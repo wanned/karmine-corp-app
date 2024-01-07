@@ -7,6 +7,9 @@ import { View } from 'react-native';
 
 import RootStack from './src/shared/navigation';
 
+import { ThemeContext } from '~/shared/contexts/theme-context';
+import { styleTokens } from '~/shared/styles/tokens';
+
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -40,8 +43,13 @@ export default function App() {
   }
 
   return (
-    <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-      <RootStack />
-    </View>
+    <ThemeContext.Provider
+      value={{
+        theme: styleTokens,
+      }}>
+      <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+        <RootStack />
+      </View>
+    </ThemeContext.Provider>
   );
 }
