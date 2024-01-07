@@ -1,9 +1,11 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { StackScreenProps } from '@react-navigation/stack';
 import { Pressable, StyleSheet } from 'react-native';
 
-import One from '../screens/one';
-import Two from '../screens/two';
+import { RootStackParamList } from '.';
+import One from '../../screens/one';
+import Two from '../../screens/two';
 
 const Tab = createBottomTabNavigator();
 
@@ -14,7 +16,9 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={styles.tabBarIcon} {...props} />;
 }
 
-export default function TabLayout({ navigation }) {
+type TabLayoutProps = StackScreenProps<RootStackParamList>;
+
+export default function TabLayout({ navigation }: TabLayoutProps) {
   return (
     <Tab.Navigator
       screenOptions={{

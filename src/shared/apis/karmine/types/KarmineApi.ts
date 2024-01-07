@@ -1,4 +1,4 @@
-import { IsoDate } from '~/types/IsoDate';
+import { IsoDate } from '~/shared/types/IsoDate';
 
 export namespace KarmineApi {
   export enum CompetitionName {

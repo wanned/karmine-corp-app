@@ -5,7 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
 import { View } from 'react-native';
 
-import RootStack from './src/navigation';
+import RootStack from './src/shared/navigation';
 
 SplashScreen.preventAutoHideAsync();
 
