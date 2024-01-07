@@ -16,6 +16,10 @@ export interface StyleTokens {
     screenHorizontal: number;
     screenVertical: number;
   };
+  fonts: {
+    default: string;
+    number: string;
+  };
 }
 
 export const styleTokens: StyleTokens = {
@@ -33,5 +37,9 @@ export const styleTokens: StyleTokens = {
   margins: {
     screenHorizontal: 16,
     screenVertical: 16,
+  },
+  fonts: {
+    default: 'Cairo',
+    number: 'MonaspaceNeon',
   },
 };
