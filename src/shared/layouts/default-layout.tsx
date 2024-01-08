@@ -1,4 +1,4 @@
-import { View, StyleSheet, StatusBar } from 'react-native';
+import { View, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { KarmineLogo } from '../components/logos/karmine-logo';
@@ -21,10 +21,12 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
         paddingTop: safeAreaInsets.top,
         paddingBottom: safeAreaInsets.bottom,
       })}>
-      <View style={styles.header}>
-        <KarmineLogo color={styles.headerLogo.color} width={38} height={36} />
-      </View>
-      {children}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <KarmineLogo color={styles.headerLogo.color} width={38} height={36} />
+        </View>
+        {children}
+      </ScrollView>
     </View>
   );
 };
