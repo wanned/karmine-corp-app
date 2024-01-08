@@ -1,31 +1,37 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import TabNavigator from './tab-navigator';
-import Modal from '../../screens/modal';
+import { TabBar } from './tab-bar';
+
+import CalendarScreen from '~/screens/calendar';
+import HomeScreen from '~/screens/home';
+import SettingsScreen from '~/screens/settings';
+import TeamsScreen from '~/screens/teams';
 
 export type RootStackParamList = {
-  TabNavigator: undefined;
-  Modal: undefined;
+  Home: undefined;
+  Calendar: undefined;
+  Teams: undefined;
+  Settings: undefined;
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStack() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="TabNavigator">
-        <Stack.Screen
-          name="TabNavigator"
-          component={TabNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Modal"
-          component={Modal}
-          options={{ presentation: 'modal', headerLeft: () => null }}
-        />
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: false,
+          animation: 'none',
+        }}>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Calendar" component={CalendarScreen} />
+        <Stack.Screen name="Teams" component={TeamsScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>
+      <TabBar />
     </NavigationContainer>
   );
 }
