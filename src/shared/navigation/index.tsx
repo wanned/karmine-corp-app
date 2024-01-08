@@ -9,10 +9,10 @@ import SettingsScreen from '~/screens/settings';
 import TeamsScreen from '~/screens/teams';
 
 export type RootStackParamList = {
-  Home: undefined;
-  Calendar: undefined;
-  Teams: undefined;
-  Settings: undefined;
+  home: undefined;
+  calendar: undefined;
+  teams: undefined;
+  settings: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -21,15 +21,15 @@ export default function RootStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="home"
         screenOptions={{
           headerShown: false,
           animation: 'none',
         }}>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Calendar" component={CalendarScreen} />
-        <Stack.Screen name="Teams" component={TeamsScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="home" component={HomeScreen} />
+        <Stack.Screen name="calendar" component={CalendarScreen} />
+        <Stack.Screen name="teams" component={TeamsScreen} />
+        <Stack.Screen name="settings" component={SettingsScreen} />
       </Stack.Navigator>
       <TabBar />
     </NavigationContainer>
