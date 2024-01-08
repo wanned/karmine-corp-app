@@ -14,6 +14,10 @@ export type Translations = Record<
     };
     settings: {
       screenName: string;
+      notifications: {
+        title: string;
+        description: string;
+      };
     };
   }
 >;

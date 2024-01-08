@@ -1,7 +1,12 @@
-import { Switch, View } from 'react-native';
+import { View, FlatList, StyleSheet, Pressable } from 'react-native';
 
 import { Typographies } from '~/shared/components/typographies';
+import { useStyles } from '~/shared/hooks/use-styles';
+import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { Settings } from '~/shared/types/Settings';
+
+const numberOfColumns = 3;
+const gridGap = 16;
 
 export function NotificationSettings({
   notificationSettings,
@@ -10,16 +15,30 @@ export function NotificationSettings({
   notificationSettings: Settings['notifications'];
   setNotificationSettings: (notificationSettings: Settings['notifications']) => void;
 }) {
+  const styles = useStyles(getNotificationSettingsStyles);
+
+  const notificationEntries = Object.entries(notificationSettings);
+  const notificationEntriesLength = notificationEntries.length;
+
+  const numberOfEmptyCells = numberOfColumns - (notificationEntriesLength % numberOfColumns);
+  const emptyCells = Array.from({ length: numberOfEmptyCells }).map(
+    (_, i) => [`empty-${i}`, null] as const
+  );
+
   return (
-    <View>
-      {Object.entries(notificationSettings).map(([key, value]) => (
-        <NotificationSetting
-          key={key}
-          label={key}
-          value={value}
-          setValue={(value) => setNotificationSettings({ ...notificationSettings, [key]: value })}
-        />
-      ))}
+    <View style={styles.notificationGrid}>
+      <FlatList
+        data={[...notificationEntries, ...emptyCells]}
+        renderItem={({ item: [key, value] }) => (
+          <NotificationSetting
+            label={key}
+            value={value}
+            setValue={(value) => setNotificationSettings({ ...notificationSettings, [key]: value })}
+          />
+        )}
+        numColumns={3}
+        keyExtractor={([key]) => key}
+      />
     </View>
   );
 }
@@ -30,13 +49,43 @@ function NotificationSetting({
   setValue,
 }: {
   label: string;
-  value: boolean;
+  value: boolean | null;
   setValue: (value: boolean) => void;
 }) {
+  const styles = useStyles(getNotificationSettingStyles);
+
+  if (value === null) {
+    return <View style={{ flex: styles.container.flex, margin: styles.container.margin }} />;
+  }
+
   return (
-    <View>
+    <Pressable
+      style={StyleSheet.compose(styles.container, value && styles.containerSelected)}
+      onPress={() => setValue(!value)}>
       <Typographies.Body>{label}</Typographies.Body>
-      <Switch value={value} onValueChange={setValue} />
-    </View>
+    </Pressable>
   );
 }
+
+const getNotificationSettingsStyles = createStylesheet((theme) => ({
+  notificationGrid: {
+    margin: -gridGap / 2,
+  },
+}));
+
+const getNotificationSettingStyles = createStylesheet((theme) => ({
+  container: {
+    aspectRatio: 1,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: gridGap / 2,
+    backgroundColor: theme.colors.subtleBackground,
+    borderWidth: 2,
+    borderColor: theme.colors.subtleBackground,
+    borderRadius: 16,
+  },
+  containerSelected: {
+    borderColor: theme.colors.accent,
+  },
+}));

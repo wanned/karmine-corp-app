@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { Text } from 'react-native';
 
 import { useStyles } from '~/shared/hooks/use-styles';
+import { useTheme } from '~/shared/hooks/use-theme';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 const FontWeights = [
@@ -54,6 +55,7 @@ export const BaseText = ({ children, fontWeight, fontSize, color, textTransform 
   const separatedText = useMemo(() => separateTextByNumber(children), [children]);
 
   const styles = useStyles(getStyles);
+  const theme = useTheme();
 
   const defaultFontWeight: FontWeight = fontWeight ?? 'Regular';
   const numberFontWeight: FontWeight =
@@ -62,7 +64,7 @@ export const BaseText = ({ children, fontWeight, fontSize, color, textTransform 
   const defaultFontStyle = {
     fontFamily: `${styles.default.fontFamily}-${defaultFontWeight}`,
     fontSize,
-    color,
+    color: color ?? theme.colors.foreground,
     textTransform,
   };
   const numberFontStyle = {
