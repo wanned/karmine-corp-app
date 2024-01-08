@@ -33,6 +33,7 @@ const getStyles = createStylesheet((theme) => ({
   layout: {
     backgroundColor: theme.colors.background,
     flex: 1,
+    paddingHorizontal: 16,
   },
   header: {
     backgroundColor: theme.colors.background,
