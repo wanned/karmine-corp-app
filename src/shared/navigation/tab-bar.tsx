@@ -8,6 +8,7 @@ import { Typographies } from '../components/typographies';
 import { useStyles } from '../hooks/use-styles';
 import { createStylesheet } from '../styles/create-stylesheet';
 import { assertUnreachable } from '../utils/assert-unreachable';
+import { useTranslate } from '../hooks/use-translate';
 
 export function TabBar() {
   const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
@@ -19,10 +20,10 @@ export function TabBar() {
       pointerEvents="box-none"
       accessibilityRole="tablist"
       accessibilityLabel="Bottom tab bar">
-      <TabBarButton navigation={navigation} name="Home" />
-      <TabBarButton navigation={navigation} name="Calendar" />
-      <TabBarButton navigation={navigation} name="Teams" />
-      <TabBarButton navigation={navigation} name="Settings" />
+      <TabBarButton navigation={navigation} name="home" />
+      <TabBarButton navigation={navigation} name="calendar" />
+      <TabBarButton navigation={navigation} name="teams" />
+      <TabBarButton navigation={navigation} name="settings" />
     </View>
   );
 }
@@ -36,6 +37,7 @@ function TabBarButton({
 }) {
   const [isActive, setIsActive] = useState(navigation.getCurrentRoute()?.name === name);
   const styles = useStyles(getStyles);
+  const translate = useTranslate();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('state', () => {
@@ -57,7 +59,7 @@ function TabBarButton({
       <TabBarIcon name={name} isActive={isActive} />
       <Typographies.Body
         color={isActive ? styles.tabBarButtonActive.color : styles.tabBarButtonInactive.color}>
-        {name}
+        {translate(`${name}.screenName`)}
       </Typographies.Body>
     </Pressable>
   );
@@ -72,28 +74,28 @@ function TabBarIcon({ name, isActive }: { name: keyof RootStackParamList; isActi
   };
 
   switch (name) {
-    case 'Home': {
+    case 'home': {
       if (isActive) {
         return <Iconify icon="solar:home-2-bold" {...iconProps} />;
       } else {
         return <Iconify icon="solar:home-2-linear" {...iconProps} />;
       }
     }
-    case 'Calendar': {
+    case 'calendar': {
       if (isActive) {
         return <Iconify icon="solar:calendar-minimalistic-bold" {...iconProps} />;
       } else {
         return <Iconify icon="solar:calendar-minimalistic-linear" {...iconProps} />;
       }
     }
-    case 'Teams': {
+    case 'teams': {
       if (isActive) {
         return <Iconify icon="solar:users-group-rounded-bold" {...iconProps} />;
       } else {
         return <Iconify icon="solar:users-group-rounded-linear" {...iconProps} />;
       }
     }
-    case 'Settings': {
+    case 'settings': {
       if (isActive) {
         return <Iconify icon="solar:settings-bold" {...iconProps} />;
       } else {
