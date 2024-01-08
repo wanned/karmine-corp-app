@@ -47,9 +47,15 @@ export default function App() {
       value={{
         theme: styleTokens,
       }}>
-      <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-        <RootStack />
-      </View>
+      <_App onLayoutRootView={onLayoutRootView} />
     </ThemeContext.Provider>
   );
 }
+
+const _App = ({ onLayoutRootView }: { onLayoutRootView: () => void }) => {
+  return (
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <RootStack />
+    </View>
+  );
+};
