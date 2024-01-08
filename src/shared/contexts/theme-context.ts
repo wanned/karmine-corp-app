@@ -6,8 +6,6 @@ interface ThemeContextValue {
   theme: StyleTokens;
 }
 
-const ThemeContext = createContext<ThemeContextValue>({
+export const ThemeContext = createContext<ThemeContextValue>({
   theme: {} as StyleTokens,
 });
-
-export { ThemeContext };
