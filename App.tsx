@@ -7,7 +7,7 @@ import { View } from 'react-native';
 
 import RootStack from './src/shared/navigation';
 
-import { SettingsContext } from '~/shared/contexts/settings-context';
+import { SettingsProvider } from '~/shared/contexts/settings-context';
 import { ThemeContext } from '~/shared/contexts/theme-context';
 import { styleTokens } from '~/shared/styles/tokens';
 
@@ -45,14 +45,14 @@ export default function App() {
 
   // TODO: Correctly implement and type SettingsContext
   return (
-    <SettingsContext.Provider value={{} as any}>
+    <SettingsProvider value={{} as any}>
       <ThemeContext.Provider
         value={{
           theme: styleTokens,
         }}>
         <_App onLayoutRootView={onLayoutRootView} />
       </ThemeContext.Provider>
-    </SettingsContext.Provider>
+    </SettingsProvider>
   );
 }
 
