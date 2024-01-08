@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { View } from 'react-native';
 
 import { NotificationSettings } from './components/notifications-settings';
+import { SpoilerSettings } from './components/spoiler-settings';
 
 import { Typographies } from '~/shared/components/typographies';
 import { SettingsContext } from '~/shared/contexts/settings-context';
@@ -23,15 +24,29 @@ export default function SettingsScreen() {
           <Typographies.Title1>{translate('settings.screenName')}</Typographies.Title1>
         </View>
 
-        <View>
-          <Typographies.Title2>{translate('settings.notifications.title')}</Typographies.Title2>
-          <View style={styles.sectionDescriptionContainer}>
-            <Typographies.Body>{translate('settings.notifications.description')}</Typographies.Body>
+        <View style={styles.settingsContainer}>
+          <View>
+            <Typographies.Title2>{translate('settings.notifications.title')}</Typographies.Title2>
+            <View style={styles.sectionDescriptionContainer}>
+              <Typographies.Body>
+                {translate('settings.notifications.description')}
+              </Typographies.Body>
+            </View>
+            <NotificationSettings
+              notificationSettings={settings.notifications}
+              setNotificationSettings={(notifications) =>
+                setSettings({ ...settings, notifications })
+              }
+            />
           </View>
-          <NotificationSettings
-            notificationSettings={settings.notifications}
-            setNotificationSettings={(notifications) => setSettings({ ...settings, notifications })}
-          />
+
+          <View>
+            <Typographies.Title2>{translate('settings.spoiler.title')}</Typographies.Title2>
+            <SpoilerSettings
+              hideSpoilersSettings={settings.hideSpoilers}
+              setHideSpoilersSettings={(hideSpoilers) => setSettings({ ...settings, hideSpoilers })}
+            />
+          </View>
         </View>
       </View>
     </DefaultLayout>
@@ -45,5 +60,9 @@ const getStyles = createStylesheet((theme) => ({
   sectionDescriptionContainer: {
     opacity: theme.opacities.priority2,
     marginBottom: 12,
+  },
+  settingsContainer: {
+    flexDirection: 'column',
+    gap: 24,
   },
 }));

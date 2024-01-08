@@ -18,6 +18,10 @@ export type Translations = Record<
         title: string;
         description: string;
       };
+      spoiler: {
+        title: string;
+        showResults: string;
+      };
     };
   }
 >;

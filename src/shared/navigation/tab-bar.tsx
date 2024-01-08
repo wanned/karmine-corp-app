@@ -6,9 +6,9 @@ import { Iconify } from 'react-native-iconify';
 import { RootStackParamList } from '.';
 import { Typographies } from '../components/typographies';
 import { useStyles } from '../hooks/use-styles';
+import { useTranslate } from '../hooks/use-translate';
 import { createStylesheet } from '../styles/create-stylesheet';
 import { assertUnreachable } from '../utils/assert-unreachable';
-import { useTranslate } from '../hooks/use-translate';
 
 export function TabBar() {
   const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();

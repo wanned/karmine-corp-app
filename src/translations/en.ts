@@ -16,5 +16,9 @@ export const enTranslations: Translations['en'] = {
       title: 'Notifications',
       description: 'Choose the games you will receive notifications for.',
     },
+    spoiler: {
+      title: 'Spoiler',
+      showResults: 'Show results',
+    },
   },
 };
