@@ -1,5 +1,6 @@
+import { Image } from 'expo-image';
 import { useContext, useMemo } from 'react';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Typographies } from '~/shared/components/typographies';
 import { ThemeContext } from '~/shared/contexts/theme-context';
@@ -25,7 +26,7 @@ export const MatchTeam = ({ logo, name, score, isWinner = false }: MatchTeamProp
   return (
     <View style={styles.teamScore}>
       <View style={styles.teamScoreLeftContainer}>
-        <Image source={{ uri: logo }} style={{ width: 24, height: 24 }} />
+        <Image source={{ uri: logo }} cachePolicy="memory-disk" style={{ width: 24, height: 24 }} />
         <Typographies.Body color={textColor}>{name}</Typographies.Body>
       </View>
       <Typographies.Body color={textColor}>{score.toString()}</Typographies.Body>

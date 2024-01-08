@@ -7,7 +7,7 @@ interface LabelProps {
 
 export const Label = ({ children, color }: LabelProps) => {
   return (
-    <BaseText color={color} fontSize={12} fontWeight="Bold" textTransform="uppercase">
+    <BaseText color={color} fontSize={12} fontWeight="SemiBold" textTransform="uppercase">
       {children}
     </BaseText>
   );

@@ -1,7 +1,5 @@
 import 'react-native-gesture-handler';
 
-import { setDefaultOptions } from 'date-fns';
-import { fr } from 'date-fns/locale';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
@@ -11,8 +9,6 @@ import RootStack from './src/shared/navigation';
 
 import { ThemeContext } from '~/shared/contexts/theme-context';
 import { styleTokens } from '~/shared/styles/tokens';
-
-setDefaultOptions({ locale: fr });
 
 SplashScreen.preventAutoHideAsync();
 
