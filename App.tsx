@@ -2,8 +2,9 @@ import 'react-native-gesture-handler';
 
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback } from 'react';
-import { View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useCallback, useContext } from 'react';
+import { Platform, SafeAreaView, View } from 'react-native';
 
 import RootStack from './src/shared/navigation';
 
@@ -47,9 +48,20 @@ export default function App() {
       value={{
         theme: styleTokens,
       }}>
-      <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-        <RootStack />
-      </View>
+      <_App onLayoutRootView={onLayoutRootView} />
     </ThemeContext.Provider>
   );
 }
+
+const _App = ({ onLayoutRootView }: { onLayoutRootView: () => void }) => {
+  const { theme } = useContext(ThemeContext);
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <RootStack />
+      </View>
+    </SafeAreaView>
+  );
+};

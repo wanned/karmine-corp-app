@@ -1,11 +1,18 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { Iconify } from 'react-native-iconify';
 
 import { RootStackParamList } from '.';
-import One from '../../screens/one';
-import Two from '../../screens/two';
+import home from '../../screens/calendar';
+import calendar from '../../screens/home';
+import settings from '../../screens/settings';
+import teams from '../../screens/teams';
+// import { KarmineLogo } from '../components/logos/karmine-logo';
+import { Typographies } from '../components/typographies';
+import { createStylesheet } from '../styles/create-stylesheet';
+import { styleTokens } from '../styles/tokens';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,48 +26,116 @@ function TabBarIcon(props: {
 type TabLayoutProps = StackScreenProps<RootStackParamList>;
 
 export default function TabLayout({ navigation }: TabLayoutProps) {
+  const styles = getStyles(styleTokens);
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: 'black',
+        tabBarActiveTintColor: styles.active.color,
+        tabBarInactiveTintColor: styles.inactive.color,
+        tabBarStyle: styles.tabBar,
+        tabBarLabel: ({ children, focused }) => (
+          <View>
+            <Typographies.Body color={focused ? styles.active.color : styles.inactive.color}>
+              {children}
+            </Typographies.Body>
+          </View>
+        ),
+        header: () => (
+          <View style={styles.header}>
+            {/* <KarmineLogo color={styles.active.color} width={38} height={36} /> */}
+          </View>
+        ),
       }}>
       <Tab.Screen
-        name="One"
-        component={One}
+        name="Home"
+        component={home}
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable onPress={() => navigation.navigate('Modal')}>
-              {({ pressed }) => (
-                <FontAwesome
-                  name="info-circle"
-                  size={25}
-                  color="gray"
-                  style={[styles.headerRight, { opacity: pressed ? 0.5 : 1 }]}
-                />
-              )}
-            </Pressable>
-          ),
+          title: 'Accueil',
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <Iconify icon="solar:home-2-bold" size={24} color={styles.active.color} />
+            ) : (
+              <Iconify icon="solar:home-2-linear" size={24} color={styles.inactive.color} />
+            ),
         }}
       />
       <Tab.Screen
-        name="Two"
-        component={Two}
+        name="Calendar"
+        component={calendar}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Calendrier',
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <Iconify
+                icon="solar:calendar-minimalistic-bold-duotone"
+                size={24}
+                color={styles.active.color}
+              />
+            ) : (
+              <Iconify
+                icon="solar:calendar-minimalistic-linear"
+                size={24}
+                color={styles.inactive.color}
+              />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Teams"
+        component={teams}
+        options={{
+          title: 'Équipes',
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <Iconify
+                icon="solar:users-group-rounded-bold"
+                size={24}
+                color={styles.active.color}
+              />
+            ) : (
+              <Iconify
+                icon="solar:users-group-rounded-linear"
+                size={24}
+                color={styles.inactive.color}
+              />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={settings}
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <Iconify icon="solar:settings-bold" size={24} color={styles.active.color} />
+            ) : (
+              <Iconify icon="solar:settings-linear" size={24} color={styles.inactive.color} />
+            ),
         }}
       />
     </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  headerRight: {
-    marginRight: 15,
+const getStyles = createStylesheet((theme) => ({
+  tabBar: {
+    backgroundColor: theme.colors.background,
+    display: 'flex',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 80,
+    paddingBottom: 10,
   },
-  tabBarIcon: {
-    marginBottom: -3,
+  inactive: {
+    color: theme.colors.subtleForeground,
   },
-});
+  active: {
+    color: theme.colors.foreground,
+  },
+  header: {
+    backgroundColor: theme.colors.background,
+  },
+}));
