@@ -1,5 +1,3 @@
-import { setDefaultOptions } from 'date-fns';
-import { fr, enUS, es } from 'date-fns/locale';
 import * as Localization from 'expo-localization';
 import { I18n } from 'i18n-js';
 import { useCallback } from 'react';
@@ -13,10 +11,6 @@ const i18n = new I18n(translations);
 
 i18n.locale = Localization.locale;
 i18n.enableFallback = true;
-
-setDefaultOptions({
-  locale: Localization.locale === 'fr' ? fr : Localization.locale === 'es' ? es : enUS,
-});
 
 export const useTranslate = () => {
   const language = useSettings().language;
