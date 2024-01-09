@@ -43,7 +43,7 @@ export const Card = ({ imagePath, children }: CardProps) => {
 const getStyles = createStylesheet((theme) => ({
   card: {
     flex: 1,
-    borderRadius: 16,
+    borderRadius: theme.roundness.large,
     overflow: 'hidden',
     borderColor: theme.colors.subtleForeground2,
     borderWidth: 1,

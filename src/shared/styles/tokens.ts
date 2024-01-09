@@ -22,6 +22,10 @@ export interface StyleTokens {
     default: string;
     number: string;
   };
+  roundness: {
+    medium: number;
+    large: number;
+  };
 }
 
 export const styleTokens: StyleTokens = {
@@ -45,5 +49,9 @@ export const styleTokens: StyleTokens = {
   fonts: {
     default: 'Cairo',
     number: 'MonaspaceNeon',
+  },
+  roundness: {
+    medium: 8,
+    large: 16,
   },
 };
