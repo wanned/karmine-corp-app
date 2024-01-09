@@ -44,7 +44,7 @@ const separateTextByNumber = (text: string) => {
 };
 
 interface TextProps {
-  children: string;
+  children: string | string[];
   fontWeight?: FontWeight;
   fontSize?: number;
   color?: string;
@@ -52,7 +52,10 @@ interface TextProps {
 }
 
 export const BaseText = ({ children, fontWeight, fontSize, color, textTransform }: TextProps) => {
-  const separatedText = useMemo(() => separateTextByNumber(children), [children]);
+  const separatedText = useMemo(
+    () => separateTextByNumber(Array.isArray(children) ? children.join('') : children),
+    [children]
+  );
 
   const styles = useStyles(getStyles);
   const theme = useTheme();

@@ -29,6 +29,7 @@ export function NotificationSettings({
     <View style={styles.notificationGrid}>
       <FlatList
         data={[...notificationEntries, ...emptyCells]}
+        scrollEnabled={false}
         renderItem={({ item: [key, value] }) => (
           <NotificationSetting
             label={key}

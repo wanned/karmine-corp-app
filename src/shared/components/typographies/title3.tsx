@@ -1,7 +1,7 @@
 import { BaseText } from './base-text';
 
 interface Title3Props {
-  children: string;
+  children: string | string[];
   color?: string;
 }
 
