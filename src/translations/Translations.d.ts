@@ -1,4 +1,4 @@
-type Language = 'en' | 'es' | 'fr';
+export type Language = 'en' | 'es' | 'fr';
 
 export type Translations = Record<
   Language,
@@ -25,6 +25,11 @@ export type Translations = Record<
       spoiler: {
         title: string;
         showResults: string;
+      };
+      language: {
+        title: string;
+        description: string;
+        languages: Record<Language, string>;
       };
     };
   }

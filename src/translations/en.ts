@@ -24,5 +24,14 @@ export const enTranslations: Translations['en'] = {
       title: 'Spoiler',
       showResults: 'Show results',
     },
+    language: {
+      title: 'Language',
+      description: 'Choose the language of the application.',
+      languages: {
+        en: 'English',
+        es: 'Español',
+        fr: 'Français',
+      },
+    },
   },
 };

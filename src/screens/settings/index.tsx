@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { View } from 'react-native';
 
+import { LanguageSettings } from './components/language-settings';
 import { NotificationSettings } from './components/notifications-settings';
 import { SpoilerSettings } from './components/spoiler-settings';
 
@@ -45,6 +46,17 @@ export default function SettingsScreen() {
             <SpoilerSettings
               hideSpoilersSettings={settings.hideSpoilers}
               setHideSpoilersSettings={(hideSpoilers) => setSettings({ ...settings, hideSpoilers })}
+            />
+          </View>
+
+          <View>
+            <Typographies.Title2>{translate('settings.language.title')}</Typographies.Title2>
+            <View style={styles.sectionDescriptionContainer}>
+              <Typographies.Body>{translate('settings.language.description')}</Typographies.Body>
+            </View>
+            <LanguageSettings
+              languageSettings={settings.language}
+              setLanguageSettings={(language) => setSettings({ ...settings, language })}
             />
           </View>
         </View>
