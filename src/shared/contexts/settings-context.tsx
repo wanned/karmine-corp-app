@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import defu from 'defu';
+import * as Localization from 'expo-localization';
 import { createContext, useState, useCallback, useEffect } from 'react';
 
 import { Settings } from '../types/Settings';
@@ -36,7 +37,9 @@ export const SettingsProvider = ({
   children: React.ReactNode;
   value?: Settings;
 }) => {
-  const [settings, _setSettings] = useState<Settings>({} as Settings);
+  const [settings, _setSettings] = useState<Settings>({
+    language: Localization.locale.split('-')[0],
+  } as Settings);
 
   useEffect(() => {
     getSavedSettings().then((savedSettings) => {
