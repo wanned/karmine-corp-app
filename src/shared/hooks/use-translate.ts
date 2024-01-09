@@ -1,8 +1,10 @@
 import { setDefaultOptions } from 'date-fns';
 import { fr, enUS, es } from 'date-fns/locale';
 import * as Localization from 'expo-localization';
-import { I18n, TranslateOptions } from 'i18n-js';
+import { I18n } from 'i18n-js';
 import { useCallback } from 'react';
+
+import { useSettings } from './use-settings';
 
 import { translations } from '~/translations';
 import { Translations } from '~/translations/Translations';
@@ -17,9 +19,17 @@ setDefaultOptions({
 });
 
 export const useTranslate = () => {
-  return useCallback((key: TranslationKeys, options?: TranslateOptions) => {
-    return i18n.t(key, options);
-  }, []);
+  const language = useSettings().language;
+
+  return useCallback(
+    (key: TranslationKeys) => {
+      if (language !== undefined) {
+        i18n.locale = language;
+      }
+      return i18n.t(key);
+    },
+    [language]
+  );
 };
 
 type TranslationKeys<
