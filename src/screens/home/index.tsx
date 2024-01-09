@@ -2,6 +2,7 @@ import { NavigationContainerRef, useNavigation } from '@react-navigation/native'
 import { View } from 'react-native';
 
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
+import { CardWrapper } from '~/shared/components/card-wrapper/card-wrapper';
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
 import { Section } from '~/shared/components/section/section';
@@ -21,6 +22,28 @@ export default function HomeScreen() {
 
   return (
     <DefaultLayout>
+      <CardWrapper
+        cardData={[
+          {
+            id: '1',
+            content: <View style={{ height: 171 }} />,
+            imagePath:
+              'https://fastly.picsum.photos/id/312/1280/720.jpg?hmac=DuZFMQOu8A5pIW05E42Ue5H6ozEMqtopekRTElSYtlI',
+          },
+          {
+            id: '2',
+            content: <View style={{ height: 171 }} />,
+            imagePath:
+              'https://fastly.picsum.photos/id/312/1280/720.jpg?hmac=DuZFMQOu8A5pIW05E42Ue5H6ozEMqtopekRTElSYtlI',
+          },
+          {
+            id: '3',
+            content: <View style={{ height: 171 }} />,
+            imagePath:
+              'https://fastly.picsum.photos/id/312/1280/720.jpg?hmac=DuZFMQOu8A5pIW05E42Ue5H6ozEMqtopekRTElSYtlI',
+          },
+        ]}
+      />
       <Section title={translate('home.nextMatchesTitle')}>
         {[...Array(3)].map((_, index) => (
           <MatchScore
