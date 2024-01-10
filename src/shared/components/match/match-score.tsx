@@ -14,7 +14,7 @@ interface MatchScoreProps {
   children: React.ReactNode;
   status: MatchStatus;
   game: KarmineApi.CompetitionName;
-  bo: number;
+  bo?: number;
 }
 
 export const MatchScore = ({ date, status, game, bo, children }: MatchScoreProps) => {
@@ -27,7 +27,8 @@ export const MatchScore = ({ date, status, game, bo, children }: MatchScoreProps
           {format(date, "dd MMM yyyy · HH'H' ")}
         </Typographies.Label>
         <Typographies.Label color={styles.titleGame.color}>
-          · {game} · BO{bo?.toString()}
+          · {game}
+          {bo !== undefined ? ` · BO${bo}` : ''}
         </Typographies.Label>
         {status === 'in-progress' && (
           <View style={styles.livePillWrapper}>

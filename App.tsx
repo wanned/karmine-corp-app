@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
@@ -11,6 +12,8 @@ import { ThemeContext } from '~/shared/contexts/theme-context';
 import { styleTokens } from '~/shared/styles/tokens';
 
 SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -43,12 +46,14 @@ export default function App() {
   }
 
   return (
-    <ThemeContext.Provider
-      value={{
-        theme: styleTokens,
-      }}>
-      <_App onLayoutRootView={onLayoutRootView} />
-    </ThemeContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeContext.Provider
+        value={{
+          theme: styleTokens,
+        }}>
+        <_App onLayoutRootView={onLayoutRootView} />
+      </ThemeContext.Provider>
+    </QueryClientProvider>
   );
 }
 

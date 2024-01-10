@@ -1,6 +1,8 @@
 import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
 import { View } from 'react-native';
 
+import { NextMatches } from './components/next-matches';
+
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
@@ -21,35 +23,17 @@ export default function HomeScreen() {
 
   return (
     <DefaultLayout>
-      <Section title={translate('home.nextMatchesTitle')}>
-        {[...Array(3)].map((_, index) => (
-          <MatchScore
-            key={index}
-            date={new Date('2023-09-17T17:00:00')}
-            status="upcoming"
-            bo={5}
-            game={KarmineApi.CompetitionName.LeagueOfLegendsLFL}>
-            <MatchTeam
-              logo="https://medias.kametotv.fr/karmine/teams_logo/KC.png"
-              name="Karmine Corp"
-              isWinner
-              score="-"
+      <NextMatches
+        max={3}
+        viewMoreButton={
+          <View style={styles.viewMoreButtonWrapper}>
+            <TextButton
+              title={translate('home.nextMatchesViewMoreText')}
+              onPress={() => navigation.navigate('calendar')}
             />
-            <MatchTeam
-              logo="https://medias.kametotv.fr/karmine/teams_logo/KC.png"
-              name="G2"
-              isWinner
-              score="-"
-            />
-          </MatchScore>
-        ))}
-        <View style={styles.viewMoreButtonWrapper}>
-          <TextButton
-            title={translate('home.nextMatchesViewMoreText')}
-            onPress={() => navigation.navigate('calendar')}
-          />
-        </View>
-      </Section>
+          </View>
+        }
+      />
       <Section title={translate('home.lastResultsTitle')}>
         {[...Array(3)].map((_, index) => (
           <MatchScore
