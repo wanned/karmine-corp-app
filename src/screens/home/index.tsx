@@ -23,22 +23,23 @@ export default function HomeScreen() {
   return (
     <DefaultLayout>
       <CardWrapper
+        height={171}
         cardData={[
           {
             id: '1',
-            content: <View style={{ height: 171 }} />,
+            content: <View />,
             imagePath:
               'https://fastly.picsum.photos/id/312/1280/720.jpg?hmac=DuZFMQOu8A5pIW05E42Ue5H6ozEMqtopekRTElSYtlI',
           },
           {
             id: '2',
-            content: <View style={{ height: 171 }} />,
+            content: <View />,
             imagePath:
               'https://fastly.picsum.photos/id/312/1280/720.jpg?hmac=DuZFMQOu8A5pIW05E42Ue5H6ozEMqtopekRTElSYtlI',
           },
           {
             id: '3',
-            content: <View style={{ height: 171 }} />,
+            content: <View />,
             imagePath:
               'https://fastly.picsum.photos/id/312/1280/720.jpg?hmac=DuZFMQOu8A5pIW05E42Ue5H6ozEMqtopekRTElSYtlI',
           },
