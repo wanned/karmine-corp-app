@@ -6,6 +6,13 @@ export interface Match {
   teams: {
     name: string;
     logoUrl: string;
+    score?:
+      | {
+          score: number;
+          scoreType?: 'top';
+          isWinner?: boolean;
+        }
+      | undefined;
   }[];
   date: Date;
   streamLink: string;

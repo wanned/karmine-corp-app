@@ -1,4 +1,4 @@
-import { parseMatchTeams } from '../parse-match-teams/parse-match-teams';
+import { parseTeamNamesFromTitle } from '../parse-match-teams/parse-match-teams';
 
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 import { leagueOfLegendsPipelines } from '~/shared/apis/league-of-legends/league-of-legends-pipelines';
@@ -11,7 +11,7 @@ export const parseLeagueOfLegendsMatchDetails = async (
       | KarmineApi.CompetitionName.LeagueOfLegendsLEC;
   }
 ): Promise<LeagueOfLegendsMatchDetails | null> => {
-  const [{ name: team1ShortName }, { name: team2ShortName }] = parseMatchTeams(event);
+  const [team1ShortName, team2ShortName] = parseTeamNamesFromTitle(event.title);
 
   const matchDetails = await leagueOfLegendsPipelines.getMatchDetails({
     leagueName:
