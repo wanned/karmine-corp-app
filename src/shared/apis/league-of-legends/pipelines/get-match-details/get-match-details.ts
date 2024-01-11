@@ -27,6 +27,15 @@ type MatchDetailsData = {
 };
 
 export const getMatchDetails = (initialInfos: InitialInfos) => {
+  // FIXME: This is a hack to correctly get matches of MAD Lions because.
+  // They changed their code from MAD to MDK, but the Karmine API still uses MAD.
+  if (initialInfos.team1ShortName === 'MAD') {
+    initialInfos.team1ShortName = 'MDK';
+  }
+  if (initialInfos.team2ShortName === 'MAD') {
+    initialInfos.team2ShortName = 'MDK';
+  }
+
   const data: MatchDetailsData = {} as MatchDetailsData;
 
   const saveData = <T extends keyof typeof data, U extends (typeof data)[T]>(
