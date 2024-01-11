@@ -1,3 +1,5 @@
+import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
+
 type Language = 'en' | 'es' | 'fr';
 
 export type Translations = Record<
@@ -18,6 +20,9 @@ export type Translations = Record<
     };
     settings: {
       screenName: string;
+    };
+    games: {
+      [K in KarmineApi.CompetitionName]: string;
     };
   }
 >;

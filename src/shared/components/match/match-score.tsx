@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
+import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { styleTokens } from '~/shared/styles/tokens';
 
@@ -20,6 +21,8 @@ interface MatchScoreProps {
 export const MatchScore = ({ date, status, game, bo, children }: MatchScoreProps) => {
   const styles = getStyles(styleTokens);
 
+  const translate = useTranslate();
+
   return (
     <View style={styles.container}>
       <View style={styles.titleHeader}>
@@ -27,7 +30,7 @@ export const MatchScore = ({ date, status, game, bo, children }: MatchScoreProps
           {format(date, "dd MMM yyyy · HH'H' ")}
         </Typographies.Label>
         <Typographies.Label color={styles.titleGame.color}>
-          · {game}
+          · {translate(`games.${game}`)}
           {bo !== undefined ? ` · BO${bo}` : ''}
         </Typographies.Label>
         {status === 'in-progress' && (
