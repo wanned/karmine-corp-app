@@ -1,5 +1,6 @@
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 import { Matchs } from '~/shared/types/data/Matchs';
+import { toCapitalCase } from '~/shared/utils/to-capital-case';
 
 const DEFAULT_KC_LOGO_URL = 'https:///medias.kametotv.fr/karmine/teams_logo/KC.png';
 const DEFAULT_LOGO_URL = ''; // TODO: Add default logo url
@@ -14,20 +15,27 @@ export const parseMatchTeams = (event: KarmineApi.Events[number]): Matchs[number
   let teams: { name: string; logoUrl: string }[] = [];
 
   if (teamNames.length === 1) {
+    const kcPlayerPrefix = 'KC ';
+    const playerName = toCapitalCase(
+      teamNames[0].startsWith(kcPlayerPrefix)
+        ? teamNames[0].slice(kcPlayerPrefix.length)
+        : teamNames[0]
+    );
+
     teams = [
       {
-        name: teamNames[0],
+        name: playerName,
         logoUrl: teamNames[0].startsWith('KC ') ? DEFAULT_KC_LOGO_URL : DEFAULT_LOGO_URL,
       },
     ];
   } else if (teamNames.length === 2) {
     teams = [
       {
-        name: teamNames[0],
+        name: getTeamName(event.team_domicile) ?? teamNames[0],
         logoUrl: event.team_domicile,
       },
       {
-        name: teamNames[1],
+        name: getTeamName(event.team_exterieur) ?? teamNames[1],
         logoUrl: event.team_exterieur,
       },
     ];
@@ -39,4 +47,16 @@ export const parseMatchTeams = (event: KarmineApi.Events[number]): Matchs[number
   }
 
   return teams;
+};
+
+const getTeamName = (team: KarmineApi.Events[number]['team_domicile']) => {
+  const regex = /https:\/\/medias\.kametotv\.fr\/karmine\/teams\/(.+?)-.+\..+/;
+
+  const match = team.match(regex)?.[1];
+
+  if (match === null || match === undefined) {
+    return null;
+  }
+
+  return match === 'KC' || match === 'Karmine Corp' ? 'Karmine Corp' : match;
 };
