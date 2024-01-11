@@ -74,6 +74,7 @@ export const getMatchDetails = (initialInfos: InitialInfos) => {
       .then((windows) => saveData('windowGames', windows))
       // Get the teams of the match
       .then(() =>
+        // TODO: We can memoize this (separate queries for each team)
         leagueOfLegendsApi.getTeams({
           teamIds: data.matchDetails.event.match.teams.map((team) =>
             assertDefined((team as any).id)
