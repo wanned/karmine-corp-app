@@ -2,10 +2,10 @@ import { NavigationContainerRef, useNavigation } from '@react-navigation/native'
 import { View } from 'react-native';
 
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
+import { Buttons } from '~/shared/components/buttons';
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
 import { Section } from '~/shared/components/section/section';
-import { TextButton } from '~/shared/components/text-button/TextButton';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { DefaultLayout } from '~/shared/layouts/default-layout';
 import { RootStackParamList } from '~/shared/navigation';
@@ -44,8 +44,8 @@ export default function HomeScreen() {
           </MatchScore>
         ))}
         <View style={styles.viewMoreButtonWrapper}>
-          <TextButton
-            title={translate('home.nextMatchesViewMoreText')}
+          <Buttons.Text
+            text={translate('home.nextMatchesViewMoreText')}
             onPress={() => navigation.navigate('calendar')}
           />
         </View>
@@ -73,8 +73,8 @@ export default function HomeScreen() {
           </MatchScore>
         ))}
         <View style={styles.viewMoreButtonWrapper}>
-          <TextButton
-            title={translate('home.lastResultsViewMoreText')}
+          <Buttons.Text
+            text={translate('home.lastResultsViewMoreText')}
             onPress={() => navigation.navigate('calendar')}
           />
         </View>
