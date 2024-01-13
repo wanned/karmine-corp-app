@@ -47,7 +47,7 @@ const getStyles = createStylesheet((theme) => ({
   titleHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 2,
+    marginBottom: 8,
   },
   titleDate: {
     color: theme.colors.accent,
