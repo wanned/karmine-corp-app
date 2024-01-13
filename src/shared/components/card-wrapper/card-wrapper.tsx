@@ -4,8 +4,8 @@ import PagerView, { PagerViewOnPageScrollEvent } from 'react-native-pager-view';
 
 import { Card } from '../card/card';
 
+import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
-import { styleTokens } from '~/shared/styles/tokens';
 
 interface CardWrapperProps {
   cardData: {
@@ -17,7 +17,7 @@ interface CardWrapperProps {
 }
 
 export const CardWrapper = ({ cardData, height }: CardWrapperProps) => {
-  const styles = getStyles(styleTokens);
+  const styles = useStyles(getStyles);
 
   const [activePageIndex, setActivePageIndex] = useState(0);
 

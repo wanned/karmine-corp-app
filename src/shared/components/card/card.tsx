@@ -35,7 +35,7 @@ export const Card = ({ imagePath, children }: CardProps) => {
         ]}
         locations={[0, 0.33, 0.48, 1]}
       />
-      {children}
+      <View style={styles.childrenContainer}>{children}</View>
     </View>
   );
 };
@@ -58,6 +58,11 @@ const getStyles = createStylesheet((theme) => ({
     left: 0,
     right: 0,
     top: 0,
+    height: '100%',
+  },
+  childrenContainer: {
+    padding: 16,
+    width: '100%',
     height: '100%',
   },
 }));
