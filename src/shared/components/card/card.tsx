@@ -64,5 +64,6 @@ const getStyles = createStylesheet((theme) => ({
     padding: 16,
     width: '100%',
     height: '100%',
+    justifyContent: 'center',
   },
 }));

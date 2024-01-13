@@ -47,6 +47,7 @@ const getStyles = createStylesheet((theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     color: theme.colors.foreground,
+    marginBottom: 8,
   },
   livePill: {
     position: 'absolute',
@@ -100,7 +101,6 @@ const getTeamsScoreStyles = createStylesheet((theme) => ({
     color: theme.colors.foreground,
     paddingVertical: 2,
   },
-
   teamContainer: {
     alignItems: 'center',
     gap: 20,

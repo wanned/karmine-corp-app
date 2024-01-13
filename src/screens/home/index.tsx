@@ -39,7 +39,7 @@ export default function HomeScreen() {
     <DefaultLayout>
       <View style={styles.cardWrapperContainer}>
         <CardWrapper
-          height={171}
+          height={160}
           cardData={[
             {
               id: '1',
