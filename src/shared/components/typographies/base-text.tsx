@@ -83,6 +83,7 @@ export const BaseText = ({
   const numberFontStyle = {
     ...defaultFontStyle,
     fontFamily: `${styles.number.fontFamily}-${numberFontWeight}`,
+    fontSize: fontSize ? fontSize * 0.95 : undefined,
   };
 
   return (
