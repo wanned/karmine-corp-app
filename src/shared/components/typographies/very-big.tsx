@@ -1,3 +1,5 @@
+import { Text } from 'react-native';
+
 import { BaseText } from './base-text';
 
 interface BodyProps {
@@ -7,8 +9,10 @@ interface BodyProps {
 
 export const VeryBig = ({ children, color }: BodyProps) => {
   return (
-    <BaseText color={color} fontSize={40} fontWeight="ExtraBold">
-      {children}
-    </BaseText>
+    <Text style={{ height: 32 }}>
+      <BaseText color={color} fontSize={40} lineHeight={40} fontWeight="ExtraBold">
+        {children}
+      </BaseText>
+    </Text>
   );
 };
