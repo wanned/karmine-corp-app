@@ -21,20 +21,6 @@ export default function HomeScreen() {
 
   const translate = useTranslate();
 
-  const teamLeft = {
-    logo: 'https://medias.kametotv.fr/karmine/teams_logo/KC.png',
-    name: 'Karmine Corp',
-    score: '1',
-    isWinner: true,
-  };
-
-  const teamRight = {
-    logo: 'https://medias.kametotv.fr/karmine/teams_logo/Team%20Heretics.png',
-    name: 'Team Heretics',
-    score: '2',
-    isWinner: false,
-  };
-
   return (
     <DefaultLayout>
       <View style={styles.cardWrapperContainer}>
@@ -43,7 +29,22 @@ export default function HomeScreen() {
           cardData={[
             {
               id: '1',
-              content: <LolCardContent teamLeft={teamLeft} teamRight={teamRight} />,
+              content: (
+                <LolCardContent
+                  teamLeft={{
+                    logo: 'https://medias.kametotv.fr/karmine/teams_logo/KC.png',
+                    name: 'Karmine Corp',
+                    score: '2',
+                    isWinner: true,
+                  }}
+                  teamRight={{
+                    logo: 'https://medias.kametotv.fr/karmine/teams_logo/Team%20Heretics.png',
+                    name: 'Team Heretics',
+                    score: '1',
+                    isWinner: false,
+                  }}
+                />
+              ),
               imagePath: 'https://www.pedagojeux.fr/wp-content/uploads/2019/11/1280x720_LoL.jpg',
             },
             {

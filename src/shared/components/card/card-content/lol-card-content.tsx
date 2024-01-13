@@ -1,10 +1,11 @@
 import { Image } from 'expo-image';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { LivePill } from '../../live-pill/live-pill';
 import { Typographies } from '../../typographies';
 
+import { OutlinedNumber } from '~/shared/components/card/card-content/outlined-numbers';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
@@ -71,12 +72,6 @@ interface TeamScoreProps extends TeamProps {
 const TeamScore = ({ logo, name, score, isWinner, position }: TeamScoreProps) => {
   const styles = useStyles(getTeamsScoreStyles);
 
-  const scoreElement = (
-    <Typographies.VeryBig color={styles.teamNameContainer.color}>
-      {score.toString()}
-    </Typographies.VeryBig>
-  );
-
   return (
     <View
       style={StyleSheet.compose(
@@ -88,7 +83,17 @@ const TeamScore = ({ logo, name, score, isWinner, position }: TeamScoreProps) =>
         <Typographies.Title3 color={styles.teamNameContainer.color}>{name}</Typographies.Title3>
       </View>
 
-      {scoreElement}
+      {isWinner ? (
+        <Typographies.VeryBig color={styles.teamNameContainer.color}>
+          {score.toString()}
+        </Typographies.VeryBig>
+      ) : ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(score.toString()) ? (
+        <OutlinedNumber>{Number(score) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}</OutlinedNumber>
+      ) : (
+        <Typographies.VeryBig color={styles.teamNameContainer.color}>
+          {score.toString()}
+        </Typographies.VeryBig>
+      )}
     </View>
   );
 };
