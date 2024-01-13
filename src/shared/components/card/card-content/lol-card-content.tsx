@@ -51,6 +51,7 @@ const getStyles = createStylesheet((theme) => ({
   livePill: {
     position: 'absolute',
     right: 0,
+    top: -6,
   },
   teamsContainer: {
     display: 'flex',

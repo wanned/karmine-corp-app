@@ -17,7 +17,8 @@ export const LivePill = () => {
 const getStyles = createStylesheet((theme) => ({
   livePill: {
     backgroundColor: theme.colors.streaming,
-    paddingHorizontal: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
     borderRadius: 20,
     color: theme.colors.foreground,
   },
