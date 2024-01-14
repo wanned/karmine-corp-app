@@ -3,6 +3,7 @@ import { IsoDate } from '~/shared/types/IsoDate';
 export namespace KarmineApi {
   export enum CompetitionName {
     LeagueOfLegendsLFL = 'LeagueOfLegendsLFL',
+    LeagueOfLegendsLEC = 'LeagueOfLegendsLEC',
     RocketLeague = 'RocketLeague',
     SuperSmashBrosUltimate = 'SuperSmashBrosUltimate',
     TFT = 'TFT',
@@ -16,7 +17,7 @@ export namespace KarmineApi {
     id: number;
     title: string;
     initial: string;
-    competition_name: string;
+    competition_name: CompetitionName;
     team_domicile: string;
     team_exterieur: string;
     player: string;

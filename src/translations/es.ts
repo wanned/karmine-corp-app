@@ -16,5 +16,33 @@ export const esTranslations: Translations['es'] = {
   },
   settings: {
     screenName: 'Configuración',
+    notifications: {
+      title: 'Notificaciones',
+      description: 'Elija los juegos que recibirá notificaciones.',
+    },
+    spoiler: {
+      title: 'Spoiler',
+      showResults: 'Mostrar resultados',
+    },
+    language: {
+      title: 'Idioma',
+      description: 'Elija el idioma de la aplicación.',
+      languages: {
+        en: 'English',
+        es: 'Español',
+        fr: 'Français',
+      },
+    },
+  },
+  games: {
+    LeagueOfLegendsLFL: 'LFL',
+    LeagueOfLegendsLEC: 'LEC',
+    RocketLeague: 'Rocket League',
+    SuperSmashBrosUltimate: 'Smash Bros',
+    TFT: 'TFT',
+    TeamfightTacticsGSC: 'TFT',
+    TrackMania: 'Trackmania',
+    ValorantVCT: 'Valorant',
+    ValorantVCT_GC: 'Valorant Femenino',
   },
 };
