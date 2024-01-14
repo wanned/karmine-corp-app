@@ -34,4 +34,15 @@ export const frTranslations: Translations['fr'] = {
       },
     },
   },
+  games: {
+    LeagueOfLegendsLFL: 'LFL',
+    LeagueOfLegendsLEC: 'LEC',
+    RocketLeague: 'Rocket League',
+    SuperSmashBrosUltimate: 'Smash Bros',
+    TFT: 'TFT',
+    TeamfightTacticsGSC: 'TFT',
+    TrackMania: 'Trackmania',
+    ValorantVCT: 'Valorant',
+    ValorantVCT_GC: 'Valorant Féminin',
+  },
 };
