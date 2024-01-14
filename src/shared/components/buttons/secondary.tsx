@@ -5,20 +5,20 @@ import { Typographies } from '../typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
-interface TextProps extends React.ComponentProps<typeof TouchableOpacity> {
+interface SecondaryProps {
   text: string;
-  onPress?: () => void;
-  fillWidth: boolean;
+  onPress: () => void;
+  fillWidth?: boolean;
 }
 
-export const Secondary = (props: TextProps) => {
+export const Secondary = ({ text, onPress, fillWidth = false }: SecondaryProps) => {
   const styles = useStyles(getStyles);
 
   return (
     <TouchableOpacity
-      style={StyleSheet.compose(styles.button, props.fillWidth ? styles.fillWidth : undefined)}
-      {...props}>
-      <Typographies.Body color={styles.button.color}>{props.text}</Typographies.Body>
+      style={StyleSheet.compose(styles.button, fillWidth ? styles.fillWidth : undefined)}
+      onPress={onPress}>
+      <Typographies.Body color={styles.button.color}>{text}</Typographies.Body>
     </TouchableOpacity>
   );
 };

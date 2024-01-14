@@ -5,17 +5,17 @@ import { Typographies } from '../typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
-interface TextProps extends React.ComponentProps<typeof TouchableOpacity> {
+interface TextProps {
   text: string;
-  onPress?: () => void;
+  onPress: () => void;
 }
 
-export const Text = (props: TextProps) => {
+export const Text = ({ text, onPress }: TextProps) => {
   const styles = useStyles(getStyles);
 
   return (
-    <TouchableOpacity {...props}>
-      <Typographies.Body color={styles.button.color}>{props.text}</Typographies.Body>
+    <TouchableOpacity onPress={onPress}>
+      <Typographies.Body color={styles.button.color}>{text}</Typographies.Body>
     </TouchableOpacity>
   );
 };
