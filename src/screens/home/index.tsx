@@ -1,10 +1,11 @@
 import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
-import { View } from 'react-native';
+import { Linking, View } from 'react-native';
 
 import { LastResults } from './components/last-results';
 import { NextMatches } from './components/next-matches';
 
 import { LolCardContent } from '~/shared/components/card/card-content/lol-card-content';
+import { MediaCardContent } from '~/shared/components/card/card-content/media-card-content';
 import { CardWrapper } from '~/shared/components/card-wrapper/card-wrapper';
 import { TextButton } from '~/shared/components/text-button/TextButton';
 import { useTranslate } from '~/shared/hooks/use-translate';
@@ -48,9 +49,18 @@ export default function HomeScreen() {
             },
             {
               id: '2',
-              content: <View />,
-              imagePath:
-                'https://fastly.picsum.photos/id/312/1280/720.jpg?hmac=DuZFMQOu8A5pIW05E42Ue5H6ozEMqtopekRTElSYtlI',
+              content: (
+                <MediaCardContent
+                  title="Prime présente le maillot LEC 2024"
+                  date="03 JANV. 2024"
+                  likes={9823}
+                  views={98775}
+                  onPress={() => {
+                    Linking.openURL('https://www.youtube.com/v/-RC1p9HWGaY?version=3');
+                  }}
+                />
+              ),
+              imagePath: 'https://i2.ytimg.com/vi/-RC1p9HWGaY/hqdefault.jpg',
             },
             {
               id: '3',

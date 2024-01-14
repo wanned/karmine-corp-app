@@ -7,7 +7,7 @@ interface Title1Props {
 
 export const Title1 = ({ children, color }: Title1Props) => {
   return (
-    <BaseText color={color} fontSize={24} fontWeight="Black">
+    <BaseText color={color} fontSize={24} fontWeight="Black" lineHeight={32}>
       {children}
     </BaseText>
   );
