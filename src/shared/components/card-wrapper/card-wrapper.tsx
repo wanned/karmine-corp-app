@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import PagerView, { PagerViewOnPageScrollEvent } from 'react-native-pager-view';
 
 import { Card } from '../card/card';
@@ -18,77 +18,25 @@ interface CardWrapperProps {
 
 export const CardWrapper = ({ cardData, height }: CardWrapperProps) => {
   const styles = useStyles(getStyles);
+  const { width } = useWindowDimensions();
 
   const [activePageIndex, setActivePageIndex] = useState(0);
-
-  const realCurrentPageIndex = useRef(0);
-  const realNextPageIndex = useRef(0);
-  const lastPositionRecorded = useRef<number | null>(null);
-  const lastOffsetRecorded = useRef<number | null>(null);
-
-  const onPageSelected = useCallback((event: PagerViewOnPageScrollEvent) => {
-    // If the offset is 0 and the next page index is not the same as the current page index, it means that the user has scrolled to the next page.
-    // So the current page index becomes the next page index.
-    if (
-      lastPositionRecorded.current !== null &&
-      lastOffsetRecorded.current !== null &&
-      ((lastPositionRecorded.current < event.nativeEvent.position &&
-        event.nativeEvent.offset < lastOffsetRecorded.current) ||
-        (lastPositionRecorded.current > event.nativeEvent.position &&
-          event.nativeEvent.offset > lastOffsetRecorded.current))
-    ) {
-      realCurrentPageIndex.current = realNextPageIndex.current;
-      lastPositionRecorded.current = null;
-      lastOffsetRecorded.current = null;
-      return;
-    }
-
-    // If the offset is < 0.5 and we scroll to the right, or if the offset is > 0.5 and we scroll to the left,
-    // it means that the user has canceled the scroll and the next page index becomes the current page index.
-    if (
-      (event.nativeEvent.offset < 0.5 &&
-        realNextPageIndex.current > realCurrentPageIndex.current) ||
-      (event.nativeEvent.offset > 0.5 && realNextPageIndex.current < realCurrentPageIndex.current)
-    ) {
-      setActivePageIndex(realCurrentPageIndex.current);
-      realNextPageIndex.current = realCurrentPageIndex.current;
-    }
-
-    // When we scroll to the right, the position is incremented when the scroll is finished.
-    // So if the offset is >= 0.5 and the position is the current page index, we increment the next page index and set the active page index.
-    if (
-      event.nativeEvent.offset >= 0.5 &&
-      event.nativeEvent.position === realCurrentPageIndex.current
-    ) {
-      realNextPageIndex.current = realCurrentPageIndex.current + 1;
-      setActivePageIndex(realNextPageIndex.current);
-    }
-
-    // When we scroll to the left, the position is decremented when the scroll is started.
-    // So if the offset is >= 0.5 and the position is not the current page index, we decrement the next page index and set the active page index.
-    if (
-      event.nativeEvent.offset <= 0.5 &&
-      event.nativeEvent.position !== realCurrentPageIndex.current
-    ) {
-      realNextPageIndex.current = realCurrentPageIndex.current - 1;
-      setActivePageIndex(realNextPageIndex.current);
-    }
-
-    lastPositionRecorded.current = event.nativeEvent.position;
-    lastOffsetRecorded.current = event.nativeEvent.offset;
-  }, []);
 
   return (
     <View>
       <PagerView
-        style={StyleSheet.compose(styles.viewPager, { height })}
+        style={StyleSheet.compose(styles.viewPager, {
+          height,
+          width,
+        })}
         initialPage={0}
-        pageMargin={16}
-        onPageScroll={onPageSelected}>
+        onPageSelected={({ nativeEvent: { position } }) => {
+          setActivePageIndex(position);
+        }}>
         {cardData.map((card) => (
-          <Card imagePath={card.imagePath} key={card.id}>
-            {card.content}
-          </Card>
+          <View style={{ marginHorizontal: 16 }} key={card.id}>
+            <Card imagePath={card.imagePath}>{card.content}</Card>
+          </View>
         ))}
       </PagerView>
       <View style={styles.dots}>
@@ -102,7 +50,8 @@ export const CardWrapper = ({ cardData, height }: CardWrapperProps) => {
 
 const getStyles = createStylesheet((theme) => ({
   viewPager: {
-    flex: 1,
+    position: 'relative',
+    left: -16,
   },
   dots: {
     flex: 1,

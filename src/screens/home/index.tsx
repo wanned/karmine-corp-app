@@ -1,11 +1,11 @@
 import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
 import { View } from 'react-native';
 
-import { LolCardContent } from '~/shared/components/card/card-content/lol-card-content';
-import { CardWrapper } from '~/shared/components/card-wrapper/card-wrapper';
 import { LastResults } from './components/last-results';
 import { NextMatches } from './components/next-matches';
 
+import { LolCardContent } from '~/shared/components/card/card-content/lol-card-content';
+import { CardWrapper } from '~/shared/components/card-wrapper/card-wrapper';
 import { TextButton } from '~/shared/components/text-button/TextButton';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { DefaultLayout } from '~/shared/layouts/default-layout';
