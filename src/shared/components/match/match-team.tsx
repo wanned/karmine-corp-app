@@ -1,9 +1,7 @@
 import { Image } from 'expo-image';
-import { useContext, useMemo } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Typographies } from '~/shared/components/typographies';
-import { ThemeContext } from '~/shared/contexts/theme-context';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
@@ -14,22 +12,16 @@ interface MatchTeamProps {
   isWinner?: boolean;
 }
 
-export const MatchTeam = ({ logo, name, score, isWinner = false }: MatchTeamProps) => {
-  const { theme } = useContext(ThemeContext);
-
+export const MatchTeam = ({ logo, name, score, isWinner }: MatchTeamProps) => {
   const styles = useStyles(getStyles);
 
-  const textColor = useMemo(() => {
-    return isWinner ? styles.teamScore.color : theme.colors.subtleForeground;
-  }, [isWinner]);
-
   return (
-    <View style={styles.teamScore}>
+    <View style={StyleSheet.compose(styles.teamScore, isWinner === false && styles.teamScoreLoser)}>
       <View style={styles.teamScoreLeftContainer}>
         <Image source={{ uri: logo }} cachePolicy="memory-disk" style={{ width: 24, height: 24 }} />
-        <Typographies.Body color={textColor}>{name}</Typographies.Body>
+        <Typographies.Body color={styles.teamScore.color}>{name}</Typographies.Body>
       </View>
-      <Typographies.Body color={textColor}>{score.toString()}</Typographies.Body>
+      <Typographies.Body color={styles.teamScore.color}>{score.toString()}</Typographies.Body>
     </View>
   );
 };
@@ -40,6 +32,9 @@ const getStyles = createStylesheet((theme) => ({
     justifyContent: 'space-between',
     color: theme.colors.foreground,
     paddingVertical: 2,
+  },
+  teamScoreLoser: {
+    opacity: theme.opacities.priority2,
   },
   teamScoreLeftContainer: {
     flexDirection: 'row',
