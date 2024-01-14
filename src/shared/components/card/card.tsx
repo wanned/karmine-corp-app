@@ -7,11 +7,11 @@ import { useTheme } from '~/shared/hooks/use-theme';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 interface CardProps {
-  imagePath: string;
+  image: { uri: string };
   children: React.ReactNode;
 }
 
-export const Card = ({ imagePath, children }: CardProps) => {
+export const Card = ({ image, children }: CardProps) => {
   const theme = useTheme();
   const gradientColor = theme.colors.subtleBackground;
 
@@ -19,7 +19,7 @@ export const Card = ({ imagePath, children }: CardProps) => {
 
   return (
     <View style={styles.card}>
-      <Image style={styles.cardImage} source={{ uri: imagePath }} cachePolicy="memory-disk" />
+      <Image style={styles.cardImage} source={image} cachePolicy="memory-disk" />
       <LinearGradient
         style={styles.cardGradient}
         colors={[`${gradientColor}00`, `${gradientColor}33`, `${gradientColor}FF`]}

@@ -1,10 +1,11 @@
 import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
+import { useAssets } from 'expo-asset';
 import { Linking, View } from 'react-native';
 
 import { LastResults } from './components/last-results';
 import { NextMatches } from './components/next-matches';
 
-import { LolCardContent } from '~/shared/components/card/card-content/lol-card-content';
+import { GameCardContent } from '~/shared/components/card/card-content/game-card-content';
 import { MediaCardContent } from '~/shared/components/card/card-content/media-card-content';
 import { CardWrapper } from '~/shared/components/card-wrapper/card-wrapper';
 import { TextButton } from '~/shared/components/text-button/TextButton';
@@ -15,6 +16,13 @@ import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { styleTokens } from '~/shared/styles/tokens';
 
 export default function HomeScreen() {
+  const [assets, error] = useAssets([
+    require('~/../assets/game-images/lol.png'),
+    require('~/../assets/game-images/rl.png'),
+    require('~/../assets/game-images/valorant.png'),
+    require('~/../assets/game-images/tft.png'),
+  ]);
+
   const styles = getStyles(styleTokens);
 
   const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
@@ -30,7 +38,7 @@ export default function HomeScreen() {
             {
               id: '1',
               content: (
-                <LolCardContent
+                <GameCardContent
                   teamLeft={{
                     logo: 'https://medias.kametotv.fr/karmine/teams_logo/KC.png',
                     name: 'Karmine Corp',
@@ -45,10 +53,50 @@ export default function HomeScreen() {
                   }}
                 />
               ),
-              imagePath: 'https://www.pedagojeux.fr/wp-content/uploads/2019/11/1280x720_LoL.jpg',
+              image: assets?.[0] || { uri: '' },
             },
             {
               id: '2',
+              content: (
+                <GameCardContent
+                  teamLeft={{
+                    logo: 'https://medias.kametotv.fr/karmine/teams_logo/KC.png',
+                    name: 'Karmine Corp',
+                    score: '2',
+                    isWinner: true,
+                  }}
+                  teamRight={{
+                    logo: 'https://medias.kametotv.fr/karmine/teams_logo/Team%20Heretics.png',
+                    name: 'Team Heretics',
+                    score: '1',
+                    isWinner: false,
+                  }}
+                />
+              ),
+              image: assets?.[1] || { uri: '' },
+            },
+            {
+              id: '3',
+              content: (
+                <GameCardContent
+                  teamLeft={{
+                    logo: 'https://medias.kametotv.fr/karmine/teams_logo/KC.png',
+                    name: 'Karmine Corp',
+                    score: '2',
+                    isWinner: true,
+                  }}
+                  teamRight={{
+                    logo: 'https://medias.kametotv.fr/karmine/teams_logo/Team%20Heretics.png',
+                    name: 'Team Heretics',
+                    score: '1',
+                    isWinner: false,
+                  }}
+                />
+              ),
+              image: assets?.[2] || { uri: '' },
+            },
+            {
+              id: '5',
               content: (
                 <MediaCardContent
                   title="Prime présente le maillot LEC 2024"
@@ -60,13 +108,7 @@ export default function HomeScreen() {
                   }}
                 />
               ),
-              imagePath: 'https://i2.ytimg.com/vi/-RC1p9HWGaY/hqdefault.jpg',
-            },
-            {
-              id: '3',
-              content: <View />,
-              imagePath:
-                'https://fastly.picsum.photos/id/312/1280/720.jpg?hmac=DuZFMQOu8A5pIW05E42Ue5H6ozEMqtopekRTElSYtlI',
+              image: { uri: 'https://i.ytimg.com/vi/-RC1p9HWGaY/maxresdefault.jpg' },
             },
           ]}
         />

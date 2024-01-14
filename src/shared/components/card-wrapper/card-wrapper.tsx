@@ -1,6 +1,6 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
-import PagerView, { PagerViewOnPageScrollEvent } from 'react-native-pager-view';
+import PagerView from 'react-native-pager-view';
 
 import { Card } from '../card/card';
 
@@ -11,7 +11,7 @@ interface CardWrapperProps {
   cardData: {
     id: string;
     content: React.ReactNode;
-    imagePath: string;
+    image: { uri: string };
   }[];
   height: number;
 }
@@ -35,7 +35,7 @@ export const CardWrapper = ({ cardData, height }: CardWrapperProps) => {
         }}>
         {cardData.map((card) => (
           <View style={{ marginHorizontal: 16 }} key={card.id}>
-            <Card imagePath={card.imagePath}>{card.content}</Card>
+            <Card image={card.image}>{card.content}</Card>
           </View>
         ))}
       </PagerView>
