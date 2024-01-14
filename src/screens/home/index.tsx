@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { LastResults } from './components/last-results';
 import { NextMatches } from './components/next-matches';
 
-import { TextButton } from '~/shared/components/text-button/TextButton';
+import { Buttons } from '~/shared/components/buttons';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { DefaultLayout } from '~/shared/layouts/default-layout';
 import { RootStackParamList } from '~/shared/navigation';
@@ -24,8 +24,8 @@ export default function HomeScreen() {
         max={3}
         viewMoreButton={
           <View style={styles.viewMoreButtonWrapper}>
-            <TextButton
-              title={translate('home.nextMatchesViewMoreText')}
+            <Buttons.Text
+              text={translate('home.nextMatchesViewMoreText')}
               onPress={() => navigation.navigate('calendar')}
             />
           </View>
@@ -35,8 +35,8 @@ export default function HomeScreen() {
         max={3}
         viewMoreButton={
           <View style={styles.viewMoreButtonWrapper}>
-            <TextButton
-              title={translate('home.lastResultsViewMoreText')}
+            <Buttons.Text
+              text={translate('home.lastResultsViewMoreText')}
               onPress={() => navigation.navigate('calendar')}
             />
           </View>
