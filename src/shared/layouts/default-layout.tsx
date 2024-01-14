@@ -17,23 +17,29 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
 
   return (
     <View
-      style={StyleSheet.compose(styles.layout, {
+      style={StyleSheet.compose(styles.appContainer, {
         paddingTop: safeAreaInsets.top,
         paddingBottom: safeAreaInsets.bottom,
       })}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <KarmineLogo color={styles.headerLogo.color} width={38} height={36} />
+        <View style={styles.layout}>
+          <View style={styles.header}>
+            <KarmineLogo color={styles.headerLogo.color} width={38} height={36} />
+          </View>
+          {children}
+          <View style={styles.endSpacer} />
         </View>
-        {children}
       </ScrollView>
     </View>
   );
 };
 
 const getStyles = createStylesheet((theme) => ({
-  layout: {
+  appContainer: {
     backgroundColor: theme.colors.background,
+    flex: 1,
+  },
+  layout: {
     flex: 1,
     paddingHorizontal: 16,
   },
@@ -45,5 +51,8 @@ const getStyles = createStylesheet((theme) => ({
   },
   headerLogo: {
     color: theme.colors.foreground,
+  },
+  endSpacer: {
+    height: 16,
   },
 }));

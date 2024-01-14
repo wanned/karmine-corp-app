@@ -16,6 +16,23 @@ export const frTranslations: Translations['fr'] = {
   },
   settings: {
     screenName: 'Paramètres',
+    notifications: {
+      title: 'Notifications',
+      description: 'Choisissez les matchs pour lesquels vous recevrez des notifications.',
+    },
+    spoiler: {
+      title: 'Spoiler',
+      showResults: 'Afficher les résultats',
+    },
+    language: {
+      title: 'Langue',
+      description: "Choisissez la langue de l'application.",
+      languages: {
+        en: 'English',
+        es: 'Español',
+        fr: 'Français',
+      },
+    },
   },
   games: {
     LeagueOfLegendsLFL: 'LFL',

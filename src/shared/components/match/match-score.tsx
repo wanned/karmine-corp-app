@@ -1,9 +1,9 @@
-import { format } from 'date-fns';
 import { View } from 'react-native';
 
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
+import { useDate } from '~/shared/hooks/use-date';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { styleTokens } from '~/shared/styles/tokens';
@@ -19,6 +19,8 @@ interface MatchScoreProps {
 }
 
 export const MatchScore = ({ date, status, game, bo, children }: MatchScoreProps) => {
+  const { formatDate, formatTime } = useDate();
+
   const styles = getStyles(styleTokens);
 
   const translate = useTranslate();
@@ -27,7 +29,7 @@ export const MatchScore = ({ date, status, game, bo, children }: MatchScoreProps
     <View style={styles.container}>
       <View style={styles.titleHeader}>
         <Typographies.Label color={styles.titleDate.color}>
-          {format(date, "dd MMM yyyy · HH'H' ")}
+          {formatDate(date)} · {formatTime(date)}{' '}
         </Typographies.Label>
         <Typographies.Label color={styles.titleGame.color}>
           · {translate(`games.${game}`)}
