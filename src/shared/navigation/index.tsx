@@ -34,7 +34,10 @@ export default function RootStack() {
         <Stack.Screen name="calendar" component={CalendarScreen} />
         <Stack.Screen name="teams" component={TeamsScreen} />
         <Stack.Screen name="settings" component={SettingsScreen} />
-        <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Group
+          screenOptions={{
+            presentation: 'fullScreenModal',
+          }}>
           <Stack.Screen name="nextMatchesModal" component={NextMatchesModal} />
           <Stack.Screen name="lastResultsModal" component={LastResultsModal} />
         </Stack.Group>

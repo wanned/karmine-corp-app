@@ -1,6 +1,6 @@
 import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, VirtualizedList } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
 import { MatchScore } from '~/shared/components/match/match-score';
@@ -35,40 +35,61 @@ export const LastResultsModal = React.memo(() => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconContainer}>
         <Iconify icon="solar:arrow-left-linear" size={28} color={styles.icon.color} />
       </TouchableOpacity>
       <View style={styles.matchesContainer}>
-        {matchs.map(
-          ({ data: match }, index) =>
+        <VirtualizedList
+          data={matchs}
+          getItem={(data, index) => data[index]}
+          getItemCount={(data) => data.length}
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item: { data: match } }) =>
             match && (
               <MatchScore
-                key={index}
+                key={match.id}
                 date={match.date}
                 status="upcoming"
                 bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}
                 game={match.matchDetails.game}>
-                {match.teams.map((team, index) => (
-                  <MatchTeam
-                    key={index}
-                    logo={team.logoUrl}
-                    name={team.name}
-                    isWinner={team.score?.isWinner}
-                    score={
-                      team.score === undefined
-                        ? '-'
-                        : team.score.scoreType === 'top'
-                          ? `TOP ${team.score.score}`
-                          : team.score.score
-                    }
-                  />
-                ))}
+                {match.teams.map(
+                  (
+                    team: {
+                      logoUrl: string;
+                      name: string;
+                      score:
+                        | {
+                            isWinner: boolean | undefined;
+                            scoreType: string;
+                            score: string | number;
+                          }
+                        | undefined;
+                    },
+                    index: number
+                  ) => (
+                    <MatchTeam
+                      key={`${match.id}-${team.name}-${index}`}
+                      logo={team.logoUrl}
+                      name={team.name}
+                      isWinner={team.score?.isWinner}
+                      score={
+                        team.score === undefined
+                          ? '-'
+                          : team.score.scoreType === 'top'
+                            ? `TOP ${team.score.score}`
+                            : team.score.score
+                      }
+                    />
+                  )
+                )}
               </MatchScore>
             )
-        )}
+          }
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 });
 
@@ -85,9 +106,10 @@ const getStyles = createStylesheet((theme) => ({
   matchesContainer: {
     marginTop: 8,
     paddingHorizontal: 16,
-    paddingBottom: 16,
+    flex: 1,
   },
   iconContainer: {
+    marginTop: 40,
     padding: 20,
   },
   icon: {
