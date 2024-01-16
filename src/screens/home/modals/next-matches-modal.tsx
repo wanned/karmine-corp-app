@@ -1,8 +1,5 @@
-import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { TouchableOpacity, View, VirtualizedList } from 'react-native';
-import { Iconify } from 'react-native-iconify';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, VirtualizedList } from 'react-native';
 
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
@@ -10,7 +7,8 @@ import { Typographies } from '~/shared/components/typographies';
 import { useNextMatches } from '~/shared/hooks/data/use-next-matches';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
-import { RootStackParamList } from '~/shared/navigation';
+import { DefaultLayout } from '~/shared/layouts/default-layout';
+import { ModalLayout } from '~/shared/layouts/modal-layout';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 export const NextMatchesModal = React.memo(() => {
@@ -18,34 +16,20 @@ export const NextMatchesModal = React.memo(() => {
 
   const translate = useTranslate();
 
-  const safeAreaInsets = useSafeAreaInsets();
-
-  const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
-
   const matchs = useNextMatches();
 
   if (!matchs.length) {
     return (
-      <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{ ...styles.iconContainer, marginTop: safeAreaInsets.top }}>
-          <Iconify icon="solar:arrow-left-linear" size={28} color={styles.icon.color} />
-        </TouchableOpacity>
+      <DefaultLayout>
         <View style={styles.noMatchesContainer}>
           <Typographies.Label>{translate('home.noMatches')}</Typographies.Label>
         </View>
-      </View>
+      </DefaultLayout>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={{ ...styles.iconContainer, marginTop: safeAreaInsets.top }}>
-        <Iconify icon="solar:arrow-left-linear" size={28} color={styles.icon.color} />
-      </TouchableOpacity>
+    <ModalLayout>
       <View style={styles.matchesContainer}>
         <VirtualizedList
           data={matchs}
@@ -74,15 +58,11 @@ export const NextMatchesModal = React.memo(() => {
           }
         />
       </View>
-    </View>
+    </ModalLayout>
   );
 });
 
 const getStyles = createStylesheet((theme) => ({
-  container: {
-    backgroundColor: theme.colors.background,
-    flex: 1,
-  },
   noMatchesContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -91,11 +71,5 @@ const getStyles = createStylesheet((theme) => ({
   matchesContainer: {
     paddingHorizontal: 16,
     flex: 1,
-  },
-  iconContainer: {
-    padding: 20,
-  },
-  icon: {
-    color: theme.colors.foreground,
   },
 }));
