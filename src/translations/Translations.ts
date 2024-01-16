@@ -17,6 +17,8 @@ export type Translations = Record<
     };
     teams: {
       screenName: string;
+      leaderboardTitle: string;
+      playersTitle: string;
     };
     settings: {
       screenName: string;

@@ -13,6 +13,8 @@ export const enTranslations: Translations['en'] = {
   },
   teams: {
     screenName: 'Teams',
+    leaderboardTitle: 'Leaderboard',
+    playersTitle: 'Members',
   },
   settings: {
     screenName: 'Settings',

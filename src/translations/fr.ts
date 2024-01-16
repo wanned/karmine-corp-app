@@ -12,7 +12,9 @@ export const frTranslations: Translations['fr'] = {
     screenName: 'Calendrier',
   },
   teams: {
-    screenName: 'Equipes',
+    screenName: 'Équipes',
+    leaderboardTitle: 'Classement',
+    playersTitle: 'Membres',
   },
   settings: {
     screenName: 'Paramètres',
