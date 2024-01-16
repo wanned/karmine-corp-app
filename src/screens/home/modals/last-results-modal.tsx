@@ -2,6 +2,7 @@ import { NavigationContainerRef, useNavigation } from '@react-navigation/native'
 import React from 'react';
 import { TouchableOpacity, View, VirtualizedList } from 'react-native';
 import { Iconify } from 'react-native-iconify';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
@@ -17,6 +18,8 @@ export const LastResultsModal = React.memo(() => {
 
   const translate = useTranslate();
 
+  const safeAreaInsets = useSafeAreaInsets();
+
   const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
 
   const matchs = useMatchesResults();
@@ -24,7 +27,9 @@ export const LastResultsModal = React.memo(() => {
   if (!matchs.length) {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{ ...styles.iconContainer, marginTop: safeAreaInsets.top }}>
           <Iconify icon="solar:arrow-left-linear" size={28} color={styles.icon.color} />
         </TouchableOpacity>
         <View style={styles.noMatchesContainer}>
@@ -36,7 +41,9 @@ export const LastResultsModal = React.memo(() => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconContainer}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{ ...styles.iconContainer, marginTop: safeAreaInsets.top }}>
         <Iconify icon="solar:arrow-left-linear" size={28} color={styles.icon.color} />
       </TouchableOpacity>
       <View style={styles.matchesContainer}>
@@ -44,7 +51,7 @@ export const LastResultsModal = React.memo(() => {
           data={matchs}
           getItem={(data, index) => data[index]}
           getItemCount={(data) => data.length}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.data.karmineEvent.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item: { data: match } }) =>
             match && (
@@ -109,7 +116,6 @@ const getStyles = createStylesheet((theme) => ({
     flex: 1,
   },
   iconContainer: {
-    marginTop: 40,
     padding: 20,
   },
   icon: {

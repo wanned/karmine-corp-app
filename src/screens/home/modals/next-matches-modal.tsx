@@ -2,6 +2,7 @@ import { NavigationContainerRef, useNavigation } from '@react-navigation/native'
 import React from 'react';
 import { TouchableOpacity, View, VirtualizedList } from 'react-native';
 import { Iconify } from 'react-native-iconify';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
@@ -17,6 +18,8 @@ export const NextMatchesModal = React.memo(() => {
 
   const translate = useTranslate();
 
+  const safeAreaInsets = useSafeAreaInsets();
+
   const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
 
   const matchs = useNextMatches();
@@ -24,7 +27,9 @@ export const NextMatchesModal = React.memo(() => {
   if (!matchs.length) {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{ ...styles.iconContainer, marginTop: safeAreaInsets.top }}>
           <Iconify icon="solar:arrow-left-linear" size={28} color={styles.icon.color} />
         </TouchableOpacity>
         <View style={styles.noMatchesContainer}>
@@ -36,7 +41,9 @@ export const NextMatchesModal = React.memo(() => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconContainer}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{ ...styles.iconContainer, marginTop: safeAreaInsets.top }}>
         <Iconify icon="solar:arrow-left-linear" size={28} color={styles.icon.color} />
       </TouchableOpacity>
       <View style={styles.matchesContainer}>
@@ -44,11 +51,10 @@ export const NextMatchesModal = React.memo(() => {
           data={matchs}
           getItem={(data, index) => data[index]}
           getItemCount={(data) => data.length}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.data.karmineEvent.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item: { data: match } }) =>
             match && (
-              // TODO: check why there is this error on first render : Warning: Each child in a list should have a unique "key" prop.
               <MatchScore
                 key={match.id}
                 date={match.date}
@@ -87,7 +93,6 @@ const getStyles = createStylesheet((theme) => ({
     flex: 1,
   },
   iconContainer: {
-    marginTop: 40,
     padding: 20,
   },
   icon: {
