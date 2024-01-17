@@ -7,6 +7,7 @@ export const frTranslations: Translations['fr'] = {
     nextMatchesViewMoreText: 'Voir tous les matchs',
     lastResultsTitle: 'Les derniers résultats',
     lastResultsViewMoreText: 'Voir tous les résultats',
+    noMatches: 'Aucun matchs',
   },
   calendar: {
     screenName: 'Calendrier',

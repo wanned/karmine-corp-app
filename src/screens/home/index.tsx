@@ -26,7 +26,7 @@ export default function HomeScreen() {
           <View style={styles.viewMoreButtonWrapper}>
             <Buttons.Text
               text={translate('home.nextMatchesViewMoreText')}
-              onPress={() => navigation.navigate('calendar')}
+              onPress={() => navigation.navigate('nextMatchesModal')}
             />
           </View>
         }
@@ -37,7 +37,7 @@ export default function HomeScreen() {
           <View style={styles.viewMoreButtonWrapper}>
             <Buttons.Text
               text={translate('home.lastResultsViewMoreText')}
-              onPress={() => navigation.navigate('calendar')}
+              onPress={() => navigation.navigate('lastResultsModal')}
             />
           </View>
         }
