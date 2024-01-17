@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Iconify } from 'react-native-iconify';
 
 import { Typographies } from '~/shared/components/typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
@@ -27,6 +28,14 @@ export const MatchTeam = React.memo<MatchTeamProps>(
             style={{ width: 24, height: 24 }}
           />
           <Typographies.Body color={styles.teamScore.color}>{name}</Typographies.Body>
+          {isWinner && (
+            <Iconify
+              icon="solar:crown-bold"
+              size={16}
+              color={styles.crown.color}
+              style={styles.crown}
+            />
+          )}
         </View>
         <Typographies.Body color={styles.teamScore.color}>{score.toString()}</Typographies.Body>
       </View>
@@ -48,5 +57,10 @@ const getStyles = createStylesheet((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  crown: {
+    position: 'relative',
+    color: '#F9D370',
+    top: -1.5,
   },
 }));
