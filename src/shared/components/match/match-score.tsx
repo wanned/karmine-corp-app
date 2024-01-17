@@ -1,3 +1,4 @@
+import React from 'react';
 import { View } from 'react-native';
 
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
@@ -18,33 +19,35 @@ interface MatchScoreProps {
   bo?: number;
 }
 
-export const MatchScore = ({ date, status, game, bo, children }: MatchScoreProps) => {
-  const { formatDate, formatTime } = useDate();
+export const MatchScore = React.memo<MatchScoreProps>(
+  ({ date, status, game, bo, children }: MatchScoreProps) => {
+    const { formatDate, formatTime } = useDate();
 
-  const styles = getStyles(styleTokens);
+    const styles = getStyles(styleTokens);
 
-  const translate = useTranslate();
+    const translate = useTranslate();
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.titleHeader}>
-        <Typographies.Label color={styles.titleDate.color}>
-          {formatDate(date)} · {formatTime(date)}{' '}
-        </Typographies.Label>
-        <Typographies.Label color={styles.titleGame.color}>
-          · {translate(`games.${game}`)}
-          {bo !== undefined ? ` · BO${bo}` : ''}
-        </Typographies.Label>
-        {status === 'in-progress' && (
-          <View style={styles.livePillWrapper}>
-            <LivePill />
-          </View>
-        )}
+    return (
+      <View style={styles.container}>
+        <View style={styles.titleHeader}>
+          <Typographies.Label color={styles.titleDate.color}>
+            {formatDate(date)} · {formatTime(date)}{' '}
+          </Typographies.Label>
+          <Typographies.Label color={styles.titleGame.color}>
+            · {translate(`games.${game}`)}
+            {bo !== undefined ? ` · BO${bo}` : ''}
+          </Typographies.Label>
+          {status === 'in-progress' && (
+            <View style={styles.livePillWrapper}>
+              <LivePill />
+            </View>
+          )}
+        </View>
+        <View>{children}</View>
       </View>
-      <View>{children}</View>
-    </View>
-  );
-};
+    );
+  }
+);
 
 const getStyles = createStylesheet((theme) => ({
   container: {

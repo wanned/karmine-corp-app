@@ -13,6 +13,7 @@ export type Translations = Record<
       lastResultsViewMoreText: string;
       views: string;
       likes: string;
+      noMatches: string;
     };
     calendar: {
       screenName: string;

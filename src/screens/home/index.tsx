@@ -5,10 +5,10 @@ import { Linking, View } from 'react-native';
 import { LastResults } from './components/last-results';
 import { NextMatches } from './components/next-matches';
 
+import { Buttons } from '~/shared/components/buttons';
 import { GameCardContent } from '~/shared/components/card/card-content/game-card-content';
 import { MediaCardContent } from '~/shared/components/card/card-content/media-card-content';
 import { CardWrapper } from '~/shared/components/card-wrapper/card-wrapper';
-import { TextButton } from '~/shared/components/text-button/TextButton';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { DefaultLayout } from '~/shared/layouts/default-layout';
 import { RootStackParamList } from '~/shared/navigation';
@@ -117,9 +117,9 @@ export default function HomeScreen() {
         max={3}
         viewMoreButton={
           <View style={styles.viewMoreButtonWrapper}>
-            <TextButton
-              title={translate('home.nextMatchesViewMoreText')}
-              onPress={() => navigation.navigate('calendar')}
+            <Buttons.Text
+              text={translate('home.nextMatchesViewMoreText')}
+              onPress={() => navigation.navigate('nextMatchesModal')}
             />
           </View>
         }
@@ -128,9 +128,9 @@ export default function HomeScreen() {
         max={3}
         viewMoreButton={
           <View style={styles.viewMoreButtonWrapper}>
-            <TextButton
-              title={translate('home.lastResultsViewMoreText')}
-              onPress={() => navigation.navigate('calendar')}
+            <Buttons.Text
+              text={translate('home.lastResultsViewMoreText')}
+              onPress={() => navigation.navigate('lastResultsModal')}
             />
           </View>
         }

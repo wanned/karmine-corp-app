@@ -49,7 +49,7 @@
   "eslintConfig": {
     "extends": "universe/native"
   },
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "src/App.tsx",
   "expo": {
     "install": {
       "exclude": [
