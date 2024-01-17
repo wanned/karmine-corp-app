@@ -21,7 +21,7 @@ export const LastResults = ({ viewMoreButton, max }: LastResultsProps) => {
   return (
     <Section title={translate('home.lastResultsTitle')}>
       {matchs.slice(0, max).map(
-        ({ data: match }, index) =>
+        (match, index) =>
           match && (
             <MatchScore
               key={index}

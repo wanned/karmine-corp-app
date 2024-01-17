@@ -34,9 +34,9 @@ export const NextMatchesModal = React.memo(() => {
           data={matchs}
           getItem={(data, index) => data[index]}
           getItemCount={(data) => data.length}
-          keyExtractor={(item) => item.data.karmineEvent.id}
+          keyExtractor={(item) => item.karmineEvent.id}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item: { data: match } }) =>
+          renderItem={({ item: match }) =>
             match && (
               <MatchScore
                 key={match.id}

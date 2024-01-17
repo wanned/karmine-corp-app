@@ -7,6 +7,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
 import { View } from 'react-native';
 
+import { useInitMatchesResults } from './shared/hooks/data/use-matches-results';
+import { useInitNextMatches } from './shared/hooks/data/use-next-matches';
 import RootStack from './shared/navigation';
 
 import { SettingsProvider } from '~/shared/contexts/settings-context';
@@ -61,6 +63,9 @@ export default function App() {
 }
 
 const _App = ({ onLayoutRootView }: { onLayoutRootView: () => void }) => {
+  useInitNextMatches();
+  useInitMatchesResults();
+
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <RootStack />
