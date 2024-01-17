@@ -7,7 +7,6 @@ import { Typographies } from '~/shared/components/typographies';
 import { useNextMatches } from '~/shared/hooks/data/use-next-matches';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
-import { DefaultLayout } from '~/shared/layouts/default-layout';
 import { ModalLayout } from '~/shared/layouts/modal-layout';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
@@ -20,11 +19,11 @@ export const NextMatchesModal = React.memo(() => {
 
   if (!matchs.length) {
     return (
-      <DefaultLayout>
+      <ModalLayout>
         <View style={styles.noMatchesContainer}>
           <Typographies.Label>{translate('home.noMatches')}</Typographies.Label>
         </View>
-      </DefaultLayout>
+      </ModalLayout>
     );
   }
 
