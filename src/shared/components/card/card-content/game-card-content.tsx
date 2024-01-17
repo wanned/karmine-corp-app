@@ -8,6 +8,7 @@ import { Typographies } from '../../typographies';
 import { OutlinedNumber } from '~/shared/components/card/card-content/outlined-numbers';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
+import { checkSingleNumber } from '../utils/check-single-number';
 
 interface TeamProps {
   logo: string;
@@ -19,9 +20,14 @@ interface TeamProps {
 interface GameCardContentProps {
   teamLeft: TeamProps;
   teamRight: TeamProps;
+  showLivePill?: boolean;
 }
 
-export const GameCardContent = ({ teamLeft, teamRight }: GameCardContentProps) => {
+export const GameCardContent = ({
+  teamLeft,
+  teamRight,
+  showLivePill = false,
+}: GameCardContentProps) => {
   const styles = useStyles(getStyles);
 
   return (
@@ -30,9 +36,11 @@ export const GameCardContent = ({ teamLeft, teamRight }: GameCardContentProps) =
         <Typographies.Label color={styles.header.color}>
           17 SEPT. 2023 · LEC · BO5
         </Typographies.Label>
-        <View style={styles.livePill}>
-          <LivePill />
-        </View>
+        {showLivePill && (
+          <View style={styles.livePill}>
+            <LivePill />
+          </View>
+        )}
       </View>
       <View style={styles.teamsContainer}>
         <TeamScore {...teamLeft} position="left" />
@@ -87,8 +95,8 @@ const TeamScore = ({ logo, name, score, isWinner, position }: TeamScoreProps) =>
         <Typographies.VeryBig color={styles.teamNameContainer.color}>
           {score.toString()}
         </Typographies.VeryBig>
-      ) : ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(score.toString()) ? (
-        <OutlinedNumber>{Number(score) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}</OutlinedNumber>
+      ) : checkSingleNumber(score) ? (
+        <OutlinedNumber>{score}</OutlinedNumber>
       ) : (
         <Typographies.VeryBig color={styles.teamNameContainer.color}>
           {score.toString()}

@@ -8,7 +8,7 @@ import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 interface CardWrapperProps {
-  cardData: {
+  cardsData: {
     id: string;
     content: React.ReactNode;
     image: { uri: string };
@@ -16,7 +16,7 @@ interface CardWrapperProps {
   height: number;
 }
 
-export const CardWrapper = ({ cardData, height }: CardWrapperProps) => {
+export const CardWrapper = ({ cardsData, height }: CardWrapperProps) => {
   const styles = useStyles(getStyles);
   const { width } = useWindowDimensions();
 
@@ -33,14 +33,14 @@ export const CardWrapper = ({ cardData, height }: CardWrapperProps) => {
         onPageSelected={({ nativeEvent: { position } }) => {
           setActivePageIndex(position);
         }}>
-        {cardData.map((card) => (
+        {cardsData.map((card) => (
           <View style={{ marginHorizontal: 16 }} key={card.id}>
             <Card image={card.image}>{card.content}</Card>
           </View>
         ))}
       </PagerView>
       <View style={styles.dots}>
-        {cardData?.map((_, index) => (
+        {cardsData?.map((_, index) => (
           <View style={[styles.dot, activePageIndex === index && styles.activeDot]} key={index} />
         ))}
       </View>

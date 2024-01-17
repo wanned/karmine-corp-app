@@ -8,13 +8,10 @@ import Outlined6 from './6';
 import Outlined7 from './7';
 import Outlined8 from './8';
 import Outlined9 from './9';
+import { SingleNumber } from '../../types/single-number';
 
-export const OutlinedNumber = ({
-  children,
-}: {
-  children: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-}) => {
-  switch (children) {
+export const OutlinedNumber = ({ children }: { children: SingleNumber | `${SingleNumber}` }) => {
+  switch (Number(children)) {
     case 0:
       return <Outlined0 />;
     case 1:

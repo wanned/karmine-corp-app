@@ -1,9 +1,9 @@
 import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
-import { useAssets } from 'expo-asset';
 import { Linking, View } from 'react-native';
 
 import { LastResults } from './components/last-results';
 import { NextMatches } from './components/next-matches';
+import { useGameImageAssets } from './hooks/use-game-image-assets';
 
 import { Buttons } from '~/shared/components/buttons';
 import { GameCardContent } from '~/shared/components/card/card-content/game-card-content';
@@ -16,12 +16,7 @@ import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { styleTokens } from '~/shared/styles/tokens';
 
 export default function HomeScreen() {
-  const [assets, error] = useAssets([
-    require('~/../assets/game-images/lol.png'),
-    require('~/../assets/game-images/rl.png'),
-    require('~/../assets/game-images/valorant.png'),
-    require('~/../assets/game-images/tft.png'),
-  ]);
+  const gameImageAssets = useGameImageAssets();
 
   const styles = getStyles(styleTokens);
 
@@ -34,7 +29,7 @@ export default function HomeScreen() {
       <View style={styles.cardWrapperContainer}>
         <CardWrapper
           height={160}
-          cardData={[
+          cardsData={[
             {
               id: '1',
               content: (
@@ -53,7 +48,7 @@ export default function HomeScreen() {
                   }}
                 />
               ),
-              image: assets?.[0] || { uri: '' },
+              image: gameImageAssets?.lol || { uri: '' },
             },
             {
               id: '2',
@@ -73,7 +68,7 @@ export default function HomeScreen() {
                   }}
                 />
               ),
-              image: assets?.[1] || { uri: '' },
+              image: gameImageAssets?.rl || { uri: '' },
             },
             {
               id: '3',
@@ -93,7 +88,7 @@ export default function HomeScreen() {
                   }}
                 />
               ),
-              image: assets?.[2] || { uri: '' },
+              image: gameImageAssets?.valorant || { uri: '' },
             },
             {
               id: '5',
