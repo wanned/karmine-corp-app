@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TabBar } from './tab-bar';
 
 import CalendarScreen from '~/screens/calendar';
+import { GameDetailsModal } from '~/screens/game-details-modal';
 import HomeScreen from '~/screens/home';
 import { LastResultsModal } from '~/screens/home/modals/last-results-modal';
 import { NextMatchesModal } from '~/screens/home/modals/next-matches-modal';
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   settings: undefined;
   nextMatchesModal: undefined;
   lastResultsModal: undefined;
+  gameDetailsModal: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -40,6 +42,7 @@ export default function RootStack() {
           }}>
           <Stack.Screen name="nextMatchesModal" component={NextMatchesModal} />
           <Stack.Screen name="lastResultsModal" component={LastResultsModal} />
+          <Stack.Screen name="gameDetailsModal" component={GameDetailsModal} />
         </Stack.Group>
       </Stack.Navigator>
       <TabBar />

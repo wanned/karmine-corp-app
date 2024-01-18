@@ -10,28 +10,36 @@ import Outlined8 from './8';
 import Outlined9 from './9';
 import { SingleNumber } from '../../types/single-number';
 
-export const OutlinedNumber = ({ children }: { children: SingleNumber | `${SingleNumber}` }) => {
+export interface OutlinedNumberSvgProps {
+  size: 'small' | 'large';
+}
+
+interface OutlinedNumberProps extends OutlinedNumberSvgProps {
+  children: SingleNumber | `${SingleNumber}`;
+}
+
+export const OutlinedNumber = ({ children, size }: OutlinedNumberProps) => {
   switch (Number(children)) {
     case 0:
-      return <Outlined0 />;
+      return <Outlined0 size={size} />;
     case 1:
-      return <Outlined1 />;
+      return <Outlined1 size={size} />;
     case 2:
-      return <Outlined2 />;
+      return <Outlined2 size={size} />;
     case 3:
-      return <Outlined3 />;
+      return <Outlined3 size={size} />;
     case 4:
-      return <Outlined4 />;
+      return <Outlined4 size={size} />;
     case 5:
-      return <Outlined5 />;
+      return <Outlined5 size={size} />;
     case 6:
-      return <Outlined6 />;
+      return <Outlined6 size={size} />;
     case 7:
-      return <Outlined7 />;
+      return <Outlined7 size={size} />;
     case 8:
-      return <Outlined8 />;
+      return <Outlined8 size={size} />;
     case 9:
-      return <Outlined9 />;
+      return <Outlined9 size={size} />;
     default:
       return null;
   }

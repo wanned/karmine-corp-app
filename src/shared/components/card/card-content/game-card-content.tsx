@@ -4,11 +4,11 @@ import { StyleSheet, View } from 'react-native';
 
 import { LivePill } from '../../live-pill/live-pill';
 import { Typographies } from '../../typographies';
+import { checkSingleNumber } from '../utils/check-single-number';
 
 import { OutlinedNumber } from '~/shared/components/card/card-content/outlined-numbers';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
-import { checkSingleNumber } from '../utils/check-single-number';
 
 interface TeamProps {
   logo: string;
@@ -96,7 +96,7 @@ const TeamScore = ({ logo, name, score, isWinner, position }: TeamScoreProps) =>
           {score.toString()}
         </Typographies.VeryBig>
       ) : checkSingleNumber(score) ? (
-        <OutlinedNumber>{score}</OutlinedNumber>
+        <OutlinedNumber size="small">{score}</OutlinedNumber>
       ) : (
         <Typographies.VeryBig color={styles.teamNameContainer.color}>
           {score.toString()}
