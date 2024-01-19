@@ -2,9 +2,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { TabBar } from './tab-bar';
+import { Match, MatchDetails } from '../types/data/Matchs';
 
 import CalendarScreen from '~/screens/calendar';
 import { GameDetailsModal } from '~/screens/game-details-modal';
+import { Player } from '~/screens/game-details-modal/components/types/player';
 import HomeScreen from '~/screens/home';
 import { LastResultsModal } from '~/screens/home/modals/last-results-modal';
 import { NextMatchesModal } from '~/screens/home/modals/next-matches-modal';
@@ -18,7 +20,10 @@ export type RootStackParamList = {
   settings: undefined;
   nextMatchesModal: undefined;
   lastResultsModal: undefined;
-  gameDetailsModal: undefined;
+  gameDetailsModal: {
+    match: Match;
+    gamesComponent: (props: { match: Match }) => React.ReactNode;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

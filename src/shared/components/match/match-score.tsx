@@ -1,6 +1,7 @@
 import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { LolGames } from '~/screens/game-details-modal/components/lol-games';
 
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 import { LivePill } from '~/shared/components/live-pill/live-pill';
@@ -34,7 +35,104 @@ export const MatchScore = React.memo<MatchScoreProps>(
     return (
       <TouchableOpacity
         style={styles.container}
-        onPress={() => navigation.navigate('gameDetailsModal')}>
+        onPress={() =>
+          navigation.navigate('gameDetailsModal', {
+            gamesComponent: LolGames as any, // FIXME: remove any
+            match: {
+              date: new Date('2021-06-26T17:00:00.000Z'),
+              streamLink: 'https://www.twitch.tv/karminecorp',
+              matchDetails: {
+                bo: 1,
+                game: KarmineApi.CompetitionName.LeagueOfLegendsLEC,
+                games: [
+                  {
+                    duration: '35:32',
+                    score: {
+                      blue: 0,
+                      red: 0,
+                    },
+                    draft: {
+                      blue: {
+                        picks: [
+                          {
+                            champion: {
+                              name: 'Sylas',
+                              imageUrl:
+                                'https://static.wikia.nocookie.net/leagueoflegends/images/7/7d/Sylas_OriginalCentered.jpg',
+                            },
+                            player: 'hello',
+                          },
+                        ],
+                      },
+                      red: {
+                        picks: [
+                          {
+                            champion: {
+                              name: 'Sylas',
+                              imageUrl:
+                                'https://static.wikia.nocookie.net/leagueoflegends/images/7/7d/Sylas_OriginalCentered.jpg',
+                            },
+                            player: 'hello',
+                          },
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+              teams: [
+                {
+                  players: [
+                    {
+                      name: 'Saken',
+                      picture: 'https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png',
+                      position: 'left',
+                      role: 'adc',
+                    },
+                    {
+                      name: 'Cabochard',
+                      picture: 'https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png',
+                      position: 'left',
+                      role: 'jungle',
+                    },
+                    {
+                      name: 'Bo',
+                      picture: 'https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png',
+                      position: 'left',
+                      role: 'mid',
+                    },
+                  ],
+                  logoUrl: 'https://medias.kametotv.fr/karmine/teams_logo/KC.png',
+                  name: 'Karmine Corp',
+                },
+                {
+                  players: [
+                    {
+                      name: 'Upset',
+                      picture: 'https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png',
+                      position: 'right',
+                      role: 'adc',
+                    },
+                    {
+                      name: 'Targamas',
+                      picture: 'https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png',
+                      position: 'right',
+                      role: 'adc',
+                    },
+                    {
+                      name: 'Vatira',
+                      picture: 'https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png',
+                      position: 'right',
+                      role: 'adc',
+                    },
+                  ],
+                  logoUrl: 'https://medias.kametotv.fr/karmine/teams_logo/KC.png',
+                  name: 'Karmine Corp',
+                },
+              ],
+            },
+          })
+        }>
         <View style={styles.titleHeader}>
           <Typographies.Label color={styles.titleDate.color}>
             {formatDate(date)} · {formatTime(date)}{' '}

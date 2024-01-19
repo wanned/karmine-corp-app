@@ -1,27 +1,30 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { View } from 'react-native';
+import { LogBox, View } from 'react-native';
 
+import { Game } from './components/game';
 import { Player } from './components/player';
 import { TeamScore } from './components/team-score';
-import { Player as PlayerType } from './components/types/player';
 import { useGameImageAssets } from '../home/hooks/use-game-image-assets';
 
 import { Section } from '~/shared/components/section/section';
-import { Typographies } from '~/shared/components/typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { ModalLayout } from '~/shared/layouts/modal-layout';
+import { RootStackParamList } from '~/shared/navigation';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
-interface GameDetailsModalProps {
-  players: PlayerType[];
-}
+interface GameDetailsModalProps
+  extends NativeStackScreenProps<RootStackParamList, 'gameDetailsModal'> {}
 
-export const GameDetailsModal = React.memo(({ players }: GameDetailsModalProps) => {
+LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']);
+
+export const GameDetailsModal = React.memo(({ route: { params } }: GameDetailsModalProps) => {
   const theme = useTheme();
+
   const gradientColor = theme.colors.background;
 
   const styles = useStyles(getStyles);
@@ -70,49 +73,36 @@ export const GameDetailsModal = React.memo(({ players }: GameDetailsModalProps) 
         </View>
       </View>
       <View style={styles.gameDetailsContainer}>
-        <Section title="Joueurs">
-          <View style={styles.playersContainer}>
-            <View style={styles.playersTeamContainer}>
-              <Player
-                picture="https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png"
-                name="Targamas"
-                role="top"
-                position="left"
-              />
-              <Player
-                picture="https://medias.kametotv.fr/karmine/players/uploaded/CABOLEC.png"
-                name="Cabochard"
-                role="top"
-                position="left"
-              />
-              <Player
-                picture="https://medias.kametotv.fr/karmine/players/uploaded/CABOLEC.png"
-                name="Cabochard"
-                role="top"
-                position="left"
-              />
+        {params.match.teams[0].players.length > 0 ? (
+          <Section title="Joueurs">
+            <View style={styles.playersContainer}>
+              <View style={styles.playersTeamContainer}>
+                {params.match.teams[0].players.map((player) => (
+                  <Player
+                    key={player.name}
+                    picture={player.picture}
+                    name={player.name}
+                    role={player.role}
+                    position={player.position}
+                  />
+                ))}
+              </View>
+              <View style={styles.playersTeamContainer}>
+                {params.match.teams[1].players.map((player) => (
+                  <Player
+                    key={player.name}
+                    picture={player.picture}
+                    name={player.name}
+                    role={player.role}
+                    position={player.position}
+                  />
+                ))}
+              </View>
             </View>
-            <View style={styles.playersTeamContainer}>
-              <Player
-                picture="https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png"
-                name="Targamas"
-                role="top"
-                position="right"
-              />
-              <Player
-                picture="https://medias.kametotv.fr/karmine/players/uploaded/CABOLEC.png"
-                name="Cabochard"
-                role="top"
-                position="right"
-              />
-              <Player
-                picture="https://medias.kametotv.fr/karmine/players/uploaded/CABOLEC.png"
-                name="Cabochard"
-                role="top"
-                position="right"
-              />
-            </View>
-          </View>
+          </Section>
+        ) : null}
+        <Section title="Games">
+          <params.gamesComponent match={params.match} />
         </Section>
       </View>
     </ModalLayout>
@@ -147,6 +137,7 @@ const getStyles = createStylesheet((theme) => ({
   },
   gameDetailsContainer: {
     paddingHorizontal: 16,
+    gap: 48,
   },
   playersContainer: {
     flexDirection: 'row',
