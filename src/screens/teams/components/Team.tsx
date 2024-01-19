@@ -8,17 +8,16 @@ import { createStylesheet } from '~/shared/styles/create-stylesheet';
 interface TeamProps {
   logo: string;
   name: string;
-  score: string | number;
   top: number;
   wins: number;
   looses: number;
-  isWinner?: boolean;
+  isKarmine?: boolean;
 }
-const Team = ({ logo, name, score, top, wins, looses, isWinner = false }: TeamProps) => {
+const Team = ({ logo, name, top, wins, looses, isKarmine = false }: TeamProps) => {
   const styles = useStyles(getStyles);
 
   return (
-    <View style={StyleSheet.compose(styles.teamScore, isWinner === false && styles.teamScoreLoser)}>
+    <View style={StyleSheet.compose(styles.teamScore, isKarmine && styles.teamScoreKarmine)}>
       <View style={styles.teamScoreLeftContainer}>
         <Image source={{ uri: logo }} cachePolicy="memory-disk" style={{ width: 24, height: 24 }} />
         <Typographies.Body color={styles.teamScore.color}>{name}</Typographies.Body>
@@ -39,12 +38,13 @@ const getStyles = createStylesheet((theme) => ({
     justifyContent: 'space-between',
     color: theme.colors.foreground,
     paddingVertical: 2,
+    opacity: theme.opacities.priority2,
+  },
+  teamScoreKarmine: {
+    opacity: theme.opacities.priority1,
   },
   teamTop: {
     color: theme.colors.accent,
-  },
-  teamScoreLoser: {
-    opacity: theme.opacities.priority2,
   },
   teamScoreLeftContainer: {
     flexDirection: 'row',

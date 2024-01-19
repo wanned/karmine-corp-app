@@ -1,10 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 import { LeaderBoard } from './components/Leaderboard';
-import Player from './components/Player';
 import Team from './components/Team';
 
-import { useTranslate } from '~/shared/hooks/use-translate';
 import { DefaultLayout } from '~/shared/layouts/default-layout';
 
 export default function TeamsScreen() {
@@ -12,9 +10,9 @@ export default function TeamsScreen() {
     <DefaultLayout>
       <LeaderBoard.Container title="League Of Legends LEC">
         <LeaderBoard.Teams>
-          <Team logo="" name="Fnatic" top={1} score={100} wins={13} looses={3} />
-          <Team logo="" name="Karmine Corp" top={2} score={100} wins={13} looses={3} isWinner />
-          <Team logo="" name="G2" top={3} wins={13} looses={3} score={100} />
+          <Team logo="" name="Fnatic" top={1} wins={13} looses={3} />
+          <Team logo="" name="Karmine Corp" top={2} wins={13} looses={3} isKarmine />
+          <Team logo="" name="G2" top={3} wins={13} looses={3} />
         </LeaderBoard.Teams>
         <LeaderBoard.Players
           players={[
