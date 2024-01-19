@@ -91,6 +91,7 @@ export const MatchesScrollLists = React.memo(({ groupedMatches }: MatchesScrollL
       data={groupedMatches}
       showsHorizontalScrollIndicator={false}
       renderItem={({ item: [, matches] }) => <MatchesList matches={matches} />}
+      initialNumToRender={0} // FIXME: Set this to 0 improve switching tab performance, but increase the first showing time of the matches list. We may need to improve rendering performance of the children of MatchesList and set this to 1.
       getItemLayout={(_, index) => ({
         length: screenWidth,
         offset: screenWidth * index,
