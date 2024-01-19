@@ -1,7 +1,7 @@
 import { Match } from '~/shared/types/data/Matchs';
 import { isSameDay } from '~/shared/utils/is-same-day';
 
-type GroupedMatchesByDay = [Date, Match[]][];
+export type GroupedMatchesByDay = [Date, Match[]][];
 
 export const groupMatchesByDay = (matches: (Match | undefined)[]): GroupedMatchesByDay => {
   const groupedMatches: GroupedMatchesByDay = [];
