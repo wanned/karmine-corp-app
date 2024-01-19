@@ -1,5 +1,7 @@
 import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 
+import Player from './Player';
+
 import { Typographies } from '~/shared/components/typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
@@ -15,7 +17,7 @@ interface TeamsProps {
 }
 
 interface PlayersProps {
-  children: React.ReactNode;
+  players: Parameters<typeof Player>[0][];
 }
 
 const Container = ({ children, title }: ContainerProps) => {
@@ -42,7 +44,7 @@ const Teams = ({ children }: TeamsProps) => {
   );
 };
 
-const Players = ({ children }: PlayersProps) => {
+const Players = ({ players }: PlayersProps) => {
   const translate = useTranslate();
 
   const styles = useStyles(getStyles);
@@ -56,9 +58,13 @@ const Players = ({ children }: PlayersProps) => {
       </View>
       <ScrollView
         horizontal
-        contentContainerStyle={StyleSheet.compose(styles.playersScrollContainer, { width })}
+        contentContainerStyle={styles.playersScrollContainer}
         showsHorizontalScrollIndicator={false}>
-        {children}
+        {players
+          .sort((a, b) => (a.isStreaming ? -1 : 1))
+          .map((player) => (
+            <Player {...player} key={player.name} />
+          ))}
       </ScrollView>
     </View>
   );
@@ -81,7 +87,7 @@ const getStyles = createStylesheet((theme) => ({
   playersScrollContainer: {
     marginTop: 4,
     gap: 16,
-    marginLeft: 16,
+    paddingHorizontal: 16,
   },
 }));
 
