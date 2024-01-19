@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   FlatList,
   NativeScrollEvent,
@@ -26,6 +26,11 @@ export const MatchesScrollLists = React.memo(({ groupedMatches }: MatchesScrollL
   const expectedSelectedDate = useRef<Date | null>(null);
   const selectedDate = useSelectedDate(({ selectedDate }) => selectedDate);
   const setSelectedDate = useSelectedDate(({ setSelectedDate }) => setSelectedDate);
+
+  const initialIndex = useMemo(() => {
+    const index = groupedMatches.findIndex(([day]) => isSameDay(day, selectedDate));
+    return index === -1 ? undefined : index;
+  }, [groupedMatches, selectedDate]);
 
   useEffect(() => {
     const index = groupedMatches.findIndex(([day]) => isSameDay(day, selectedDate));
@@ -91,7 +96,8 @@ export const MatchesScrollLists = React.memo(({ groupedMatches }: MatchesScrollL
       data={groupedMatches}
       showsHorizontalScrollIndicator={false}
       renderItem={({ item: [, matches] }) => <MatchesList matches={matches} />}
-      initialNumToRender={0} // FIXME: Set this to 0 improve switching tab performance, but increase the first showing time of the matches list. We may need to improve rendering performance of the children of MatchesList and set this to 1.
+      initialNumToRender={1}
+      initialScrollIndex={initialIndex}
       getItemLayout={(_, index) => ({
         length: screenWidth,
         offset: screenWidth * index,
