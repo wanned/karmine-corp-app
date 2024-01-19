@@ -21,7 +21,7 @@ export const LastResultsModal = React.memo(() => {
     return (
       <ModalLayout>
         <View style={styles.noMatchesContainer}>
-          <Typographies.Label>{translate('home.noMatches')}</Typographies.Label>
+          <Typographies.Label verticalTrim>{translate('home.noMatches')}</Typographies.Label>
         </View>
       </ModalLayout>
     );

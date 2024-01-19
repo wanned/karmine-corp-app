@@ -4,11 +4,11 @@ import { StyleSheet, View } from 'react-native';
 
 import { LivePill } from '../../live-pill/live-pill';
 import { Typographies } from '../../typographies';
+import { checkSingleNumber } from '../utils/check-single-number';
 
 import { OutlinedNumber } from '~/shared/components/card/card-content/outlined-numbers';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
-import { checkSingleNumber } from '../utils/check-single-number';
 
 interface TeamProps {
   logo: string;
@@ -33,7 +33,7 @@ export const GameCardContent = ({
   return (
     <View>
       <View style={styles.header}>
-        <Typographies.Label color={styles.header.color}>
+        <Typographies.Label color={styles.header.color} verticalTrim>
           17 SEPT. 2023 · LEC · BO5
         </Typographies.Label>
         {showLivePill && (
@@ -92,13 +92,13 @@ const TeamScore = ({ logo, name, score, isWinner, position }: TeamScoreProps) =>
       </View>
 
       {isWinner ? (
-        <Typographies.VeryBig color={styles.teamNameContainer.color}>
+        <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
           {score.toString()}
         </Typographies.VeryBig>
       ) : checkSingleNumber(score) ? (
         <OutlinedNumber>{score}</OutlinedNumber>
       ) : (
-        <Typographies.VeryBig color={styles.teamNameContainer.color}>
+        <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
           {score.toString()}
         </Typographies.VeryBig>
       )}
