@@ -38,7 +38,9 @@ export default function CalendarScreen() {
         <DayList />
       </View>
 
-      <MatchesScrollLists groupedMatches={groupedMatches} />
+      <View style={styles.matchesListContainer}>
+        <MatchesScrollLists groupedMatches={groupedMatches} />
+      </View>
     </DefaultLayout>
   );
 }
@@ -48,7 +50,7 @@ const getStyles = createStylesheet((theme) => ({
     marginTop: 8,
     marginBottom: 24,
   },
-  matchesList: {
-    gap: 16,
+  matchesListContainer: {
+    flex: 1,
   },
 }));
