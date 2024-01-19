@@ -23,6 +23,10 @@ export const groupMatchesByDay = (matches: (Match | undefined)[]): GroupedMatche
     }
   });
 
+  if (!groupedMatches.some(([date]) => isSameDay(date, new Date()))) {
+    groupedMatches.push([new Date(), []]);
+  }
+
   groupedMatches.sort(([day1], [day2]) => day1.getTime() - day2.getTime());
 
   return groupedMatches;

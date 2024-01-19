@@ -17,6 +17,7 @@ export type Translations = Record<
     };
     calendar: {
       screenName: string;
+      noMatchesToday: string;
     };
     teams: {
       screenName: string;
