@@ -59,7 +59,6 @@ export const DayList = React.memo(() => {
           index,
         };
       }}
-      // initialScrollIndex={selectedIndex}
     />
   );
 });

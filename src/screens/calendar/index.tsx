@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 
 import { DayList } from './components/day-list';
-import { MatchsScrollLists } from './components/match-score-list';
+import { MatchesScrollLists } from './components/matches-scroll-lists';
 import { useSelectedDate } from './hooks/use-selected-date';
 import { groupMatchesByDay } from './utils/group-matches-by-day';
 
@@ -38,7 +38,7 @@ export default function CalendarScreen() {
         <DayList />
       </View>
 
-      <MatchsScrollLists groupedMatches={groupedMatches} />
+      <MatchesScrollLists groupedMatches={groupedMatches} />
     </DefaultLayout>
   );
 }
