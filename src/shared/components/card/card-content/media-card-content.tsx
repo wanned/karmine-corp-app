@@ -38,7 +38,9 @@ export const MediaCardContent = ({ title, date, likes, views, onPress }: MediaCa
           </Text>
         </View>
         <View style={styles.stats}>
-          <Typographies.Label color={styles.date.color}>{date}</Typographies.Label>
+          <Typographies.Label color={styles.date.color} verticalTrim>
+            {date}
+          </Typographies.Label>
           <Typographies.Body color={styles.views.color}> · </Typographies.Body>
           <Typographies.Body color={styles.views.color}>
             {formatNumber(views)} {translate('home.views')} · {formatNumber(likes)}{' '}

@@ -30,10 +30,10 @@ export const MatchScore = React.memo<MatchScoreProps>(
     return (
       <View style={styles.container}>
         <View style={styles.titleHeader}>
-          <Typographies.Label color={styles.titleDate.color}>
+          <Typographies.Label color={styles.titleDate.color} verticalTrim>
             {formatDate(date)} · {formatTime(date)}{' '}
           </Typographies.Label>
-          <Typographies.Label color={styles.titleGame.color}>
+          <Typographies.Label color={styles.titleGame.color} verticalTrim>
             · {translate(`games.${game}`)}
             {bo !== undefined ? ` · BO${bo}` : ''}
           </Typographies.Label>
