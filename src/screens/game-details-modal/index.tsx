@@ -4,7 +4,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { LogBox, View } from 'react-native';
 
-import { Game } from './components/game';
 import { Player } from './components/player';
 import { TeamScore } from './components/team-score';
 import { useGameImageAssets } from '../home/hooks/use-game-image-assets';
@@ -38,7 +37,7 @@ export const GameDetailsModal = React.memo(({ route: { params } }: GameDetailsMo
       <View style={styles.headerContainer}>
         <Image
           style={styles.headerImage}
-          source={gameImageAssets?.lol || { uri: '' }}
+          source={gameImageAssets?.lol || ({ uri: '' } as any)} // FIXME: remove any
           cachePolicy="memory-disk"
         />
         <LinearGradient
@@ -58,23 +57,27 @@ export const GameDetailsModal = React.memo(({ route: { params } }: GameDetailsMo
         />
         <View style={styles.headerScoreContainer}>
           <TeamScore
-            logo="https://medias.kametotv.fr/karmine/teams_logo/KC.png"
-            score={1}
-            name="Karmine Corp"
+            logo={params.match.teams[0].logoUrl}
+            score={params.match.teams[0].score?.score || '-'}
+            name={params.match.teams[0].name}
             position="left"
+            isWinner={params.match.teams[0].score?.isWinner}
           />
           <TeamScore
-            logo="https://medias.kametotv.fr/karmine/teams_logo/KC.png"
-            score={3}
-            name="Karmine Corp"
+            logo={params.match.teams[1].logoUrl}
+            score={params.match.teams[1].score?.score || '-'}
+            name={params.match.teams[1].name}
             position="right"
-            isWinner
+            isWinner={params.match.teams[1].score?.isWinner}
           />
         </View>
       </View>
       <View style={styles.gameDetailsContainer}>
+        <Section title={translate('gameDetails.gamesTitle')}>
+          <params.gamesComponent match={params.match} />
+        </Section>
         {params.match.teams[0].players.length > 0 ? (
-          <Section title="Joueurs">
+          <Section title={translate('gameDetails.playersTitle')}>
             <View style={styles.playersContainer}>
               <View style={styles.playersTeamContainer}>
                 {params.match.teams[0].players.map((player) => (
@@ -101,9 +104,6 @@ export const GameDetailsModal = React.memo(({ route: { params } }: GameDetailsMo
             </View>
           </Section>
         ) : null}
-        <Section title="Games">
-          <params.gamesComponent match={params.match} />
-        </Section>
       </View>
     </ModalLayout>
   );

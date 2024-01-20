@@ -1,8 +1,8 @@
 import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { LolGames } from '~/screens/game-details-modal/components/lol-games';
+import { TouchableOpacity, View } from 'react-native';
 
+import { LolGames } from '~/screens/game-details-modal/components/lol-games';
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
@@ -39,7 +39,7 @@ export const MatchScore = React.memo<MatchScoreProps>(
           navigation.navigate('gameDetailsModal', {
             gamesComponent: LolGames as any, // FIXME: remove any
             match: {
-              date: new Date('2021-06-26T17:00:00.000Z'),
+              date: new Date('2023-12-26T17:00:00.000Z'),
               streamLink: 'https://www.twitch.tv/karminecorp',
               matchDetails: {
                 bo: 1,
@@ -49,18 +49,50 @@ export const MatchScore = React.memo<MatchScoreProps>(
                     duration: '35:32',
                     score: {
                       blue: 0,
-                      red: 0,
+                      red: 1,
                     },
                     draft: {
                       blue: {
                         picks: [
                           {
                             champion: {
-                              name: 'Sylas',
+                              name: 'Aatrox',
                               imageUrl:
-                                'https://static.wikia.nocookie.net/leagueoflegends/images/7/7d/Sylas_OriginalCentered.jpg',
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
                             },
-                            player: 'hello',
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
                           },
                         ],
                       },
@@ -68,11 +100,140 @@ export const MatchScore = React.memo<MatchScoreProps>(
                         picks: [
                           {
                             champion: {
-                              name: 'Sylas',
+                              name: 'Aatrox',
                               imageUrl:
-                                'https://static.wikia.nocookie.net/leagueoflegends/images/7/7d/Sylas_OriginalCentered.jpg',
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
                             },
-                            player: 'hello',
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    duration: '30:21',
+                    score: {
+                      blue: 2,
+                      red: 1,
+                    },
+                    draft: {
+                      blue: {
+                        picks: [
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                        ],
+                      },
+                      red: {
+                        picks: [
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
+                          },
+                          {
+                            champion: {
+                              name: 'Aatrox',
+                              imageUrl:
+                                'https://ddragon.leagueoflegends.com/cdn/13.24.1/img/champion/Aatrox.png',
+                            },
+                            player: 'Saken',
                           },
                         ],
                       },
@@ -85,7 +246,7 @@ export const MatchScore = React.memo<MatchScoreProps>(
                   players: [
                     {
                       name: 'Saken',
-                      picture: 'https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png',
+                      picture: undefined,
                       position: 'left',
                       role: 'adc',
                     },
@@ -104,6 +265,10 @@ export const MatchScore = React.memo<MatchScoreProps>(
                   ],
                   logoUrl: 'https://medias.kametotv.fr/karmine/teams_logo/KC.png',
                   name: 'Karmine Corp',
+                  score: {
+                    score: 2,
+                    isWinner: true,
+                  },
                 },
                 {
                   players: [
@@ -126,8 +291,12 @@ export const MatchScore = React.memo<MatchScoreProps>(
                       role: 'adc',
                     },
                   ],
-                  logoUrl: 'https://medias.kametotv.fr/karmine/teams_logo/KC.png',
-                  name: 'Karmine Corp',
+                  logoUrl: 'https://medias.kametotv.fr/karmine/teams_logo/Team%20Heretics.png',
+                  name: 'Team Herectics',
+                  score: {
+                    score: 1,
+                    isWinner: false,
+                  },
                 },
               ],
             },

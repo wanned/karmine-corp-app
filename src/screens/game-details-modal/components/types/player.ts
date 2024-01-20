@@ -1,6 +1,6 @@
 export type Player = {
-  picture: string;
+  picture?: string;
   name: string;
-  role: 'top' | 'jungle' | 'mid' | 'adc' | 'support';
+  role: string;
   position: 'left' | 'right';
 };

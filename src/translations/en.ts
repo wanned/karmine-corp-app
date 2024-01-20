@@ -48,4 +48,13 @@ export const enTranslations: Translations['en'] = {
     ValorantVCT: 'Valorant',
     ValorantVCT_GC: 'Valorant Women',
   },
+  gameDetails: {
+    gamesTitle: 'Games',
+    playersTitle: 'Players',
+    gamePrefix: 'Game',
+    watchReplayText: 'Watch replay',
+    goalsText: 'Goals',
+    stopsText: 'Stops',
+    totalText: 'Total points',
+  },
 };

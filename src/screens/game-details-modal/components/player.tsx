@@ -1,5 +1,6 @@
 import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
+import { Iconify } from 'react-native-iconify';
 
 import { Player as PlayerProps } from './types/player';
 
@@ -22,11 +23,17 @@ export const Player = ({ picture, name, role, position }: PlayerProps) => {
         position === 'right' ? styles.containerRightPosition : {}
       )}>
       <View style={styles.pictureContainer}>
-        <Image
-          source={{ uri: picture }}
-          cachePolicy="memory-disk"
-          style={{ width: 70, height: 70 }}
-        />
+        {picture ? (
+          <Image
+            source={{ uri: picture }}
+            cachePolicy="memory-disk"
+            style={{ width: 70, height: 70 }}
+          />
+        ) : (
+          <View style={styles.noPictureContainer}>
+            <Iconify icon="solar:user-bold" size={40} color={theme.colors.subtleForeground} />
+          </View>
+        )}
       </View>
       <View
         style={StyleSheet.compose(
@@ -57,6 +64,9 @@ const getStyles = createStylesheet((theme) => ({
     borderRadius: 50,
     overflow: 'hidden',
     alignItems: 'center',
+  },
+  noPictureContainer: {
+    marginTop: 4,
   },
   textsContainer: {
     gap: -4,
