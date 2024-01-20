@@ -8,6 +8,7 @@ import { Player } from './components/player';
 import { TeamScore } from './components/team-score';
 import { useGameImageAssets } from '../home/hooks/use-game-image-assets';
 
+import { Buttons } from '~/shared/components/buttons';
 import { Section } from '~/shared/components/section/section';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
@@ -31,6 +32,8 @@ export const GameDetailsModal = React.memo(({ route: { params } }: GameDetailsMo
   const translate = useTranslate();
 
   const gameImageAssets = useGameImageAssets();
+
+  const [isNotified, setIsNotified] = React.useState(false);
 
   return (
     <ModalLayout>
@@ -73,6 +76,33 @@ export const GameDetailsModal = React.memo(({ route: { params } }: GameDetailsMo
         </View>
       </View>
       <View style={styles.gameDetailsContainer}>
+        {params.match.date > new Date() ? (
+          <View style={styles.buttonsContainer}>
+            {!isNotified ? (
+              <Buttons.Primary
+                text={translate('gameDetails.beNotifiedButtonText')}
+                onPress={() => setIsNotified(true)}
+              />
+            ) : (
+              <Buttons.Secondary
+                text={translate('gameDetails.cancelNotificationButtonText')}
+                onPress={() => setIsNotified(false)}
+              />
+            )}
+          </View>
+        ) : null}
+        {params.match.streamLink ? (
+          <View style={styles.buttonsContainer}>
+            <Buttons.Primary
+              text={translate('gameDetails.watchStreamButtonText')}
+              onPress={() => {}}
+            />
+            <Buttons.Secondary
+              text={translate('gameDetails.shareStreamButtonText')}
+              onPress={() => {}}
+            />
+          </View>
+        ) : null}
         <Section title={translate('gameDetails.gamesTitle')}>
           <params.gamesComponent match={params.match} />
         </Section>
@@ -110,6 +140,9 @@ export const GameDetailsModal = React.memo(({ route: { params } }: GameDetailsMo
 });
 
 const getStyles = createStylesheet((theme) => ({
+  buttonsContainer: {
+    gap: 12,
+  },
   headerContainer: {
     height: 280,
     marginTop: -130,

@@ -56,5 +56,9 @@ export const enTranslations: Translations['en'] = {
     goalsText: 'Goals',
     stopsText: 'Stops',
     totalText: 'Total points',
+    beNotifiedButtonText: 'Be notified',
+    cancelNotificationButtonText: 'Cancel notification',
+    watchStreamButtonText: 'Watch stream',
+    shareStreamButtonText: 'Share stream',
   },
 };

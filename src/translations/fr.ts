@@ -56,5 +56,9 @@ export const frTranslations: Translations['fr'] = {
     goalsText: 'Buts',
     stopsText: 'Arrêts',
     totalText: 'Total des points',
+    beNotifiedButtonText: 'Être notifié',
+    cancelNotificationButtonText: 'Annuler la notification',
+    watchStreamButtonText: 'Regarder le stream',
+    shareStreamButtonText: 'Partager le stream',
   },
 };
