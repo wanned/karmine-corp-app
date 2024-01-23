@@ -36,6 +36,15 @@ export const esTranslations: Translations['es'] = {
         fr: 'Français',
       },
     },
+    other: {
+      title: 'Otros',
+      buttonTitles: {
+        bugReport: 'Reportar un error',
+        karmineCorpWebsite: 'Ir a karminecorp.fr',
+        karmineCorpTwitter: 'Visitar el X de Karmine Corp',
+        credits: 'Créditos',
+      },
+    },
   },
   games: {
     LeagueOfLegendsLFL: 'LFL',

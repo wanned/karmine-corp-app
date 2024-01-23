@@ -36,6 +36,15 @@ export type Translations = Record<
         description: string;
         languages: Record<Language, string>;
       };
+      other: {
+        title: string;
+        buttonTitles: {
+          bugReport: string;
+          karmineCorpWebsite: string;
+          karmineCorpTwitter: string;
+          credits: string;
+        };
+      };
     };
     games: {
       [K in KarmineApi.CompetitionName]: string;
