@@ -1,9 +1,10 @@
 import { Image } from 'expo-image';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
 import { Typographies } from '~/shared/components/typographies';
+import { useSettings } from '~/shared/hooks/use-settings';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
@@ -17,6 +18,16 @@ interface MatchTeamProps {
 export const MatchTeam = React.memo<MatchTeamProps>(
   ({ logo, name, score, isWinner }: MatchTeamProps) => {
     const styles = useStyles(getStyles);
+
+    const { hideSpoilers } = useSettings();
+
+    const [isSpoilerHidden, setIsSpoilerHidden] = React.useState(hideSpoilers);
+
+    React.useEffect(() => {
+      setIsSpoilerHidden(hideSpoilers);
+    }, [hideSpoilers]);
+
+    const spoil = () => setIsSpoilerHidden(!isSpoilerHidden);
 
     return (
       <View
@@ -37,7 +48,10 @@ export const MatchTeam = React.memo<MatchTeamProps>(
             />
           )}
         </View>
-        <Typographies.Body color={styles.teamScore.color}>{score.toString()}</Typographies.Body>
+        <View>
+          <Typographies.Body color={styles.teamScore.color}>{score.toString()}</Typographies.Body>
+          {!isSpoilerHidden && <TouchableOpacity style={styles.hideSpoiler} onPress={spoil} />}
+        </View>
       </View>
     );
   }
@@ -57,6 +71,16 @@ const getStyles = createStylesheet((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  hideSpoiler: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    backgroundColor: 'black',
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: [{ translateX: -10 }, { translateY: -10 }],
   },
   crown: {
     position: 'relative',
