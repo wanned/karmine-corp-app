@@ -7,6 +7,7 @@ type BaseKarmineEvent = {
   competition_name: string;
   team_domicile: string | null;
   team_exterieur: string | null;
+  player: string | null;
   start: Date;
   streamLink?: string | null;
 };
@@ -90,6 +91,16 @@ async function getTeamsFromEvent(
 
   if (teamNames.length > 2) {
     teamNames = teamNames.filter((teamName) => teamName.startsWith('KC'));
+  }
+
+  if (teamNames.length === 1 && event.player !== null) {
+    return [
+      {
+        name: event.player,
+        logoUrl: 'https://medias.kametotv.fr/karmine/teams/Karmine Corp-LeagueOfLegendsLEC.png',
+      },
+      null,
+    ];
   }
 
   if (teamNames.length === 1) {
