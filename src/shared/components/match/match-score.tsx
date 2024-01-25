@@ -6,6 +6,7 @@ import { Iconify } from 'react-native-iconify';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
+import { MatchScoreContextProvider } from '~/shared/contexts/match-score-context';
 import { useDate } from '~/shared/hooks/use-date';
 import { useNavigation } from '~/shared/hooks/use-navigation';
 import { useTranslate } from '~/shared/hooks/use-translate';
@@ -28,6 +29,8 @@ export const MatchScore = React.memo<MatchScoreProps>(
     const styles = getStyles(styleTokens);
 
     const translate = useTranslate();
+
+    const [isSpoilerHidden, setIsSpoilerHidden] = React.useState(false);
 
     const navigation = useNavigation();
 
@@ -66,11 +69,17 @@ export const MatchScore = React.memo<MatchScoreProps>(
             </View>
           )}
         </View>
-        <View style={styles.childrenContainer}>
-          <View style={styles.children}>{children}</View>
+        <View>
+          <MatchScoreContextProvider
+            value={{
+              isSpoilerHidden,
+              setIsSpoilerHidden,
+            }}>
+            {children}
+          </MatchScoreContextProvider>
           <Iconify icon="solar:alt-arrow-right-outline" color={styles.icon.color} size={16} />
         </View>
-      </TouchableOpacity>
+      </View>
     );
   },
   (prevProps, nextProps) => prevProps.match.id === nextProps.match.id

@@ -66,6 +66,8 @@ export const SettingsProvider = ({
 const SETTINGS_ASYNC_STORAGE_KEY = 'settings';
 
 async function saveSettings(settings: Settings) {
+  console.log(settings.hideSpoilers, settings.language);
+
   try {
     await AsyncStorage.setItem(SETTINGS_ASYNC_STORAGE_KEY, JSON.stringify(settings));
   } catch (error) {

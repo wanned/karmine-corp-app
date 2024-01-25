@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
 import { Typographies } from '~/shared/components/typographies';
+import { MatchScoreContext } from '~/shared/contexts/match-score-context';
 import { useSettings } from '~/shared/hooks/use-settings';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
@@ -21,9 +22,13 @@ export const MatchTeam = React.memo<MatchTeamProps>(
 
     const { hideSpoilers } = useSettings();
 
-    const [isSpoilerHidden, setIsSpoilerHidden] = React.useState(hideSpoilers);
+    const { isSpoilerHidden, setIsSpoilerHidden } = React.useContext(MatchScoreContext);
+
+    const [spoilerWidth, setSpoilerWidth] = React.useState(0);
 
     React.useEffect(() => {
+      if (score === '-') return setIsSpoilerHidden(true);
+
       setIsSpoilerHidden(hideSpoilers);
     }, [hideSpoilers]);
 
@@ -31,7 +36,10 @@ export const MatchTeam = React.memo<MatchTeamProps>(
 
     return (
       <View
-        style={StyleSheet.compose(styles.teamScore, isWinner === false && styles.teamScoreLoser)}>
+        style={StyleSheet.compose(
+          styles.teamScore,
+          isWinner === false && isSpoilerHidden && styles.teamScoreLoser
+        )}>
         <View style={styles.teamScoreLeftContainer}>
           <Image
             source={{ uri: logo }}
@@ -48,9 +56,21 @@ export const MatchTeam = React.memo<MatchTeamProps>(
             />
           )}
         </View>
-        <View>
+        <View
+          onLayout={(e) => {
+            const { width } = e.nativeEvent.layout;
+
+            setSpoilerWidth(width);
+          }}>
           <Typographies.Body color={styles.teamScore.color}>{score.toString()}</Typographies.Body>
-          {!isSpoilerHidden && <TouchableOpacity style={styles.hideSpoiler} onPress={spoil} />}
+          {!isSpoilerHidden && score !== '-' && (
+            <TouchableOpacity
+              style={StyleSheet.compose(styles.hideSpoiler, {
+                width: Math.max(20, spoilerWidth),
+              })}
+              onPress={spoil}
+            />
+          )}
         </View>
       </View>
     );
@@ -73,14 +93,13 @@ const getStyles = createStylesheet((theme) => ({
     gap: 8,
   },
   hideSpoiler: {
-    width: 20,
     height: 20,
     borderRadius: 4,
-    backgroundColor: 'black',
+    backgroundColor: theme.colors.subtleBackground,
     position: 'absolute',
-    left: '50%',
     top: '50%',
-    transform: [{ translateX: -10 }, { translateY: -10 }],
+    right: 0,
+    transform: [{ translateY: -10 }],
   },
   crown: {
     position: 'relative',

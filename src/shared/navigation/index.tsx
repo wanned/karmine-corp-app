@@ -17,6 +17,7 @@ const RootNavigator = ModalsNavigator;
 export default RootNavigator;
 
 export type PagesParamList = {
+  _: undefined;
   home: undefined;
   calendar: undefined;
   teams: undefined;
