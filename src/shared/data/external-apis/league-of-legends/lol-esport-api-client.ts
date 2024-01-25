@@ -53,7 +53,7 @@ class LolEsportApiClient {
       lolEsportApiSchemas.getMatchById
     );
 
-    return data.event;
+    return data.event.match;
   }
 
   public async getAllTeams() {

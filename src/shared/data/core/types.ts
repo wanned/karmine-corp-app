@@ -47,12 +47,12 @@ export namespace CoreData {
     competitionName: CompetitionName.LeagueOfLegendsLFL | CompetitionName.LeagueOfLegendsLEC;
     games: LeagueOfLegendsGame[];
     bo: number;
-    players: Record<'blue' | 'red', Player[]>;
+    players: Record<'home' | 'away', Player[]>;
   }
 
   interface LeagueOfLegendsGame {
     draft: Record<
-      'blue' | 'red',
+      'home' | 'away',
       {
         picks: {
           champion: {
@@ -63,8 +63,9 @@ export namespace CoreData {
         }[];
       }
     >;
-    score: Record<'blue' | 'red', number>;
+    score: Record<'home' | 'away', number>;
     status: 'live' | 'finished';
     duration?: number;
+    winnerTeam?: 'home' | 'away';
   }
 }

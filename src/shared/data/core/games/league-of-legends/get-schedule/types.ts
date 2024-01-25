@@ -13,8 +13,11 @@ type ApiMethod<
 
 export type LolApiEvent = ApiMethod<'lol', 'getScheduleByLeagueIds'>['events'][number];
 export type LolApiTeam = LolApiEvent['match']['teams'][number];
+export type LolApiMatchDetails = ApiMethod<'lol', 'getMatchById'>;
+export type LolApiGameDetails = ApiMethod<'lol', 'getGameWindow'>;
 
 export type StrafeApiMatch = ApiMethod<'strafe', 'getCalendar'>[number];
+export type StrafeApiMatchDetails = ApiMethod<'strafe', 'getMatch'>;
 
 export interface ExternalMatch {
   lol: LolApiEvent;

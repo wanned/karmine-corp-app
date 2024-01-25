@@ -1,66 +1,90 @@
 import { getAllPlayers } from './get-all-players';
 import { getChampionImageUrl } from './get-champion-image-url';
 import { getLastGameWindow } from './get-last-game-window';
+import { LolApiGameDetails, LolApiMatchDetails, StrafeApiMatchDetails } from '../../types';
 import { getCoreStatus } from '../get-core-status';
 
 import { CoreData } from '~/shared/data/core/types';
-import { lolEsportApiClient } from '~/shared/data/external-apis/league-of-legends/lol-esport-api-client';
-import { strafeApiClient } from '~/shared/data/external-apis/strafe/strafe-api-client';
 
 export async function getGameDetailsFromEvent({
   lolEsportMatchDetails,
-  strafeGameDetails,
+  strafeMatchDetails,
+  gameNumber,
   startTime,
-  playersSet,
+  playersMap,
 }: {
-  lolEsportMatchDetails: Awaited<ReturnType<typeof lolEsportApiClient.getMatchById>>;
-  strafeGameDetails: Awaited<ReturnType<typeof strafeApiClient.getMatch>>[number];
+  lolEsportMatchDetails: LolApiMatchDetails;
+  strafeMatchDetails: StrafeApiMatchDetails;
+  gameNumber: number;
   startTime: Date;
-  playersSet: Map<string, CoreData.Player & { team: 'blue' | 'red' }>;
+  playersMap: Map<string, CoreData.Player & { team: 'home' | 'away' }>;
 }): Promise<CoreData.LeagueOfLegendsMatch['matchDetails']['games'][number] | undefined> {
-  const lolGame = lolEsportMatchDetails.match.games.find(
-    (game) => game.number - 1 === strafeGameDetails.index
-  );
+  const lolGame = lolEsportMatchDetails.games.find((game) => game.number === gameNumber);
   if (lolGame === undefined) return undefined;
+
+  const strafeGameDetails = strafeMatchDetails.find((game) => game.index === gameNumber - 1);
 
   const lolGameDetails = await getLastGameWindow(lolGame.id, startTime);
   if (lolGameDetails === null) return undefined;
 
+  const lastFrame = lolGameDetails.frames.at(-1);
+  if (lastFrame === undefined) return undefined;
+
+  const firstGame = lolEsportMatchDetails.games[0];
+  const homeTeam = firstGame.teams.find((team) => team.side === 'blue');
+  if (homeTeam === undefined) return undefined;
+
+  const homeColor = lolGame.teams.find((team) => team.id === homeTeam.id)?.side;
+  if (homeColor === undefined) return undefined;
+  const awayColor = homeColor === 'blue' ? 'red' : 'blue';
+
+  if (gameNumber !== 1) {
+    // If we are not in the first game, we do not want to add players to the map.
+    // We only want to add players from the first game.
+    // This is because this function is called in a Promise.all, so if there is multiple games,
+    // where the teams are not the same side between the games, the players could all be added
+    // to the home team, or all to the away team.
+    playersMap = new Map();
+  }
+
   return {
-    status: getCoreStatus(strafeGameDetails.status),
+    status: getCoreStatus(lastFrame.gameState === 'paused' ? 'finished' : lastFrame.gameState),
     score: {
-      blue: strafeGameDetails.game.score.home,
-      red: strafeGameDetails.game.score.away,
+      home: lastFrame[`${homeColor}Team`].totalKills,
+      away: lastFrame[`${awayColor}Team`].totalKills,
     },
-    duration: strafeGameDetails.game.duration,
     draft: {
-      blue: {
-        picks: await getTeamPicks('blue', { lolGameDetails, playersSet }),
+      home: {
+        picks: await getTeamPicks(homeColor, { lolGameDetails, playersMap, team: 'home' }),
       },
-      red: {
-        picks: await getTeamPicks('red', { lolGameDetails, playersSet }),
+      away: {
+        picks: await getTeamPicks(awayColor, { lolGameDetails, playersMap, team: 'away' }),
       },
     },
+    duration: strafeGameDetails?.game.duration,
+    winnerTeam: strafeGameDetails?.winner ?? undefined,
   };
 }
 
 async function getTeamPicks(
-  team: 'blue' | 'red',
+  side: 'blue' | 'red',
   {
     lolGameDetails,
-    playersSet,
+    playersMap,
+    team,
   }: {
-    lolGameDetails: NonNullable<Awaited<ReturnType<typeof lolEsportApiClient.getGameWindow>>>;
-    playersSet: Map<string, CoreData.Player & { team: 'blue' | 'red' }>;
+    lolGameDetails: LolApiGameDetails;
+    playersMap: Map<string, CoreData.Player & { team: 'home' | 'away' }>;
+    team: 'home' | 'away';
   }
 ) {
   const allWorldPlayers = await getAllPlayers();
 
   return Promise.all(
-    lolGameDetails.gameMetadata[`${team}TeamMetadata`].participantMetadata.map(
+    lolGameDetails.gameMetadata[`${side}TeamMetadata`].participantMetadata.map(
       async (participant) => {
-        if (!playersSet.has(participant.summonerName)) {
-          playersSet.set(participant.summonerName, {
+        if (!playersMap.has(participant.summonerName)) {
+          playersMap.set(participant.summonerName, {
             name: participant.summonerName,
             imageUrl:
               participant.esportsPlayerId !== undefined ?

@@ -14,29 +14,32 @@ export async function getMatchDetailsFromEvent(
 
   const competitionName = league.team;
 
-  const playersSet = new Map<string, CoreData.Player & { team: 'blue' | 'red' }>();
+  const playersMap = new Map<string, CoreData.Player & { team: 'home' | 'away' }>();
 
   const strafeMatchDetails = await strafeApiClient.getMatch(externalMatch.strafe.id);
   const lolEsportMatchDetails = await lolEsportApiClient.getMatchById(externalMatch.lol.match.id);
+  lolEsportMatchDetails.games.sort((a, b) => a.number - b.number);
 
   const games = await Promise.all(
-    strafeMatchDetails
-      .sort((a, b) => a.index - b.index)
-      .map(async (strafeGameDetails) =>
-        getGameDetailsFromEvent({
-          lolEsportMatchDetails,
-          startTime: externalMatch.lol.startTime,
-          strafeGameDetails,
-          playersSet,
-        })
-      )
+    lolEsportMatchDetails.games.map(async (lolGame) =>
+      getGameDetailsFromEvent({
+        lolEsportMatchDetails,
+        strafeMatchDetails,
+        gameNumber: lolGame.number,
+        startTime: externalMatch.lol.startTime,
+        playersMap,
+      })
+    )
   );
 
   const players: CoreData.LeagueOfLegendsMatch['matchDetails']['players'] = {
-    blue: [],
-    red: [],
+    home: [],
+    away: [],
   };
-  playersSet.forEach(({ team, ...player }) => players[team].push(player));
+  playersMap.forEach(({ team, ...player }) => players[team].push(player));
+
+  if (players.away.length === 0 && players.home.length !== 0)
+    console.log(lolEsportMatchDetails.games.at(0)?.id);
 
   return {
     competitionName,

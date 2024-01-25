@@ -12,11 +12,22 @@ const teamMetadataSchema = z.object({
   ),
 });
 
+const frameTeamDataSchema = z.object({
+  totalKills: z.number().int(),
+});
+
 export const getGameWindowSchema = z
   .object({
     gameMetadata: z.object({
       blueTeamMetadata: teamMetadataSchema,
       redTeamMetadata: teamMetadataSchema,
     }),
+    frames: z.array(
+      z.object({
+        gameState: z.enum(['in_game', 'finished', 'paused']),
+        blueTeam: frameTeamDataSchema,
+        redTeam: frameTeamDataSchema,
+      })
+    ),
   })
   .nullable();
