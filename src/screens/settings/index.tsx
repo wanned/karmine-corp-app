@@ -70,7 +70,7 @@ export default function SettingsScreen() {
 
         <View style={styles.versionContainer}>
           <Typographies.Label color={styles.versionContainer.color}>
-            version {packageJson.version}
+            {translate('settings.version')} {packageJson.version}
           </Typographies.Label>
         </View>
       </View>

@@ -19,6 +19,7 @@ export const frTranslations: Translations['fr'] = {
   },
   settings: {
     screenName: 'Paramètres',
+    version: 'Version',
     notifications: {
       title: 'Notifications',
       description: 'Choisissez les matchs pour lesquels vous recevrez des notifications.',

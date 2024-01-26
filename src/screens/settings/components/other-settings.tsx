@@ -1,8 +1,7 @@
 import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
-import { Linking, Pressable, View } from 'react-native';
-import { Iconify } from 'react-native-iconify';
+import { Linking, View } from 'react-native';
 
-import { Typographies } from '~/shared/components/typographies';
+import { Buttons } from '~/shared/components/buttons';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { RootStackParamList } from '~/shared/navigation';
@@ -15,6 +14,8 @@ interface ButtonProps {
 
 export const OtherSettings = () => {
   const styles = useStyles(getStyles);
+
+  const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
 
   const translate = useTranslate();
 
@@ -38,27 +39,6 @@ export const OtherSettings = () => {
     },
   ];
 
-  return (
-    <View style={styles.ButtonContainer}>
-      {buttons.map((button, index) => (
-        <Button key={index} title={button.title} redirectTo={button.redirectTo} />
-      ))}
-    </View>
-  );
-};
-
-const getStyles = createStylesheet((theme) => ({
-  ButtonContainer: {
-    marginTop: 12,
-    gap: 8,
-  },
-}));
-
-const Button = ({ title, redirectTo }: ButtonProps) => {
-  const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
-
-  const styles = useStyles(getButtonStyle);
-
   const navigateOrOpenURL = (redirectTo: string) => {
     const isUrl = /^(http|https):\/\/[^ "]+$/.test(redirectTo);
 
@@ -69,32 +49,24 @@ const Button = ({ title, redirectTo }: ButtonProps) => {
     }
   };
 
-  const handlePress = () => {
-    navigateOrOpenURL(redirectTo);
-  };
-
   return (
-    <Pressable onPress={handlePress}>
-      <View style={styles.buttonContainer}>
-        <Typographies.Body verticalTrim>{title}</Typographies.Body>
-        <Iconify icon="solar:arrow-right-linear" size={20} color={styles.iconColor.color} />
-      </View>
-    </Pressable>
+    <View style={styles.ButtonContainer}>
+      {buttons.map((button, index) => (
+        <Buttons.Secondary
+          key={index}
+          text={button.title}
+          onPress={() => navigateOrOpenURL(button.redirectTo)}
+          fillWidth
+          withArrow
+        />
+      ))}
+    </View>
   );
 };
 
-const getButtonStyle = createStylesheet((theme) => ({
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    backgroundColor: theme.colors.subtleBackground,
-    borderRadius: 8,
-  },
-  iconColor: {
-    color: theme.colors.foreground,
+const getStyles = createStylesheet((theme) => ({
+  ButtonContainer: {
+    marginTop: 12,
+    gap: 8,
   },
 }));

@@ -19,6 +19,7 @@ export const esTranslations: Translations['es'] = {
   },
   settings: {
     screenName: 'Configuración',
+    version: 'Versión',
     notifications: {
       title: 'Notificaciones',
       description: 'Elija los juegos que recibirá notificaciones.',

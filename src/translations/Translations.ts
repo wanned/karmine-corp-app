@@ -23,6 +23,7 @@ export type Translations = Record<
     };
     settings: {
       screenName: string;
+      version: string;
       notifications: {
         title: string;
         description: string;
