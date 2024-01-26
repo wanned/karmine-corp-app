@@ -1,6 +1,6 @@
 import { useAssets } from 'expo-asset';
 
-export const useGameImageAssets = () => {
+export const useGameBackgroundImage = () => {
   const [gameImageAssets] = useAssets([
     require('~/../assets/game-images/lol.png'),
     require('~/../assets/game-images/rl.png'),
