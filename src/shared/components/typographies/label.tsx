@@ -1,14 +1,25 @@
+import { View } from 'react-native';
+
 import { BaseText } from './base-text';
+import { TypographyProps } from './typography';
 
-interface LabelProps {
-  children: string | string[];
-  color?: string;
-}
-
-export const Label = ({ children, color }: LabelProps) => {
+export const Label = ({ children, color, verticalTrim = false }: TypographyProps) => {
   return (
-    <BaseText color={color} fontSize={12} fontWeight="SemiBold" textTransform="uppercase">
-      {children}
-    </BaseText>
+    <View
+      style={{
+        height: verticalTrim ? 9 : undefined,
+        justifyContent: 'flex-end',
+      }}>
+      <View style={{ position: 'relative', top: verticalTrim ? 3.5 : undefined }}>
+        <BaseText
+          color={color}
+          fontSize={12}
+          lineHeight={verticalTrim ? 16 : undefined}
+          fontWeight="SemiBold"
+          textTransform="uppercase">
+          {children}
+        </BaseText>
+      </View>
+    </View>
   );
 };

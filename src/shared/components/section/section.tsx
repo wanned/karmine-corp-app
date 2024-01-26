@@ -14,7 +14,9 @@ export const Section = ({ title, children }: SectionProps) => {
 
   return (
     <View style={styles.container}>
-      <Typographies.Title1 color={styles.title.color}>{title}</Typographies.Title1>
+      <View style={styles.title}>
+        <Typographies.Title1 color={styles.title.color}>{title}</Typographies.Title1>
+      </View>
       <View style={styles.contentContainer}>{children}</View>
     </View>
   );
@@ -24,6 +26,7 @@ const getStyles = createStylesheet((theme) => ({
   container: {},
   title: {
     color: theme.colors.foreground,
+    marginBottom: 12,
   },
   contentContainer: {
     marginTop: 4,

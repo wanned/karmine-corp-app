@@ -7,6 +7,9 @@ export const esTranslations: Translations['es'] = {
     nextMatchesViewMoreText: 'Ver todos los partidos',
     lastResultsTitle: 'Los últimos resultados',
     lastResultsViewMoreText: 'Ver todos los resultados',
+    views: 'vistas',
+    likes: 'likes',
+    noMatches: 'No hay partidos',
   },
   calendar: {
     screenName: 'Calendario',

@@ -11,6 +11,9 @@ export type Translations = Record<
       nextMatchesViewMoreText: string;
       lastResultsTitle: string;
       lastResultsViewMoreText: string;
+      views: string;
+      likes: string;
+      noMatches: string;
     };
     calendar: {
       screenName: string;
