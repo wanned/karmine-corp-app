@@ -1,9 +1,53 @@
 import { Image } from 'expo-image';
+import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Typographies } from '~/shared/components/typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
+import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
+
+interface TeamsProps {
+  teams: TeamProps[];
+}
+
+export const Teams = ({ teams }: TeamsProps) => {
+  const translate = useTranslate();
+
+  const styles = useStyles(getStyles);
+
+  const sortedTeams = useMemo(() => {
+    const sortedTeams = [...teams].sort((a, b) => a.top - b.top);
+
+    const karmineIndex = sortedTeams.findIndex(({ isKarmine }) => isKarmine);
+    let minIndex: number | undefined;
+    let maxIndex: number | undefined;
+
+    if (karmineIndex === -1 || karmineIndex === 0) {
+      minIndex = 0;
+      maxIndex = 2;
+    } else if (karmineIndex === sortedTeams.length - 1) {
+      minIndex = -3;
+      maxIndex = undefined;
+    } else {
+      minIndex = karmineIndex - 1;
+      maxIndex = karmineIndex + 1;
+    }
+
+    return sortedTeams.slice(minIndex, maxIndex !== undefined ? maxIndex + 1 : undefined);
+  }, [teams]);
+
+  return (
+    <View>
+      <Typographies.Title3>{translate('teams.leaderboardTitle')}</Typographies.Title3>
+      <View style={styles.teamsContainer}>
+        {sortedTeams.map((team, teamIndex) => (
+          <Team key={teamIndex} {...team} />
+        ))}
+      </View>
+    </View>
+  );
+};
 
 interface TeamProps {
   logo: string;
@@ -13,6 +57,7 @@ interface TeamProps {
   looses: number;
   isKarmine?: boolean;
 }
+
 const Team = ({ logo, name, top, wins, looses, isKarmine = false }: TeamProps) => {
   const styles = useStyles(getStyles);
 
@@ -37,6 +82,9 @@ const Team = ({ logo, name, top, wins, looses, isKarmine = false }: TeamProps) =
 };
 
 const getStyles = createStylesheet((theme) => ({
+  teamsContainer: {
+    marginTop: 4,
+  },
   teamScore: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -61,5 +109,3 @@ const getStyles = createStylesheet((theme) => ({
     gap: 12,
   },
 }));
-
-export default Team;
