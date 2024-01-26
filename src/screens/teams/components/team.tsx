@@ -1,18 +1,18 @@
 import { View } from 'react-native';
 
-import { Players } from './Players';
-import { Teams } from './Teams';
+import { Leaderboard } from './leaderboard';
+import { Players } from './players';
 
 import { Typographies } from '~/shared/components/typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
-interface LeaderboardContainerProps {
+interface TeamContainerProps {
   title: string;
   children: React.ReactNode;
 }
 
-const LeaderboardContainer = ({ children, title }: LeaderboardContainerProps) => {
+const TeamContainer = ({ children, title }: TeamContainerProps) => {
   const styles = useStyles(getStyles);
 
   return (
@@ -30,8 +30,8 @@ const getStyles = createStylesheet((theme) => ({
   },
 }));
 
-export const LeaderBoard = {
-  Container: LeaderboardContainer,
-  Teams,
+export const Team = {
+  Container: TeamContainer,
+  Leaderboard,
   Players,
 };
