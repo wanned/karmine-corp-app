@@ -33,7 +33,7 @@ export const GameCardContent = ({
   return (
     <View>
       <View style={styles.header}>
-        <Typographies.Label color={styles.header.color}>
+        <Typographies.Label color={styles.header.color} verticalTrim>
           17 SEPT. 2023 · LEC · BO5
         </Typographies.Label>
         {showLivePill && (
@@ -92,13 +92,13 @@ const TeamScore = ({ logo, name, score, isWinner, position }: TeamScoreProps) =>
       </View>
 
       {isWinner ? (
-        <Typographies.VeryBig color={styles.teamNameContainer.color}>
+        <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
           {score.toString()}
         </Typographies.VeryBig>
       ) : checkSingleNumber(score) ? (
         <OutlinedNumber size="small">{score}</OutlinedNumber>
       ) : (
-        <Typographies.VeryBig color={styles.teamNameContainer.color}>
+        <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
           {score.toString()}
         </Typographies.VeryBig>
       )}

@@ -6,7 +6,7 @@ import { LogBox, View } from 'react-native';
 
 import { Player } from './components/player';
 import { TeamScore } from './components/team-score';
-import { useGameImageAssets } from '../home/hooks/use-game-image-assets';
+import { useGameBackgroundImage } from '../home/hooks/use-game-background-image';
 
 import { Buttons } from '~/shared/components/buttons';
 import { Section } from '~/shared/components/section/section';
@@ -31,7 +31,7 @@ export const GameDetailsModal = React.memo(({ route: { params } }: GameDetailsMo
 
   const translate = useTranslate();
 
-  const gameImageAssets = useGameImageAssets();
+  const gameImageAssets = useGameBackgroundImage();
 
   const [isNotified, setIsNotified] = React.useState(false);
 

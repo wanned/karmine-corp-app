@@ -9,7 +9,9 @@ export const LivePill = () => {
 
   return (
     <View style={styles.livePill}>
-      <Typographies.Label color={styles.livePill.color}>LIVE</Typographies.Label>
+      <Typographies.Label color={styles.livePill.color} verticalTrim>
+        LIVE
+      </Typographies.Label>
     </View>
   );
 };

@@ -1,18 +1,24 @@
-import { Text } from 'react-native';
+import { View } from 'react-native';
 
 import { BaseText } from './base-text';
+import { TypographyProps } from './typography';
 
-interface BodyProps {
-  children: string | string[];
-  color?: string;
-}
-
-export const VeryBig = ({ children, color }: BodyProps) => {
+export const VeryBig = ({ children, color, verticalTrim = false }: TypographyProps) => {
   return (
-    <Text style={{ height: 32 }}>
-      <BaseText color={color} fontSize={44.5} lineHeight={41} fontWeight="ExtraBold">
-        {children}
-      </BaseText>
-    </Text>
+    <View
+      style={{
+        height: verticalTrim ? 32 : undefined,
+        justifyContent: 'flex-end',
+      }}>
+      <View style={{ position: 'relative', top: verticalTrim ? 4 : undefined }}>
+        <BaseText
+          color={color}
+          fontSize={44.5}
+          lineHeight={verticalTrim ? 58 : undefined}
+          fontWeight="ExtraBold">
+          {children}
+        </BaseText>
+      </View>
+    </View>
   );
 };
