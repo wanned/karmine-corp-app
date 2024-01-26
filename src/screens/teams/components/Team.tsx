@@ -20,11 +20,15 @@ const Team = ({ logo, name, top, wins, looses, isKarmine = false }: TeamProps) =
     <View style={StyleSheet.compose(styles.teamScore, isKarmine && styles.teamScoreKarmine)}>
       <View style={styles.teamScoreLeftContainer}>
         <Image source={{ uri: logo }} cachePolicy="memory-disk" style={{ width: 24, height: 24 }} />
-        <Typographies.Body color={styles.teamScore.color}>{name}</Typographies.Body>
+        <Typographies.Body color={styles.teamScore.color} verticalTrim>
+          {name}
+        </Typographies.Body>
       </View>
       <View style={styles.teamScoreRightContainer}>
-        <Typographies.Body color={styles.teamTop.color}>#{top.toString()}</Typographies.Body>
-        <Typographies.Body color={styles.teamScore.color}>
+        <Typographies.Body color={styles.teamTop.color} verticalTrim>
+          #{top.toString()}
+        </Typographies.Body>
+        <Typographies.Body color={styles.teamScore.color} verticalTrim>
           {wins.toString()}V · {looses.toString()}D
         </Typographies.Body>
       </View>

@@ -72,7 +72,7 @@ const Players = ({ players }: PlayersProps) => {
 
 const getStyles = createStylesheet((theme) => ({
   container: {
-    marginTop: 8,
+    marginTop: 12,
     gap: 8,
   },
   teamsContainer: {
@@ -83,6 +83,7 @@ const getStyles = createStylesheet((theme) => ({
   },
   playersTitle: {
     marginLeft: 16,
+    marginBottom: 4,
   },
   playersScrollContainer: {
     marginTop: 4,
