@@ -3,13 +3,15 @@ import { getCoreStatus } from './get-core-status';
 import { getMatchDetailsFromEvent } from './get-match-details';
 import { getTeamsFromEvent } from './get-teams-from-event';
 
+import { DataFetcher } from '~/shared/data/core/data-fetcher';
 import { CoreData } from '~/shared/data/core/types';
 
 export async function getCoreMatch(
+  { apis }: Pick<DataFetcher.GetScheduleParams, 'apis'>,
   externalMatch: ExternalMatch
 ): Promise<CoreData.LeagueOfLegendsMatch | undefined> {
   // Get match details
-  const matchDetails = await getMatchDetailsFromEvent(externalMatch);
+  const matchDetails = await getMatchDetailsFromEvent({ apis }, externalMatch);
   if (matchDetails === undefined) return undefined;
 
   // Get date

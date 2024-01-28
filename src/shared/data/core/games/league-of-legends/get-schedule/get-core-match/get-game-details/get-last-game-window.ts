@@ -1,6 +1,10 @@
-import { lolEsportApiClient } from '~/shared/data/external-apis/league-of-legends/lol-esport-api-client';
+import { DataFetcher } from '~/shared/data/core/data-fetcher';
 
-export const getLastGameWindow = async (gameId: string, eventStartDate: Date) => {
+export const getLastGameWindow = async (
+  { apis }: Pick<DataFetcher.GetScheduleParams, 'apis'>,
+  gameId: string,
+  eventStartDate: Date
+) => {
   const year = eventStartDate.getFullYear();
   const maxWindowDate = new Date(`${year}-12-31T23:59:50.000Z`);
 
@@ -16,7 +20,7 @@ export const getLastGameWindow = async (gameId: string, eventStartDate: Date) =>
     Math.min(currentMinus55SecRounded.getTime(), maxWindowDate.getTime())
   );
 
-  return lolEsportApiClient.getGameWindow({
+  return apis.lolEsport.getGameWindow({
     gameId,
     startingTime: lastWindowDate,
   });

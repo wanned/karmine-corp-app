@@ -1,23 +1,17 @@
-import { useQueries, useQuery, queryOptions } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import { karmineApi } from '~/shared/apis/karmine/karmine-api';
-import { parseMatch } from '~/shared/data/parse-matchs/parse-match';
+import { useDataFetcher } from './use-data-fetcher';
 
 export const useNextMatches = () => {
-  const { data: events } = useQuery({
-    queryKey: ['karmineEvents'],
-    queryFn: karmineApi.getEvents,
-  });
+  const dataFetcher = useDataFetcher();
 
-  const results = useQueries({
-    queries: events
-      ? events.map((event) => {
-          return queryOptions({
-            queryKey: ['karmineEvent', event.id],
-            queryFn: () => parseMatch(event),
-          });
-        })
-      : [],
+  const results = useQuery({
+    queryKey: ['nextMatches'],
+    queryFn: () =>
+      dataFetcher
+        .getSchedule({ filters: { status: ['upcoming'] } })
+        .then((matches) => matches.sort((a, b) => a.date.getTime() - b.date.getTime())),
+    throwOnError: true,
   });
 
   return results;

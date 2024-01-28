@@ -1,4 +1,4 @@
-import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
+import { CoreData } from '~/shared/data/core/types';
 
 export type Language = 'en' | 'es' | 'fr';
 
@@ -38,7 +38,7 @@ export type Translations = Record<
       };
     };
     games: {
-      [K in KarmineApi.CompetitionName]: string;
+      [K in CoreData.CompetitionName]: string;
     };
   }
 >;

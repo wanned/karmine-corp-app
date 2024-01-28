@@ -2,11 +2,11 @@ import { getGameDetailsFromEvent } from './get-game-details';
 import { findLeague } from '../get-lol-leagues';
 import { ExternalMatch } from '../types';
 
+import { DataFetcher } from '~/shared/data/core/data-fetcher';
 import { CoreData } from '~/shared/data/core/types';
-import { lolEsportApiClient } from '~/shared/data/external-apis/league-of-legends/lol-esport-api-client';
-import { strafeApiClient } from '~/shared/data/external-apis/strafe/strafe-api-client';
 
 export async function getMatchDetailsFromEvent(
+  { apis }: Pick<DataFetcher.GetScheduleParams, 'apis'>,
   externalMatch: ExternalMatch
 ): Promise<CoreData.LeagueOfLegendsMatch['matchDetails'] | undefined> {
   const league = await findLeague(externalMatch.lol.league);
@@ -16,19 +16,22 @@ export async function getMatchDetailsFromEvent(
 
   const playersMap = new Map<string, CoreData.Player & { team: 'home' | 'away' }>();
 
-  const strafeMatchDetails = await strafeApiClient.getMatch(externalMatch.strafe.id);
-  const lolEsportMatchDetails = await lolEsportApiClient.getMatchById(externalMatch.lol.match.id);
+  const strafeMatchDetails = await apis.strafe.getMatch(externalMatch.strafe.id);
+  const lolEsportMatchDetails = await apis.lolEsport.getMatchById(externalMatch.lol.match.id);
   lolEsportMatchDetails.games.sort((a, b) => a.number - b.number);
 
   const games = await Promise.all(
     lolEsportMatchDetails.games.map(async (lolGame) =>
-      getGameDetailsFromEvent({
-        lolEsportMatchDetails,
-        strafeMatchDetails,
-        gameNumber: lolGame.number,
-        startTime: externalMatch.lol.startTime,
-        playersMap,
-      })
+      getGameDetailsFromEvent(
+        { apis },
+        {
+          lolEsportMatchDetails,
+          strafeMatchDetails,
+          gameNumber: lolGame.number,
+          startTime: externalMatch.lol.startTime,
+          playersMap,
+        }
+      )
     )
   );
 
@@ -37,9 +40,6 @@ export async function getMatchDetailsFromEvent(
     away: [],
   };
   playersMap.forEach(({ team, ...player }) => players[team].push(player));
-
-  if (players.away.length === 0 && players.home.length !== 0)
-    console.log(lolEsportMatchDetails.games.at(0)?.id);
 
   return {
     competitionName,

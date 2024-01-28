@@ -4,27 +4,31 @@ import { getLastGameWindow } from './get-last-game-window';
 import { LolApiGameDetails, LolApiMatchDetails, StrafeApiMatchDetails } from '../../types';
 import { getCoreStatus } from '../get-core-status';
 
+import { DataFetcher } from '~/shared/data/core/data-fetcher';
 import { CoreData } from '~/shared/data/core/types';
 
-export async function getGameDetailsFromEvent({
-  lolEsportMatchDetails,
-  strafeMatchDetails,
-  gameNumber,
-  startTime,
-  playersMap,
-}: {
-  lolEsportMatchDetails: LolApiMatchDetails;
-  strafeMatchDetails: StrafeApiMatchDetails;
-  gameNumber: number;
-  startTime: Date;
-  playersMap: Map<string, CoreData.Player & { team: 'home' | 'away' }>;
-}): Promise<CoreData.LeagueOfLegendsMatch['matchDetails']['games'][number] | undefined> {
+export async function getGameDetailsFromEvent(
+  { apis }: Pick<DataFetcher.GetScheduleParams, 'apis'>,
+  {
+    lolEsportMatchDetails,
+    strafeMatchDetails,
+    gameNumber,
+    startTime,
+    playersMap,
+  }: {
+    lolEsportMatchDetails: LolApiMatchDetails;
+    strafeMatchDetails: StrafeApiMatchDetails;
+    gameNumber: number;
+    startTime: Date;
+    playersMap: Map<string, CoreData.Player & { team: 'home' | 'away' }>;
+  }
+): Promise<CoreData.LeagueOfLegendsMatch['matchDetails']['games'][number] | undefined> {
   const lolGame = lolEsportMatchDetails.games.find((game) => game.number === gameNumber);
   if (lolGame === undefined) return undefined;
 
   const strafeGameDetails = strafeMatchDetails.find((game) => game.index === gameNumber - 1);
 
-  const lolGameDetails = await getLastGameWindow(lolGame.id, startTime);
+  const lolGameDetails = await getLastGameWindow({ apis }, lolGame.id, startTime);
   if (lolGameDetails === null) return undefined;
 
   const lastFrame = lolGameDetails.frames.at(-1);
@@ -55,10 +59,18 @@ export async function getGameDetailsFromEvent({
     },
     draft: {
       home: {
-        picks: await getTeamPicks(homeColor, { lolGameDetails, playersMap, team: 'home' }),
+        picks: await getTeamPicks({ apis }, homeColor, {
+          lolGameDetails,
+          playersMap,
+          team: 'home',
+        }),
       },
       away: {
-        picks: await getTeamPicks(awayColor, { lolGameDetails, playersMap, team: 'away' }),
+        picks: await getTeamPicks({ apis }, awayColor, {
+          lolGameDetails,
+          playersMap,
+          team: 'away',
+        }),
       },
     },
     duration: strafeGameDetails?.game.duration,
@@ -67,6 +79,7 @@ export async function getGameDetailsFromEvent({
 }
 
 async function getTeamPicks(
+  { apis }: Pick<DataFetcher.GetScheduleParams, 'apis'>,
   side: 'blue' | 'red',
   {
     lolGameDetails,
@@ -78,7 +91,7 @@ async function getTeamPicks(
     team: 'home' | 'away';
   }
 ) {
-  const allWorldPlayers = await getAllPlayers();
+  const allWorldPlayers = await getAllPlayers({ apis });
 
   return Promise.all(
     lolGameDetails.gameMetadata[`${side}TeamMetadata`].participantMetadata.map(
@@ -98,7 +111,7 @@ async function getTeamPicks(
         return {
           champion: {
             name: participant.championId,
-            imageUrl: await getChampionImageUrl(participant.championId),
+            imageUrl: await getChampionImageUrl({ apis }, participant.championId),
           },
           player: participant.summonerName,
         };

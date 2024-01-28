@@ -1,9 +1,9 @@
-import { lolEsportApiClient } from '~/shared/data/external-apis/league-of-legends/lol-esport-api-client';
-import { strafeApiClient } from '~/shared/data/external-apis/strafe/strafe-api-client';
+import { LolEsportApiClient } from '~/shared/data/external-apis/league-of-legends/lol-esport-api-client';
+import { StrafeApiClient } from '~/shared/data/external-apis/strafe/strafe-api-client';
 
-export interface ApiClients {
-  lol: typeof lolEsportApiClient;
-  strafe: typeof strafeApiClient;
+interface ApiClients {
+  lol: LolEsportApiClient;
+  strafe: StrafeApiClient;
 }
 
 type ApiMethod<

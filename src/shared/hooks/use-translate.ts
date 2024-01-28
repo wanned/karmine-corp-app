@@ -28,9 +28,9 @@ type TranslationKeys<
   TranslationObject extends Record<string, any> = Translations['en'],
   Prefix extends string = '',
 > = {
-  [Key in keyof TranslationObject]: Key extends string | number
-    ? TranslationObject[Key] extends Record<string, any>
-      ? TranslationKeys<TranslationObject[Key], `${Prefix}${Key}.`>
-      : `${Prefix}${Key}`
-    : never;
+  [Key in keyof TranslationObject]: Key extends string | number ?
+    TranslationObject[Key] extends Record<string, any> ?
+      TranslationKeys<TranslationObject[Key], `${Prefix}${Key}.`>
+    : `${Prefix}${Key}`
+  : never;
 }[keyof TranslationObject];

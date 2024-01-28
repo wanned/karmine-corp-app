@@ -1,14 +1,16 @@
 import { LolApiEvent } from './types';
+import { DataFetcher } from '../../../data-fetcher';
 
-import { strafeApiClient } from '~/shared/data/external-apis/strafe/strafe-api-client';
-
-export async function getStrafeMatch(lolApiEvent: LolApiEvent) {
+export async function getStrafeMatch(
+  { apis }: Pick<DataFetcher.GetScheduleParams, 'apis'>,
+  lolApiEvent: LolApiEvent
+) {
   const karmineTeam = lolApiEvent.match.teams.find((team) =>
     team.name.toLowerCase().includes('karmine')
   );
   if (karmineTeam === undefined) return undefined;
 
-  const strafeMatches = await strafeApiClient.getCalendar(lolApiEvent.startTime);
+  const strafeMatches = await apis.strafe.getCalendar(lolApiEvent.startTime);
 
   const strafeMatch = strafeMatches?.find((match) =>
     [match.home.name, match.away.name].includes(karmineTeam.name)

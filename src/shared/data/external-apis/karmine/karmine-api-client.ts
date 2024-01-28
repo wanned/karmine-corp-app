@@ -2,20 +2,27 @@ import { z } from 'zod';
 
 import { karmineApiSchemas } from './schemas/karmine-api-schemas';
 
-class KarmineApiClient {
+export class KarmineApiClient {
   private readonly KARMINE_API_URL = 'https://api2.kametotv.fr/karmine';
+
+  private fetch_: typeof fetch;
+
+  constructor({ fetch_ = fetch }: { fetch_?: typeof fetch } = {}) {
+    this.fetch_ = fetch_;
+  }
 
   private fetch = async <S extends z.Schema<any>>(
     url: string,
     schema?: S
   ): Promise<z.output<S>> => {
-    const response = await fetch(`${this.KARMINE_API_URL}${url}`);
+    const response = await this.fetch_(`${this.KARMINE_API_URL}${url}`);
 
     if (!response.ok) {
       throw new Error(`${response.status} ${response.statusText} (${url})`);
     }
 
-    const data = await response.json();
+    const dataText = await response.text();
+    const data = dataText === '' ? null : JSON.parse(dataText); // TODO: Remove this hack. We may use Effect to catch the errors instead of modifying the data for all requests
 
     if (schema) {
       const parseResult = schema.safeParse(data);
@@ -54,5 +61,3 @@ class KarmineApiClient {
     return twitch;
   }
 }
-
-export const karmineApiClient = new KarmineApiClient();

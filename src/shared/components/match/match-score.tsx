@@ -1,9 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
+import { CoreData } from '~/shared/data/core/types';
 import { useDate } from '~/shared/hooks/use-date';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
@@ -15,7 +15,7 @@ interface MatchScoreProps {
   date: Date;
   children: React.ReactNode;
   status: MatchStatus;
-  game: KarmineApi.CompetitionName;
+  game: CoreData.CompetitionName;
   bo?: number;
 }
 

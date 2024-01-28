@@ -1,6 +1,5 @@
+import { DataFetcher } from '../../data-fetcher';
 import { CoreData } from '../../types';
-
-import { karmineApiClient } from '~/shared/data/external-apis/karmine/karmine-api-client';
 
 type BaseKarmineEvent = {
   title: string;
@@ -12,20 +11,29 @@ type BaseKarmineEvent = {
   streamLink?: string | null;
 };
 
-export async function getSchedule(
-  onResult: (match: CoreData.Match) => void
-): Promise<CoreData.Match[]> {
-  const matches = await Promise.all([getMatchesResults(onResult), getNextMatches(onResult)]);
+export async function getSchedule({
+  onResult,
+  filters,
+  apis,
+}: DataFetcher.GetScheduleParams): Promise<CoreData.Match[]> {
+  const matches = await Promise.all([
+    ...(filters.status?.includes('finished') ?
+      [getMatchesResults({ onResult, filters, apis })]
+    : []),
+    ...(filters.status?.includes('upcoming') ? [getNextMatches({ onResult, filters, apis })] : []),
+  ]);
 
   return matches.flat();
 }
 
-async function getMatchesResults(
-  onResult: (match: CoreData.Match) => void
-): Promise<CoreData.Match[]> {
-  const eventsResults = await karmineApiClient
+async function getMatchesResults({
+  onResult,
+  filters,
+  apis,
+}: DataFetcher.GetScheduleParams): Promise<CoreData.Match[]> {
+  const eventsResults = await apis.karmine
     .getEventsResults()
-    .then((events) => events.filter(filterKarmineEvents));
+    .then((events) => events.filter((event) => filterKarmineEvents(event, filters)));
 
   return await Promise.all(
     eventsResults.map(async (eventResult) => {
@@ -36,12 +44,14 @@ async function getMatchesResults(
   );
 }
 
-async function getNextMatches(
-  onResult: (match: CoreData.Match) => void
-): Promise<CoreData.Match[]> {
-  const events = await karmineApiClient
+async function getNextMatches({
+  onResult,
+  filters,
+  apis,
+}: DataFetcher.GetScheduleParams): Promise<CoreData.Match[]> {
+  const events = await apis.karmine
     .getEvents()
-    .then((events) => events.filter(filterKarmineEvents));
+    .then((events) => events.filter((event) => filterKarmineEvents(event, filters)));
 
   return await Promise.all(
     events.map(async (eventResult) => {
@@ -52,15 +62,19 @@ async function getNextMatches(
   );
 }
 
-function filterKarmineEvents(event: BaseKarmineEvent): boolean {
-  return (
-    // We don't want to fetch events that are not related to League of Legends
-    // because they are fetched by another service
-    !(
-      event.competition_name === CoreData.CompetitionName.LeagueOfLegendsLEC ||
-      event.competition_name === CoreData.CompetitionName.LeagueOfLegendsLFL
-    )
-  );
+function filterKarmineEvents(
+  event: BaseKarmineEvent,
+  filters: DataFetcher.GetScheduleParams['filters']
+): boolean {
+  // We don't want to fetch events that are not related to League of Legends
+  // because they are fetched by another service
+  if (event.competition_name === CoreData.CompetitionName.LeagueOfLegendsLEC) return false;
+  if (event.competition_name === CoreData.CompetitionName.LeagueOfLegendsLFL) return false;
+
+  if (filters.date?.from !== undefined && event.start < filters.date.from) return false;
+  if (filters.date?.to !== undefined && event.start > filters.date.to) return false;
+
+  return true;
 }
 
 async function karmineEventToCoreMatch(event: BaseKarmineEvent): Promise<CoreData.Match> {

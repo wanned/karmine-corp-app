@@ -2,12 +2,18 @@ import { z } from 'zod';
 
 import { strafeApiSchemas } from './schemas/strafe-api-schemas';
 
-class StrafeApiClient {
+export class StrafeApiClient {
   private STRAFE_API_KEY =
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMDAwLCJpYXQiOjE2MTE2NTM0MzcuMzMzMDU5fQ.n9StQPQdpNIx3E4FKFntFuzKWolstKJRd-T4LwXmfmo';
 
+  private fetch_: typeof fetch;
+
+  constructor({ fetch_ = fetch }: { fetch_?: typeof fetch } = {}) {
+    this.fetch_ = fetch_;
+  }
+
   private async fetch<S extends z.Schema<any>>(url: string, schema?: S): Promise<z.output<S>> {
-    const response = await fetch(url, {
+    const response = await this.fetch_(url, {
       headers: { Authorization: `Bearer ${this.STRAFE_API_KEY}` },
     });
 
@@ -36,7 +42,8 @@ class StrafeApiClient {
       throw new Error(`${response.status} ${response.statusText} (${url})`);
     }
 
-    const data = await response.json();
+    const dataText = await response.text();
+    const data = dataText === '' ? null : JSON.parse(dataText); // TODO: Remove this hack. We may use Effect to catch the errors instead of modifying the data for all requests
 
     if (schema) {
       const parseResult = schema.safeParse(data);
@@ -67,5 +74,3 @@ class StrafeApiClient {
     ).then(({ data }) => data.live.map(({ data }) => data));
   }
 }
-
-export const strafeApiClient = new StrafeApiClient();

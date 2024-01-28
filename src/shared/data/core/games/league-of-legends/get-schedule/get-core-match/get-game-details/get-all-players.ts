@@ -1,6 +1,6 @@
-import { lolEsportApiClient } from '~/shared/data/external-apis/league-of-legends/lol-esport-api-client';
+import { DataFetcher } from '~/shared/data/core/data-fetcher';
 
-export async function getAllPlayers() {
-  const teams = await lolEsportApiClient.getAllTeams();
+export async function getAllPlayers({ apis }: Pick<DataFetcher.GetScheduleParams, 'apis'>) {
+  const teams = await apis.lolEsport.getAllTeams();
   return teams.flatMap((team) => team.players);
 }

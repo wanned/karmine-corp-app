@@ -12,41 +12,40 @@ interface LastResultsProps {
 export const LastResults = ({ viewMoreButton, max }: LastResultsProps) => {
   const translate = useTranslate();
 
-  const matchs = useMatchesResults();
+  const { data: matchs } = useMatchesResults();
 
-  if (!matchs.length) {
+  if (!matchs?.length) {
     return null;
   }
 
   return (
     <Section title={translate('home.lastResultsTitle')}>
-      {matchs.slice(0, max).map(
-        ({ data: match }, index) =>
-          match && (
-            <MatchScore
-              key={index}
-              date={match.date}
-              status="upcoming"
-              bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}
-              game={match.matchDetails.game}>
-              {match.teams.map((team, index) => (
+      {matchs.slice(0, max).map((match, index) => (
+        <MatchScore
+          key={index}
+          date={match.date}
+          status="upcoming"
+          bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}
+          game={match.matchDetails.competitionName}>
+          {match.teams.map(
+            (team, index) =>
+              team && (
                 <MatchTeam
                   key={index}
                   logo={team.logoUrl}
                   name={team.name}
                   isWinner={team.score?.isWinner}
                   score={
-                    team.score === undefined
-                      ? '-'
-                      : team.score.scoreType === 'top'
-                        ? `TOP ${team.score.score}`
-                        : team.score.score
+                    team.score === undefined ? '-'
+                    : team.score.scoreType === 'top' ?
+                      `TOP ${team.score.score}`
+                    : team.score.score
                   }
                 />
-              ))}
-            </MatchScore>
-          )
-      )}
+              )
+          )}
+        </MatchScore>
+      ))}
       {viewMoreButton}
     </Section>
   );
