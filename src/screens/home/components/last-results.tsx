@@ -20,9 +20,9 @@ export const LastResults = ({ viewMoreButton, max }: LastResultsProps) => {
 
   return (
     <Section title={translate('home.lastResultsTitle')}>
-      {matchs.slice(0, max).map((match, index) => (
+      {matchs.slice(0, max).map((match) => (
         <MatchScore
-          key={index}
+          key={match.id}
           date={match.date}
           status="upcoming"
           bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}

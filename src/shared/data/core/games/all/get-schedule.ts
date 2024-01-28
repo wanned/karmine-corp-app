@@ -2,6 +2,7 @@ import { DataFetcher } from '../../data-fetcher';
 import { CoreData } from '../../types';
 
 type BaseKarmineEvent = {
+  id: number;
   title: string;
   competition_name: string;
   team_domicile: string | null;
@@ -81,6 +82,7 @@ async function karmineEventToCoreMatch(event: BaseKarmineEvent): Promise<CoreDat
   const teams = await getTeamsFromEvent(event);
 
   return {
+    id: `all:${event.id}`,
     teams,
     date: event.start,
     streamLink: event.streamLink ?? null,

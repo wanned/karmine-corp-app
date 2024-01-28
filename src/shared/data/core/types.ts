@@ -33,6 +33,7 @@ export namespace CoreData {
   }
 
   export interface BaseMatch<MD extends BaseMatchDetails = BaseMatchDetails> {
+    id: string;
     teams: [Team & { score?: Score }, (Team & { score?: Score }) | null];
     date: Date;
     streamLink: string | null;

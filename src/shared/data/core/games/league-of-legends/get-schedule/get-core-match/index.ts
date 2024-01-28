@@ -27,6 +27,7 @@ export async function getCoreMatch(
   const teams = await getTeamsFromEvent(externalMatch);
 
   return {
+    id: `lol:${externalMatch.lol.match.id}`,
     date,
     status,
     streamLink,

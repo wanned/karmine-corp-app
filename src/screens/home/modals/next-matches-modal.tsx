@@ -35,12 +35,12 @@ export const NextMatchesModal = React.memo(() => {
           data={matchs}
           getItem={(data, index) => data[index]}
           getItemCount={(data) => data.length}
-          keyExtractor={(item, itemIndex) => itemIndex.toString()}
+          keyExtractor={(match) => match.id}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item: match, index: matchIndex }) =>
+          renderItem={({ item: match }) =>
             match && (
               <MatchScore
-                key={matchIndex}
+                key={match.id}
                 date={match.date}
                 status="upcoming"
                 bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}
@@ -49,7 +49,7 @@ export const NextMatchesModal = React.memo(() => {
                   (team, index: number) =>
                     team && (
                       <MatchTeam
-                        key={`${matchIndex}-${team.name}-${index}`}
+                        key={`${match.id}-${team.name}-${index}`}
                         logo={team.logoUrl}
                         name={team.name}
                         score="-"

@@ -4,6 +4,7 @@ const nullStringSchema = z.string().transform((x) => (x === 'null' ? null : x));
 
 export const getEventsResultsSchema = z.array(
   z.object({
+    id: z.number(),
     title: z.string(),
     competition_name: z.string(),
     team_domicile: z.union([z.string().url(), nullStringSchema]),
