@@ -30,14 +30,14 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
 
   const translate = useTranslate();
 
-  function formatDuration(seconds: number) {
-    const format = (value: number) => value.toString().padStart(2, '0');
-
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
+  function formatMatchDuration(seconds: number) {
+    const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
 
-    return `${format(hours)}:${format(minutes)}:${format(remainingSeconds)}`;
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+    const paddedSeconds = remainingSeconds.toString().padStart(2, '0');
+
+    return `${paddedMinutes}:${paddedSeconds}`;
   }
 
   return (
@@ -47,7 +47,7 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
           {translate('gameDetails.gamePrefix')} {number.toString()}
         </Typographies.Title2>
         <Typographies.Body color={theme.colors.subtleForeground} verticalTrim>
-          {formatDuration(duration)}
+          {formatMatchDuration(duration)}
         </Typographies.Body>
       </View>
       <View style={styles.scoresContainer}>
