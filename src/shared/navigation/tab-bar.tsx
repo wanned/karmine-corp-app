@@ -1,17 +1,15 @@
-import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Pressable, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
-import { RootStackParamList } from '.';
+import { PagesParamList } from '.';
 import { Typographies } from '../components/typographies';
 import { useStyles } from '../hooks/use-styles';
 import { useTranslate } from '../hooks/use-translate';
 import { createStylesheet } from '../styles/create-stylesheet';
 import { assertUnreachable } from '../utils/assert-unreachable';
 
-export function TabBar() {
-  const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
+export function TabBar({ navigation, state }: BottomTabBarProps) {
   const styles = useStyles(getStyles);
 
   return (
@@ -20,32 +18,27 @@ export function TabBar() {
       pointerEvents="box-none"
       accessibilityRole="tablist"
       accessibilityLabel="Bottom tab bar">
-      <TabBarButton navigation={navigation} name="home" />
-      <TabBarButton navigation={navigation} name="calendar" />
-      <TabBarButton navigation={navigation} name="teams" />
-      <TabBarButton navigation={navigation} name="settings" />
+      <TabBarButton navigation={navigation} state={state} name="home" />
+      <TabBarButton navigation={navigation} state={state} name="calendar" />
+      <TabBarButton navigation={navigation} state={state} name="teams" />
+      <TabBarButton navigation={navigation} state={state} name="settings" />
     </View>
   );
 }
 
 function TabBarButton({
   navigation,
+  state,
   name,
 }: {
-  navigation: NavigationContainerRef<RootStackParamList>;
-  name: keyof RootStackParamList;
+  navigation: BottomTabBarProps['navigation'];
+  state: BottomTabBarProps['state'];
+  name: keyof PagesParamList;
 }) {
-  const [isActive, setIsActive] = useState(navigation.getCurrentRoute()?.name === name);
+  const currentRoute = state.routes[state.index];
+  const isActive = currentRoute?.name === name;
   const styles = useStyles(getStyles);
   const translate = useTranslate();
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('state', () => {
-      setIsActive(navigation.getCurrentRoute()?.name === name);
-    });
-
-    return unsubscribe;
-  }, [navigation]);
 
   return (
     <Pressable
@@ -65,7 +58,7 @@ function TabBarButton({
   );
 }
 
-function TabBarIcon({ name, isActive }: { name: keyof RootStackParamList; isActive: boolean }) {
+function TabBarIcon({ name, isActive }: { name: keyof PagesParamList; isActive: boolean }) {
   const styles = useStyles(getStyles);
 
   const iconProps = {

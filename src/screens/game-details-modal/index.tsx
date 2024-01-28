@@ -14,11 +14,11 @@ import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { ModalLayout } from '~/shared/layouts/modal-layout';
-import { RootStackParamList } from '~/shared/navigation';
+import { ModalsParamList } from '~/shared/navigation';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 interface GameDetailsModalProps
-  extends NativeStackScreenProps<RootStackParamList, 'gameDetailsModal'> {}
+  extends NativeStackScreenProps<ModalsParamList, 'gameDetailsModal'> {}
 
 LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']);
 

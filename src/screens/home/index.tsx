@@ -1,4 +1,3 @@
-import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
 import { Linking, View } from 'react-native';
 
 import { LastResults } from './components/last-results';
@@ -9,9 +8,9 @@ import { Buttons } from '~/shared/components/buttons';
 import { GameCardContent } from '~/shared/components/card/card-content/game-card-content';
 import { MediaCardContent } from '~/shared/components/card/card-content/media-card-content';
 import { CardWrapper } from '~/shared/components/card-wrapper/card-wrapper';
+import { useNavigation } from '~/shared/hooks/use-navigation';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { DefaultLayout } from '~/shared/layouts/default-layout';
-import { RootStackParamList } from '~/shared/navigation';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { styleTokens } from '~/shared/styles/tokens';
 
@@ -20,7 +19,7 @@ export default function HomeScreen() {
 
   const styles = getStyles(styleTokens);
 
-  const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
+  const navigation = useNavigation();
 
   const translate = useTranslate();
 

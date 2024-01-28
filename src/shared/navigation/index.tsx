@@ -1,23 +1,30 @@
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { TabBar } from './tab-bar';
-import { Match, MatchDetails } from '../types/data/Matchs';
+import { Match } from '../types/data/Matchs';
 
 import CalendarScreen from '~/screens/calendar';
 import { GameDetailsModal } from '~/screens/game-details-modal';
-import { Player } from '~/screens/game-details-modal/components/types/player';
 import HomeScreen from '~/screens/home';
 import { LastResultsModal } from '~/screens/home/modals/last-results-modal';
 import { NextMatchesModal } from '~/screens/home/modals/next-matches-modal';
 import SettingsScreen from '~/screens/settings';
 import TeamsScreen from '~/screens/teams';
 
-export type RootStackParamList = {
+const RootNavigator = ModalsNavigator;
+export default RootNavigator;
+
+export type PagesParamList = {
   home: undefined;
   calendar: undefined;
   teams: undefined;
   settings: undefined;
+};
+
+export type ModalsParamList = {
+  root: undefined;
   nextMatchesModal: undefined;
   lastResultsModal: undefined;
   gameDetailsModal: {
@@ -26,31 +33,39 @@ export type RootStackParamList = {
   };
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Modals = createNativeStackNavigator<ModalsParamList>();
+const Pages = createBottomTabNavigator<PagesParamList>();
 
-export default function RootStack() {
+function ModalsNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="home"
+      <Modals.Navigator
+        initialRouteName="root"
         screenOptions={{
           headerShown: false,
-          animation: 'none',
+          presentation: 'fullScreenModal',
         }}>
-        <Stack.Screen name="home" component={HomeScreen} />
-        <Stack.Screen name="calendar" component={CalendarScreen} />
-        <Stack.Screen name="teams" component={TeamsScreen} />
-        <Stack.Screen name="settings" component={SettingsScreen} />
-        <Stack.Group
-          screenOptions={{
-            presentation: 'fullScreenModal',
-          }}>
-          <Stack.Screen name="nextMatchesModal" component={NextMatchesModal} />
-          <Stack.Screen name="lastResultsModal" component={LastResultsModal} />
-          <Stack.Screen name="gameDetailsModal" component={GameDetailsModal} />
-        </Stack.Group>
-      </Stack.Navigator>
-      <TabBar />
+        <Modals.Screen name="root" component={PagesNavigator} options={{ headerShown: false }} />
+        <Modals.Screen name="nextMatchesModal" component={NextMatchesModal} />
+        <Modals.Screen name="lastResultsModal" component={LastResultsModal} />
+        <Modals.Screen name="gameDetailsModal" component={GameDetailsModal} />
+      </Modals.Navigator>
     </NavigationContainer>
+  );
+}
+
+function PagesNavigator() {
+  return (
+    <Pages.Navigator
+      initialRouteName="home"
+      screenOptions={{
+        headerShown: false,
+      }}
+      tabBar={(props) => <TabBar {...props} />}>
+      <Pages.Screen name="home" component={HomeScreen} />
+      <Pages.Screen name="calendar" component={CalendarScreen} />
+      <Pages.Screen name="teams" component={TeamsScreen} />
+      <Pages.Screen name="settings" component={SettingsScreen} />
+    </Pages.Navigator>
   );
 }

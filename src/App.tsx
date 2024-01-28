@@ -7,7 +7,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
 import { View } from 'react-native';
 
-import RootStack from './shared/navigation';
+import { useTheme } from './shared/hooks/use-theme';
+import RootNavigator from './shared/navigation';
 
 import { SettingsProvider } from '~/shared/contexts/settings-context';
 import { ThemeContext } from '~/shared/contexts/theme-context';
@@ -61,9 +62,11 @@ export default function App() {
 }
 
 const _App = ({ onLayoutRootView }: { onLayoutRootView: () => void }) => {
+  const theme = useTheme();
+
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <RootStack />
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }} onLayout={onLayoutRootView}>
+      <RootNavigator />
     </View>
   );
 };

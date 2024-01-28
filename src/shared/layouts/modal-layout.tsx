@@ -1,11 +1,10 @@
-import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
 import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Iconify } from 'react-native-iconify';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useNavigation } from '../hooks/use-navigation';
 import { useStyles } from '../hooks/use-styles';
-import { RootStackParamList } from '../navigation';
 import { createStylesheet } from '../styles/create-stylesheet';
 
 interface ModalLayoutProps {
@@ -17,7 +16,7 @@ export const ModalLayout = ({ children }: ModalLayoutProps) => {
 
   const safeAreaInsets = useSafeAreaInsets();
 
-  const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
+  const navigation = useNavigation();
 
   StatusBar.setBarStyle('default');
 
