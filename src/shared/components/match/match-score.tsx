@@ -45,7 +45,7 @@ export const MatchScore = React.memo<MatchScoreProps>(
                 game: KarmineApi.CompetitionName.LeagueOfLegendsLEC,
                 games: [
                   {
-                    duration: '35:32',
+                    duration: 89565,
                     score: {
                       blue: 0,
                       red: 1,
@@ -142,7 +142,7 @@ export const MatchScore = React.memo<MatchScoreProps>(
                     },
                   },
                   {
-                    duration: '30:21',
+                    duration: 788555,
                     score: {
                       blue: 2,
                       red: 1,

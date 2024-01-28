@@ -48,6 +48,6 @@ export interface LeagueOfLegendsGame {
       }[];
     }
   >;
-  duration: string;
+  duration: number;
   score: Record<'blue' | 'red', number>;
 }

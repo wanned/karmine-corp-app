@@ -30,13 +30,25 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
 
   const translate = useTranslate();
 
+  function formatDuration(seconds: number) {
+    const format = (value: number) => value.toString().padStart(2, '0');
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    return `${format(hours)}:${format(minutes)}:${format(remainingSeconds)}`;
+  }
+
   return (
     <View>
       <View style={styles.headerContainer}>
-        <Typographies.Title2>
+        <Typographies.Title2 verticalTrim>
           {translate('gameDetails.gamePrefix')} {number.toString()}
         </Typographies.Title2>
-        <Typographies.Body color={theme.colors.subtleForeground}>{duration}</Typographies.Body>
+        <Typographies.Body color={theme.colors.subtleForeground} verticalTrim>
+          {formatDuration(duration)}
+        </Typographies.Body>
       </View>
       <View style={styles.scoresContainer}>
         <View style={StyleSheet.compose(styles.scoreContainer, styles.scoreContainerLeft)}>
@@ -90,6 +102,7 @@ const getStyles = createStylesheet((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    marginBottom: 6,
   },
   championsContainer: {
     flexDirection: 'row',
