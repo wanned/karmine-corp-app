@@ -7,6 +7,8 @@ type BaseKarmineEvent = {
   competition_name: string;
   team_domicile: string | null;
   team_exterieur: string | null;
+  score_domicile?: string | null;
+  score_exterieur?: string | null;
   player: string | null;
   start: Date;
   streamLink?: string | null;
@@ -93,9 +95,7 @@ async function karmineEventToCoreMatch(event: BaseKarmineEvent): Promise<CoreDat
   } satisfies CoreData.Match;
 }
 
-async function getTeamsFromEvent(
-  event: BaseKarmineEvent
-): Promise<[CoreData.Team, CoreData.Team | null]> {
+async function getTeamsFromEvent(event: BaseKarmineEvent): Promise<CoreData.BaseMatch['teams']> {
   let teamNames = [
     ...new Set(
       event.title
@@ -114,6 +114,7 @@ async function getTeamsFromEvent(
       {
         name: event.player,
         logoUrl: 'https://medias.kametotv.fr/karmine/teams/Karmine Corp-LeagueOfLegendsLEC.png',
+        score: getTeamScore(event, 'domicile'),
       },
       null,
     ];
@@ -124,6 +125,7 @@ async function getTeamsFromEvent(
       {
         name: 'KC',
         logoUrl: 'https://medias.kametotv.fr/karmine/teams/Karmine Corp-LeagueOfLegendsLEC.png',
+        score: getTeamScore(event, 'domicile'),
       },
       null,
     ];
@@ -135,10 +137,77 @@ async function getTeamsFromEvent(
       logoUrl:
         event.team_domicile ??
         'https://medias.kametotv.fr/karmine/teams/Karmine Corp-LeagueOfLegendsLEC.png',
+      score: getTeamScore(event, 'domicile'),
     },
     {
       name: teamNames[1],
       logoUrl: event.team_exterieur ?? '',
+      score: getTeamScore(event, 'exterieur'),
     },
   ];
+}
+
+function getTeamScore(
+  event: BaseKarmineEvent,
+  team: 'domicile' | 'exterieur'
+): CoreData.Score | undefined {
+  const scoreDomicile = event.score_domicile;
+  const scoreExterieur = event.score_exterieur;
+
+  if (scoreDomicile === undefined || scoreExterieur === undefined) {
+    return undefined;
+  }
+
+  if (scoreDomicile === 'WIN') {
+    if (team === 'domicile') {
+      return {
+        score: 1,
+        isWinner: true,
+      };
+    } else {
+      return {
+        score: 0,
+        isWinner: false,
+      };
+    }
+  } else if (scoreDomicile === 'LOSE') {
+    if (team === 'domicile') {
+      return {
+        score: 0,
+        isWinner: false,
+      };
+    } else {
+      return {
+        score: 1,
+        isWinner: true,
+      };
+    }
+  }
+
+  const score = team === 'domicile' ? scoreDomicile : scoreExterieur;
+
+  if (score === null) {
+    return undefined;
+  }
+
+  if (score.startsWith('TOP')) {
+    return {
+      score: parseInt(score.slice(3).trim(), 10),
+      scoreType: 'top',
+    };
+  }
+
+  const parsedScore = parseInt(score, 10);
+  const otherScore = team === 'domicile' ? scoreExterieur : scoreDomicile;
+
+  if (otherScore === null) {
+    return undefined;
+  }
+
+  const parsedOtherScore = parseInt(otherScore, 10);
+
+  return {
+    score: parseInt(score, 10),
+    isWinner: parsedScore > parsedOtherScore,
+  };
 }
