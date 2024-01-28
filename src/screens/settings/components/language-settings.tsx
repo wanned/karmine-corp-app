@@ -50,7 +50,7 @@ function LanguageRadio({
   return (
     <Pressable onPress={() => setLanguageSelected(language)}>
       <View style={styles.container}>
-        <Typographies.Body>
+        <Typographies.Body verticalTrim>
           {translate(`settings.language.languages.${language}`)}
         </Typographies.Body>
         <View style={styles.radio}>

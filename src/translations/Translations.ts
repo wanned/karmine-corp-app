@@ -25,6 +25,7 @@ export type Translations = Record<
     };
     settings: {
       screenName: string;
+      version: string;
       notifications: {
         title: string;
         description: string;
@@ -37,6 +38,15 @@ export type Translations = Record<
         title: string;
         description: string;
         languages: Record<Language, string>;
+      };
+      other: {
+        title: string;
+        buttonTitles: {
+          bugReport: string;
+          karmineCorpWebsite: string;
+          karmineCorpTwitter: string;
+          credits: string;
+        };
       };
     };
     games: {

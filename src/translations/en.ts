@@ -21,6 +21,7 @@ export const enTranslations: Translations['en'] = {
   },
   settings: {
     screenName: 'Settings',
+    version: 'Version',
     notifications: {
       title: 'Notifications',
       description: 'Choose the games you will receive notifications for.',
@@ -36,6 +37,15 @@ export const enTranslations: Translations['en'] = {
         en: 'English',
         es: 'Español',
         fr: 'Français',
+      },
+    },
+    other: {
+      title: 'Other',
+      buttonTitles: {
+        bugReport: 'Report a bug',
+        karmineCorpWebsite: 'Go to karminecorp.fr',
+        karmineCorpTwitter: "Visit Karmine Corp's X",
+        credits: 'Credits',
       },
     },
   },

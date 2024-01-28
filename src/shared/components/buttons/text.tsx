@@ -15,7 +15,9 @@ export const Text = ({ text, onPress }: TextProps) => {
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <Typographies.Body color={styles.button.color}>{text}</Typographies.Body>
+      <Typographies.Body color={styles.button.color} verticalTrim>
+        {text}
+      </Typographies.Body>
     </TouchableOpacity>
   );
 };

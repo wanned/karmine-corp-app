@@ -3,8 +3,10 @@ import { View } from 'react-native';
 
 import { LanguageSettings } from './components/language-settings';
 import { NotificationSettings } from './components/notifications-settings';
+import { OtherSettings } from './components/other-settings';
 import { SpoilerSettings } from './components/spoiler-settings';
 
+import packageJson from '~/../package.json';
 import { Typographies } from '~/shared/components/typographies';
 import { SettingsContext } from '~/shared/contexts/settings-context';
 import { useStyles } from '~/shared/hooks/use-styles';
@@ -59,6 +61,17 @@ export default function SettingsScreen() {
               setLanguageSettings={(language) => setSettings({ ...settings, language })}
             />
           </View>
+
+          <View>
+            <Typographies.Title2>{translate('settings.other.title')}</Typographies.Title2>
+            <OtherSettings />
+          </View>
+        </View>
+
+        <View style={styles.versionContainer}>
+          <Typographies.Label color={styles.versionContainer.color}>
+            {translate('settings.version')} {packageJson.version}
+          </Typographies.Label>
         </View>
       </View>
     </DefaultLayout>
@@ -76,5 +89,11 @@ const getStyles = createStylesheet((theme) => ({
   settingsContainer: {
     flexDirection: 'column',
     gap: 24,
+  },
+  versionContainer: {
+    marginTop: 48,
+    marginBottom: 32,
+    alignItems: 'center',
+    color: theme.colors.subtleForeground,
   },
 }));

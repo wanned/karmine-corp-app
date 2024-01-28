@@ -21,6 +21,7 @@ export const frTranslations: Translations['fr'] = {
   },
   settings: {
     screenName: 'Paramètres',
+    version: 'Version',
     notifications: {
       title: 'Notifications',
       description: 'Choisissez les matchs pour lesquels vous recevrez des notifications.',
@@ -36,6 +37,15 @@ export const frTranslations: Translations['fr'] = {
         en: 'English',
         es: 'Español',
         fr: 'Français',
+      },
+    },
+    other: {
+      title: 'Autre',
+      buttonTitles: {
+        bugReport: 'Signaler un bug',
+        karmineCorpWebsite: 'Aller sur karminecorp.fr',
+        karmineCorpTwitter: 'Visiter le X de Karmine Corp',
+        credits: 'Crédits',
       },
     },
   },

@@ -21,6 +21,7 @@ export const esTranslations: Translations['es'] = {
   },
   settings: {
     screenName: 'Configuración',
+    version: 'Versión',
     notifications: {
       title: 'Notificaciones',
       description: 'Elija los juegos que recibirá notificaciones.',
@@ -36,6 +37,15 @@ export const esTranslations: Translations['es'] = {
         en: 'English',
         es: 'Español',
         fr: 'Français',
+      },
+    },
+    other: {
+      title: 'Otros',
+      buttonTitles: {
+        bugReport: 'Reportar un error',
+        karmineCorpWebsite: 'Ir a karminecorp.fr',
+        karmineCorpTwitter: 'Visitar el X de Karmine Corp',
+        credits: 'Créditos',
       },
     },
   },
