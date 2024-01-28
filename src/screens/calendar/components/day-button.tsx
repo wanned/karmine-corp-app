@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { useSelectedDate } from '../hooks/use-selected-date';
+import { useCalendarState } from '../hooks/use-calendar-state';
 
 import { Typographies } from '~/shared/components/typographies';
 import { useDate } from '~/shared/hooks/use-date';
@@ -10,18 +10,16 @@ import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { isSameDay } from '~/shared/utils/is-same-day';
 
 interface DayButtonProps {
-  isoDay: string;
+  date: { date: Date; isMatchDay: boolean };
 }
 
-export const DayButton = React.memo(({ isoDay }: DayButtonProps) => {
+export const DayButton = React.memo(({ date: { date, isMatchDay } }: DayButtonProps) => {
   const styles = useStyles(getStyles);
 
-  const day = useMemo(() => new Date(isoDay), [isoDay]);
-  const isToday = useMemo(() => isSameDay(day, new Date()), [day]);
+  const isToday = useMemo(() => isSameDay(date, new Date()), [date]);
 
-  const isSelected = useSelectedDate(({ isSelected: isSameDay }) => isSameDay(day));
-  const isMatchDay = useSelectedDate(({ isMatchDay }) => isMatchDay(day));
-  const selectDate = useSelectedDate(({ setSelectedDate }) => setSelectedDate);
+  const isSelected = useCalendarState(({ isSelected: isSameDay }) => isSameDay(date));
+  const selectDate = useCalendarState(({ setSelectedDate }) => setSelectedDate);
 
   const { formatDate } = useDate();
 
@@ -39,13 +37,13 @@ export const DayButton = React.memo(({ isoDay }: DayButtonProps) => {
     <TouchableOpacity
       disabled={!isMatchDay}
       onPress={() => {
-        selectDate(day);
+        selectDate(date);
       }}
       style={styles.container}>
       <View style={dayContainerStyle}>
-        <Typographies.Body color={textColor}>{formatDate(day, 'EEE')}</Typographies.Body>
-        <Typographies.Title2 color={textColor}>{formatDate(day, 'd')}</Typographies.Title2>
-        <Typographies.Body color={textColor}>{formatDate(day, 'MMM')}</Typographies.Body>
+        <Typographies.Body color={textColor}>{formatDate(date, 'EEE')}</Typographies.Body>
+        <Typographies.Title2 color={textColor}>{formatDate(date, 'd')}</Typographies.Title2>
+        <Typographies.Body color={textColor}>{formatDate(date, 'MMM')}</Typographies.Body>
       </View>
       {isMatchDay && <View style={styles.matchDayIndicator} />}
     </TouchableOpacity>

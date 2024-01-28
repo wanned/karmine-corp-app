@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 
 import { MatchesList } from './matches-page';
-import { useSelectedDate } from '../../hooks/use-selected-date';
+import { useCalendarState } from '../../hooks/use-calendar-state';
 import { GroupedMatchesByDay } from '../../utils/group-matches-by-day';
 
 import { isSameDay } from '~/shared/utils/is-same-day';
@@ -24,8 +24,8 @@ export const MatchesScrollLists = React.memo(({ groupedMatches }: MatchesScrollL
   const { width: screenWidth } = useWindowDimensions();
 
   const expectedSelectedDate = useRef<Date | null>(null);
-  const selectedDate = useSelectedDate(({ selectedDate }) => selectedDate);
-  const setSelectedDate = useSelectedDate(({ setSelectedDate }) => setSelectedDate);
+  const selectedDate = useCalendarState(({ selectedDate }) => selectedDate);
+  const setSelectedDate = useCalendarState(({ setSelectedDate }) => setSelectedDate);
 
   const initialIndex = useMemo(() => {
     const index = groupedMatches.findIndex(([day]) => isSameDay(day, selectedDate));
