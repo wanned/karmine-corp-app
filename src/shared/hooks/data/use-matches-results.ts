@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import * as datefns from 'date-fns';
 import { useEffect } from 'react';
 
 import { useDataFetcher } from './use-data-fetcher';
@@ -12,6 +13,28 @@ export const useMatchesResults = () => {
   useEffect(() => {
     dataFetcher.getSchedule({
       filters: { status: ['finished', 'live'] },
+      batches: [
+        // Priority 1: last 24h
+        {
+          from: datefns.startOfDay(datefns.subDays(new Date(), 1)),
+          to: datefns.endOfDay(new Date()),
+        },
+        // Priority 2: last 3 days
+        {
+          from: datefns.startOfDay(datefns.subDays(new Date(), 4)),
+          to: datefns.endOfDay(datefns.subDays(new Date(), 1)),
+        },
+        // Priority 3: last 7 days
+        {
+          from: datefns.startOfDay(datefns.subDays(new Date(), 7)),
+          to: datefns.endOfDay(datefns.subDays(new Date(), 4)),
+        },
+        // Priority 4: last 1 month
+        {
+          from: datefns.startOfDay(datefns.subMonths(new Date(), 1)),
+          to: datefns.endOfDay(datefns.subDays(new Date(), 7)),
+        },
+      ],
       onResult: (newMatch) => {
         queryClient.setQueryData<CoreData.Match[]>(['matchesResults'], (matches = []) => {
           const matchIndex = matches?.findIndex((match) => match.id === newMatch.id);

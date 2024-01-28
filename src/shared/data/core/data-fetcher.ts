@@ -18,6 +18,7 @@ export namespace DataFetcher {
       status?: _CoreData.Match['status'][];
       date?: { from?: Date; to?: Date };
     };
+    batches?: { from: Date; to: Date }[];
     apis: Apis;
   }
 }
@@ -32,6 +33,7 @@ export class DataFetcher {
   public async getSchedule({
     onResult = () => {},
     filters = {},
+    batches = [],
   }: Partial<Omit<DataFetcher.GetScheduleParams, 'apis'>> = {}): Promise<_CoreData.Match[]> {
     const apis: DataFetcher.Apis = {
       karmine: new KarmineApiClient({ fetch_: this.fetch_ }),
@@ -40,8 +42,8 @@ export class DataFetcher {
     };
 
     const matches = await Promise.all([
-      getAllMatches({ onResult, filters, apis }),
-      getLeagueOfLegendsMatches({ onResult, filters, apis }),
+      getAllMatches({ onResult, filters, batches, apis }),
+      getLeagueOfLegendsMatches({ onResult, filters, batches, apis }),
     ]);
 
     return matches.flat();
