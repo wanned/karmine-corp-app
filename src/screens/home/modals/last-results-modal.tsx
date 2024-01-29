@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, VirtualizedList } from 'react-native';
+import { ScrollView, View, VirtualizedList } from 'react-native';
 
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
@@ -29,7 +29,14 @@ export const LastResultsModal = React.memo(() => {
 
   return (
     <ModalLayout>
-      <View style={styles.matchesContainer}>
+      {/*
+        The horizontal ScrollView is a workaround for the VirtualizedList not working properly with the ModalLayout.
+        "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality"
+      */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        horizontal
+        contentContainerStyle={styles.matchesContainer}>
         <VirtualizedList
           data={matchs}
           getItem={(data, index) => data[index]}
@@ -78,7 +85,7 @@ export const LastResultsModal = React.memo(() => {
             )
           }
         />
-      </View>
+      </ScrollView>
     </ModalLayout>
   );
 });
