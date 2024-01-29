@@ -36,7 +36,7 @@ export const GameDetailsModal = React.memo(({ route: { params } }: GameDetailsMo
   const [isNotified, setIsNotified] = React.useState(false);
 
   return (
-    <ModalLayout>
+    <ModalLayout scrollViewStyle={{ marginTop: -130, zIndex: -1 }} opacifyOnScroll>
       <View style={styles.headerContainer}>
         <Image
           style={styles.headerImage}
@@ -145,8 +145,6 @@ const getStyles = createStylesheet((theme) => ({
   },
   headerContainer: {
     height: 280,
-    marginTop: -130,
-    zIndex: -1,
   },
   headerImage: {
     position: 'absolute',
@@ -169,6 +167,7 @@ const getStyles = createStylesheet((theme) => ({
     marginBottom: 60,
   },
   gameDetailsContainer: {
+    flex: 1,
     paddingHorizontal: 16,
     gap: 48,
   },
