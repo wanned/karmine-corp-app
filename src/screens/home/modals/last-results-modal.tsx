@@ -28,15 +28,8 @@ export const LastResultsModal = React.memo(() => {
   }
 
   return (
-    <ModalLayout>
-      {/*
-        The horizontal ScrollView is a workaround for the VirtualizedList not working properly with the ModalLayout.
-        "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality"
-      */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        horizontal
-        contentContainerStyle={styles.matchesContainer}>
+    <ModalLayout useScrollView={false}>
+      <View style={styles.matchesContainer}>
         <VirtualizedList
           data={matchs}
           getItem={(data, index) => data[index]}
@@ -85,7 +78,7 @@ export const LastResultsModal = React.memo(() => {
             )
           }
         />
-      </ScrollView>
+      </View>
     </ModalLayout>
   );
 });
@@ -97,8 +90,7 @@ const getStyles = createStylesheet((theme) => ({
     alignItems: 'center',
   },
   matchesContainer: {
-    marginTop: 8,
-    paddingHorizontal: 16,
     flex: 1,
+    paddingHorizontal: 16,
   },
 }));
