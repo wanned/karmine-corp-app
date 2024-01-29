@@ -26,7 +26,7 @@ export const ModalHeaderBar = ({ opacifyOnScroll, handleScrollRef }: ModalHeader
   const safeAreaInsets = useSafeAreaInsets();
   const styles = useStyles(getStyles);
 
-  const { backgroundContainerStyle, handleModalScroll, handleHeaderLayout, headerHeight } =
+  const { backgroundContainerStyle, handleModalScroll, headerHeight, setHeaderHeight } =
     useHeaderBarFadingBackground({
       opacifyOnScroll,
     });
@@ -38,7 +38,9 @@ export const ModalHeaderBar = ({ opacifyOnScroll, handleScrollRef }: ModalHeader
   }, [handleModalScroll]);
 
   return (
-    <View style={{ overflow: 'hidden' }} onLayout={handleHeaderLayout}>
+    <View
+      style={{ overflow: 'hidden' }}
+      onLayout={(event) => setHeaderHeight(event.nativeEvent.layout.height)}>
       <Animated.View style={backgroundContainerStyle}>
         <HeaderBackground headerHeight={headerHeight} />
       </Animated.View>
@@ -77,17 +79,10 @@ const useHeaderBarFadingBackground = ({ opacifyOnScroll }: ModalHeaderBarProps) 
     [scrollY, opacifyOnScroll]
   );
 
-  const handleHeaderLayout = useCallback(
-    (event: Parameters<NonNullable<View['props']['onLayout']>>[0]) => {
-      setHeaderHeight(event.nativeEvent.layout.height);
-    },
-    [setHeaderHeight]
-  );
-
   return {
     backgroundContainerStyle,
     handleModalScroll,
-    handleHeaderLayout,
+    setHeaderHeight,
     headerHeight,
   };
 };
