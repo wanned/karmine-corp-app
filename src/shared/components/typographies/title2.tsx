@@ -1,14 +1,24 @@
+import { View } from 'react-native';
+
 import { BaseText } from './base-text';
+import { TypographyProps } from './typography';
 
-interface Title2Props {
-  children: string | string[];
-  color?: string;
-}
-
-export const Title2 = ({ children, color }: Title2Props) => {
+export const Title2 = ({ children, color, verticalTrim = false }: TypographyProps) => {
   return (
-    <BaseText color={color} fontSize={16} fontWeight="Black">
-      {children}
-    </BaseText>
+    <View
+      style={{
+        height: verticalTrim ? 11 : undefined,
+        justifyContent: 'flex-end',
+      }}>
+      <View style={{ position: 'relative', top: verticalTrim ? 4 : undefined }}>
+        <BaseText
+          color={color}
+          fontSize={16}
+          fontWeight="Black"
+          lineHeight={verticalTrim ? 20 : undefined}>
+          {children}
+        </BaseText>
+      </View>
+    </View>
   );
 };

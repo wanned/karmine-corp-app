@@ -1,6 +1,10 @@
+import { Image } from 'expo-image';
 import { View, FlatList, StyleSheet, Pressable } from 'react-native';
 
-import { Typographies } from '~/shared/components/typographies';
+import { useGameLogoImage } from '../hooks/use-game-logo-image';
+import { useGames } from '../hooks/use-games';
+
+import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { Settings } from '~/shared/types/Settings';
@@ -17,28 +21,34 @@ export function NotificationSettings({
 }) {
   const styles = useStyles(getNotificationSettingsStyles);
 
-  const notificationEntries = Object.entries(notificationSettings);
-  const notificationEntriesLength = notificationEntries.length;
+  const games = useGames();
 
-  const numberOfEmptyCells = numberOfColumns - (notificationEntriesLength % numberOfColumns);
+  const numberOfEmptyCells =
+    games.length % numberOfColumns === 0 ? 0 : numberOfColumns - (games.length % numberOfColumns);
   const emptyCells = Array.from({ length: numberOfEmptyCells }).map(
-    (_, i) => [`empty-${i}`, null] as const
+    (_, i) => `empty-${i}` as const
   );
 
   return (
     <View style={styles.notificationGrid}>
       <FlatList
-        data={[...notificationEntries, ...emptyCells]}
+        data={[...games, ...emptyCells]}
         scrollEnabled={false}
-        renderItem={({ item: [key, value] }) => (
+        renderItem={({ item: label }) => (
           <NotificationSetting
-            label={key}
-            value={value}
-            setValue={(value) => setNotificationSettings({ ...notificationSettings, [key]: value })}
+            label={label}
+            value={
+              label.startsWith('empty-')
+                ? null
+                : notificationSettings[label as KarmineApi.CompetitionName]
+            }
+            setValue={(value) =>
+              setNotificationSettings({ ...notificationSettings, [label]: value })
+            }
           />
         )}
         numColumns={3}
-        keyExtractor={([key]) => key}
+        keyExtractor={(key) => key}
       />
     </View>
   );
@@ -55,6 +65,8 @@ function NotificationSetting({
 }) {
   const styles = useStyles(getNotificationSettingStyles);
 
+  const image = useGameLogoImage(label);
+
   if (value === null) {
     return <View style={{ flex: styles.container.flex, margin: styles.container.margin }} />;
   }
@@ -63,7 +75,7 @@ function NotificationSetting({
     <Pressable
       style={StyleSheet.compose(styles.container, value && styles.containerSelected)}
       onPress={() => setValue(!value)}>
-      <Typographies.Body>{label}</Typographies.Body>
+      <Image style={styles.gameLogo} source={image} cachePolicy="memory-disk" />
     </Pressable>
   );
 }
@@ -88,5 +100,10 @@ const getNotificationSettingStyles = createStylesheet((theme) => ({
   },
   containerSelected: {
     borderColor: theme.colors.accent,
+  },
+  gameLogo: {
+    width: '100%',
+    height: '100%',
+    contentFit: 'contain',
   },
 }));

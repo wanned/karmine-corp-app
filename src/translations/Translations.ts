@@ -21,9 +21,12 @@ export type Translations = Record<
     };
     teams: {
       screenName: string;
+      leaderboardTitle: string;
+      playersTitle: string;
     };
     settings: {
       screenName: string;
+      version: string;
       notifications: {
         title: string;
         description: string;
@@ -37,9 +40,31 @@ export type Translations = Record<
         description: string;
         languages: Record<Language, string>;
       };
+      other: {
+        title: string;
+        buttonTitles: {
+          bugReport: string;
+          karmineCorpWebsite: string;
+          karmineCorpTwitter: string;
+          credits: string;
+        };
+      };
     };
     games: {
       [K in KarmineApi.CompetitionName]: string;
+    };
+    gameDetails: {
+      gamesTitle: string;
+      playersTitle: string;
+      gamePrefix: string;
+      watchReplayText: string;
+      goalsText: string;
+      stopsText: string;
+      totalText: string;
+      beNotifiedButtonText: string;
+      cancelNotificationButtonText: string;
+      watchStreamButtonText: string;
+      shareStreamButtonText: string;
     };
   }
 >;

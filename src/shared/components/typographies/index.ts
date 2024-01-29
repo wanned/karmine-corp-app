@@ -1,4 +1,5 @@
 import { Body } from './body';
+import { Huge } from './huge';
 import { Label } from './label';
 import { Title1 } from './title1';
 import { Title2 } from './title2';
@@ -12,4 +13,5 @@ export const Typographies = {
   Title2,
   Title3,
   VeryBig,
+  Huge,
 };
