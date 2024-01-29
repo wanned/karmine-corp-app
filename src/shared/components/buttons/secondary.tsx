@@ -23,13 +23,21 @@ export const Secondary = ({
 
   return (
     <TouchableOpacity
-      style={StyleSheet.compose(styles.button, fillWidth ? styles.fillWidth : undefined)}
+      style={StyleSheet.compose(
+        StyleSheet.compose(styles.button, fillWidth ? styles.fillWidth : undefined),
+        withArrow ? styles.buttonWithArrow : undefined
+      )}
       onPress={onPress}>
       <Typographies.Body color={styles.button.color} verticalTrim>
         {text}
       </Typographies.Body>
       {withArrow && (
-        <Iconify icon="solar:arrow-right-linear" size={20} color={styles.iconColor.color} />
+        <Iconify
+          icon="solar:arrow-right-linear"
+          size={20}
+          color={styles.icon.color}
+          style={styles.icon}
+        />
       )}
     </TouchableOpacity>
   );
@@ -41,15 +49,20 @@ const getStyles = createStylesheet((theme) => ({
     backgroundColor: theme.colors.subtleBackground,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
     borderRadius: 8,
   },
+  buttonWithArrow: {
+    justifyContent: 'space-between',
+  },
   fillWidth: {
     width: '100%',
   },
-  iconColor: {
+  icon: {
     color: theme.colors.foreground,
+    position: 'absolute',
+    right: 16,
   },
 }));
