@@ -52,5 +52,18 @@ export type Translations = Record<
     games: {
       [K in KarmineApi.CompetitionName]: string;
     };
+    gameDetails: {
+      gamesTitle: string;
+      playersTitle: string;
+      gamePrefix: string;
+      watchReplayText: string;
+      goalsText: string;
+      stopsText: string;
+      totalText: string;
+      beNotifiedButtonText: string;
+      cancelNotificationButtonText: string;
+      watchStreamButtonText: string;
+      shareStreamButtonText: string;
+    };
   }
 >;

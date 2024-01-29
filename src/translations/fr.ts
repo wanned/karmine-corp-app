@@ -60,4 +60,17 @@ export const frTranslations: Translations['fr'] = {
     ValorantVCT: 'Valorant',
     ValorantVCT_GC: 'Valorant Féminin',
   },
+  gameDetails: {
+    gamesTitle: 'Games',
+    playersTitle: 'Joueurs',
+    gamePrefix: 'Game',
+    watchReplayText: 'Voir le replay',
+    goalsText: 'Buts',
+    stopsText: 'Arrêts',
+    totalText: 'Total des points',
+    beNotifiedButtonText: 'Être notifié',
+    cancelNotificationButtonText: 'Annuler la notification',
+    watchStreamButtonText: 'Regarder le stream',
+    shareStreamButtonText: 'Partager le stream',
+  },
 };

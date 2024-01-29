@@ -1,4 +1,4 @@
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 import { Typographies } from '../typographies';
 
@@ -14,15 +14,20 @@ export const Text = ({ text, onPress }: TextProps) => {
   const styles = useStyles(getStyles);
 
   return (
-    <TouchableOpacity onPress={onPress}>
-      <Typographies.Body color={styles.button.color} verticalTrim>
-        {text}
-      </Typographies.Body>
-    </TouchableOpacity>
+    <View>
+      <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
+        <Typographies.Body color={styles.button.color} verticalTrim>
+          {text}
+        </Typographies.Body>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const getStyles = createStylesheet((theme) => ({
+  buttonContainer: {
+    alignSelf: 'flex-start',
+  },
   button: {
     color: theme.colors.accent,
   },

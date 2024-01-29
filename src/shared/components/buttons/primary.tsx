@@ -18,9 +18,9 @@ export const Primary = ({ text, onPress, fillWidth = false }: PrimaryProps) => {
     <TouchableOpacity
       style={StyleSheet.compose(styles.button, fillWidth ? styles.fillWidth : undefined)}
       onPress={onPress}>
-      <Typographies.Body color={styles.button.color} verticalTrim>
+      <Typographies.Title3 color={styles.button.color} verticalTrim>
         {text}
-      </Typographies.Body>
+      </Typographies.Title3>
     </TouchableOpacity>
   );
 };
@@ -32,11 +32,9 @@ const getStyles = createStylesheet((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 12,
+    padding: 16,
     borderRadius: 8,
   },
-
   fillWidth: {
     width: '100%',
   },

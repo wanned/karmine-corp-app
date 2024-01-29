@@ -1,3 +1,4 @@
+import { Player } from '~/screens/game-details-modal/components/types/player';
 import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 
 export type Matchs = Match[];
@@ -13,6 +14,7 @@ export interface Match {
           isWinner?: boolean;
         }
       | undefined;
+    players: Player[];
   }[];
   date: Date;
   streamLink: string;
@@ -31,17 +33,9 @@ export interface LeagueOfLegendsMatchDetails extends BaseMatchDetails {
     | KarmineApi.CompetitionName.LeagueOfLegendsLEC;
   games: LeagueOfLegendsGame[];
   bo: number;
-  players: Record<
-    string,
-    {
-      name: string;
-      imageUrl: string;
-      role: string;
-    }[]
-  >;
 }
 
-interface LeagueOfLegendsGame {
+export interface LeagueOfLegendsGame {
   draft: Record<
     'blue' | 'red',
     {
@@ -54,5 +48,6 @@ interface LeagueOfLegendsGame {
       }[];
     }
   >;
+  duration: number;
   score: Record<'blue' | 'red', number>;
 }

@@ -19,7 +19,6 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
     <View
       style={StyleSheet.compose(styles.appContainer, {
         paddingTop: safeAreaInsets.top,
-        paddingBottom: safeAreaInsets.bottom,
       })}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.layout}>
