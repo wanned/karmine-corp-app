@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 import { StyleSheet, VirtualizedList, useWindowDimensions } from 'react-native';
 
 import { DayButton, dayButtonConstants } from './day-button';
@@ -6,6 +6,7 @@ import { useCalendarState } from '../hooks/use-calendar-state';
 
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
+import { IsoDate } from '~/shared/types/IsoDate';
 import { isSameDay } from '~/shared/utils/is-same-day';
 
 export const DayList = React.memo(() => {
@@ -15,17 +16,23 @@ export const DayList = React.memo(() => {
 
   const styles = useStyles(getStyles);
 
-  const dates = useCalendarState(({ dates }) => dates);
+  const dates = useCalendarState(({ dates }) =>
+    dates.map(({ date, isMatchDay }) => ({
+      isoDate: date.toISOString() as IsoDate,
+      isMatchDay,
+    }))
+  );
   const selectedDate = useCalendarState(({ selectedDate }) => selectedDate);
 
   const selectedIndex = useMemo(() => {
     if (dates.length === 0) return -1;
 
-    return dates.findIndex(({ date }) => isSameDay(date, selectedDate));
+    return dates.findIndex(({ isoDate }) => isSameDay(new Date(isoDate), selectedDate));
   }, [dates, selectedDate]);
 
   const scrollInitialized = useRef(false);
-  useLayoutEffect(() => {
+
+  const scrollToSelectedIndex = useCallback(() => {
     if (selectedIndex === -1) return;
 
     dayListRef.current?.scrollToIndex({
@@ -50,9 +57,9 @@ export const DayList = React.memo(() => {
       data={dates}
       getItem={(data, index) => data[index]}
       getItemCount={(data) => data.length}
-      keyExtractor={({ date }) => date.toISOString()}
+      keyExtractor={({ isoDate }) => isoDate}
       showsHorizontalScrollIndicator={false}
-      renderItem={({ item: date }) => <DayButton date={date} />}
+      renderItem={({ item: date }) => <DayButton {...date} />}
       getItemLayout={(_, index) => {
         const itemSpace =
           dayButtonConstants.width + dayButtonConstants.padding * 2 + dayButtonConstants.margin * 2;
@@ -62,6 +69,7 @@ export const DayList = React.memo(() => {
           index,
         };
       }}
+      initialNumToRender={30}
     />
   );
 });

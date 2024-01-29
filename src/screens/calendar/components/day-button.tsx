@@ -7,13 +7,17 @@ import { Typographies } from '~/shared/components/typographies';
 import { useDate } from '~/shared/hooks/use-date';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
+import { IsoDate } from '~/shared/types/IsoDate';
 import { isSameDay } from '~/shared/utils/is-same-day';
 
 interface DayButtonProps {
-  date: { date: Date; isMatchDay: boolean };
+  isoDate: IsoDate;
+  isMatchDay: boolean;
 }
 
-export const DayButton = React.memo(({ date: { date, isMatchDay } }: DayButtonProps) => {
+export const DayButton = React.memo(({ isoDate, isMatchDay }: DayButtonProps) => {
+  const date = useMemo(() => new Date(isoDate), [isoDate]);
+
   const styles = useStyles(getStyles);
 
   const isToday = useMemo(() => isSameDay(date, new Date()), [date]);
