@@ -34,12 +34,16 @@ export const DayList = React.memo(() => {
       viewPosition: 0.5,
       viewOffset: scrollInitialized.current ? 0 : width / 2,
     });
+  }, [selectedIndex, width]);
 
+  useLayoutEffect(() => {
+    scrollToSelectedIndex();
     scrollInitialized.current = true;
-  }, [selectedIndex]);
+  }, [scrollToSelectedIndex]);
 
   return (
     <VirtualizedList<(typeof dates)[number]>
+      onLayout={() => scrollToSelectedIndex()}
       ref={dayListRef}
       style={StyleSheet.compose(styles.dayListContainer, { width })}
       horizontal
