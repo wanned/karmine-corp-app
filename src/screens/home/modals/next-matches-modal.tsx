@@ -28,22 +28,15 @@ export const NextMatchesModal = React.memo(() => {
   }
 
   return (
-    <ModalLayout>
-      {/*
-        The horizontal ScrollView is a workaround for the VirtualizedList not working properly with the ModalLayout.
-        "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality"
-      */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        horizontal
-        contentContainerStyle={styles.matchesContainer}>
+    <ModalLayout useScrollView={false}>
+      <View style={styles.matchesContainer}>
         <VirtualizedList
           data={matchs}
           getItem={(data, index) => data[index]}
           getItemCount={(data) => data.length}
-          keyExtractor={(item) => item.data.karmineEvent.id}
+          keyExtractor={(item) => item.karmineEvent.id}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item: { data: match } }) =>
+          renderItem={({ item: match }) =>
             match && (
               <MatchScore
                 key={match.id}
@@ -63,7 +56,7 @@ export const NextMatchesModal = React.memo(() => {
             )
           }
         />
-      </ScrollView>
+      </View>
     </ModalLayout>
   );
 });

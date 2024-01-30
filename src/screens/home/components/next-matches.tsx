@@ -23,7 +23,7 @@ export const NextMatches = ({ viewMoreButton, max }: NextMatchesProps) => {
   return (
     <Section title={translate('home.nextMatchesTitle')}>
       {matchs.slice(0, max).map(
-        ({ data: match }, index) =>
+        (match, index) =>
           match && (
             <MatchScore
               key={index}

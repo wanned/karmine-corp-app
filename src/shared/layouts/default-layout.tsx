@@ -20,7 +20,9 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
       style={StyleSheet.compose(styles.appContainer, {
         paddingTop: safeAreaInsets.top,
       })}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ minHeight: '100%' }}>
         <View style={styles.layout}>
           <View style={styles.header}>
             <KarmineLogo color={styles.headerLogo.color} width={38} height={36} />

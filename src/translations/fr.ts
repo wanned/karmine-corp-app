@@ -13,6 +13,7 @@ export const frTranslations: Translations['fr'] = {
   },
   calendar: {
     screenName: 'Calendrier',
+    noMatchesToday: "Aucun match aujourd'hui",
   },
   teams: {
     screenName: 'Équipes',

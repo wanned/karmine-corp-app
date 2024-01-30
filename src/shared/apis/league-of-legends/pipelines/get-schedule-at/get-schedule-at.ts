@@ -1,5 +1,7 @@
 import { leagueOfLegendsApi } from '../../league-of-legends-api';
 
+import { isSameDay } from '~/shared/utils/is-same-day';
+
 export const getScheduleAt = async (date: Date, params: { leagueIds?: string[] }) => {
   const dateSchedule: Awaited<ReturnType<typeof leagueOfLegendsApi.getSchedule>> = {
     data: {
@@ -19,7 +21,7 @@ export const getScheduleAt = async (date: Date, params: { leagueIds?: string[] }
 
   for (;;) {
     currentSchedule.data.schedule.events.forEach((event) => {
-      if (dateIsEqualTo(new Date(event.startTime), date)) {
+      if (isSameDay(new Date(event.startTime), date)) {
         dateSchedule.data.schedule.events.push(event);
       }
     });
@@ -56,15 +58,6 @@ export const getScheduleAt = async (date: Date, params: { leagueIds?: string[] }
   }
 
   return dateSchedule;
-};
-
-const dateIsEqualTo = (date: Date, dateToCompare: Date) => {
-  // Check only the day, month and year
-  return (
-    date.getDate() === dateToCompare.getDate() &&
-    date.getMonth() === dateToCompare.getMonth() &&
-    date.getFullYear() === dateToCompare.getFullYear()
-  );
 };
 
 const dateIsGreaterThan = (date: Date, dateToCompare: Date) => {

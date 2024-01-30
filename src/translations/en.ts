@@ -13,6 +13,7 @@ export const enTranslations: Translations['en'] = {
   },
   calendar: {
     screenName: 'Calendar',
+    noMatchesToday: 'No match today',
   },
   teams: {
     screenName: 'Teams',
