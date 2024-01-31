@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { TabBar } from './tab-bar';
-import { Match } from '../types/data/Matchs';
+import { CoreData } from '../data/core/types';
 
 import CalendarScreen from '~/screens/calendar';
 import { GameDetailsModal } from '~/screens/game-details-modal';
@@ -28,8 +28,8 @@ export type ModalsParamList = {
   nextMatchesModal: undefined;
   lastResultsModal: undefined;
   gameDetailsModal: {
-    match: Match;
-    gamesComponent: (props: { match: Match }) => React.ReactNode;
+    match: CoreData.Match;
+    gamesComponent: (props: { match: CoreData.Match }) => React.ReactNode;
   };
 };
 

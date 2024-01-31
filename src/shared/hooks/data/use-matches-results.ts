@@ -1,53 +1,76 @@
-import { queryOptions, useQueries, useQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import * as datefns from 'date-fns';
 import { useEffect } from 'react';
 import { create } from 'zustand';
 
-import { karmineApi } from '~/shared/apis/karmine/karmine-api';
-import { parseMatch } from '~/shared/data/parse-matchs/parse-match';
-import { Match } from '~/shared/types/data/Matchs';
+import { useDataFetcher } from './use-data-fetcher';
+
+import { CoreData } from '~/shared/data/core/types';
 
 interface MatchesResults {
-  matchesResults: Match[];
-  setMatchesResults: (matches: Match[]) => void;
+  matchesResults: CoreData.Match[];
+  addMatchResult: (match: CoreData.Match) => void;
 }
 
 const useMatchesResultsStore = create<MatchesResults>((set) => ({
   matchesResults: [],
-  setMatchesResults: (matches) => set({ matchesResults: matches }),
+  addMatchResult: (newMatch: CoreData.Match) =>
+    set((state) => {
+      const matchIndex = state.matchesResults?.findIndex((match) => match.id === newMatch.id);
+
+      if (matchIndex === -1) {
+        return {
+          matchesResults: [...state.matchesResults, newMatch],
+        };
+      }
+
+      return {
+        matchesResults: [
+          ...state.matchesResults.slice(0, matchIndex),
+          newMatch,
+          ...state.matchesResults.slice(matchIndex + 1),
+        ],
+      };
+    }),
 }));
 
-export const useMatchesResults = () => useMatchesResultsStore((state) => state.matchesResults);
+export const useMatchesResults = () =>
+  useMatchesResultsStore((state) =>
+    [...state.matchesResults].sort((a, b) => b.date.getTime() - a.date.getTime())
+  );
 
 export const useInitMatchesResults = () => {
-  const setMatchesResults = useMatchesResultsStore((state) => state.setMatchesResults);
+  const dataFetcher = useDataFetcher();
+  const queryClient = useQueryClient();
 
-  const { data: eventsResults } = useQuery({
-    queryKey: ['karmineEventsResults'],
-    queryFn: karmineApi.getEventsResults,
-  });
-
-  const results = useQueries({
-    queries: eventsResults
-      ? eventsResults.map((event) => {
-          return queryOptions({
-            queryKey: ['karmineEventResult', event.id],
-            queryFn: () =>
-              parseMatch({
-                ...event,
-                end: '' as any,
-                hasNotif: 0,
-                streamLink: '',
-              }),
-          });
-        })
-      : [],
-  });
+  const addMatchResult = useMatchesResultsStore((state) => state.addMatchResult);
 
   useEffect(() => {
-    const matchesResults = results
-      .map((result) => result.data)
-      .filter((data): data is NonNullable<typeof data> => !!data);
-
-    setMatchesResults(matchesResults);
-  }, [results]);
+    dataFetcher.getSchedule({
+      filters: { status: ['finished', 'live'] },
+      batches: [
+        // Priority 1: last 24h
+        {
+          from: datefns.startOfDay(datefns.subDays(new Date(), 1)),
+          to: datefns.endOfDay(new Date()),
+        },
+        // Priority 2: last 3 days
+        {
+          from: datefns.startOfDay(datefns.subDays(new Date(), 4)),
+          to: datefns.endOfDay(datefns.subDays(new Date(), 1)),
+        },
+        // Priority 3: last 7 days
+        {
+          from: datefns.startOfDay(datefns.subDays(new Date(), 7)),
+          to: datefns.endOfDay(datefns.subDays(new Date(), 4)),
+        },
+        // Priority 4: last 1 month
+        {
+          from: datefns.startOfDay(datefns.subMonths(new Date(), 1)),
+          to: datefns.endOfDay(datefns.subDays(new Date(), 7)),
+        },
+      ],
+      onResult: addMatchResult,
+    });
+  }, [queryClient, dataFetcher]);
 };

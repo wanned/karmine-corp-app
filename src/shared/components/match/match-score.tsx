@@ -2,9 +2,9 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 import { LolGames } from '~/screens/game-details-modal/components/lol-games';
-import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
+import { CoreData } from '~/shared/data/core/types';
 import { useDate } from '~/shared/hooks/use-date';
 import { useNavigation } from '~/shared/hooks/use-navigation';
 import { useTranslate } from '~/shared/hooks/use-translate';
@@ -17,7 +17,7 @@ interface MatchScoreProps {
   date: Date;
   children: React.ReactNode;
   status: MatchStatus;
-  game: KarmineApi.CompetitionName;
+  game: CoreData.CompetitionName;
   bo?: number;
 }
 
@@ -36,13 +36,13 @@ export const MatchScore = React.memo<MatchScoreProps>(
         style={styles.container}
         onPress={() =>
           navigation.navigate('gameDetailsModal', {
-            gamesComponent: LolGames as any, // FIXME: remove any
+            gamesComponent: LolGames,
             match: {
               date: new Date('2023-12-26T17:00:00.000Z'),
               streamLink: 'https://www.twitch.tv/karminecorp',
               matchDetails: {
                 bo: 1,
-                game: KarmineApi.CompetitionName.LeagueOfLegendsLEC,
+                game: CoreData.CompetitionName.LeagueOfLegendsLEC,
                 games: [
                   {
                     duration: 1500,

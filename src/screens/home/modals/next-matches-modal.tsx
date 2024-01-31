@@ -4,6 +4,7 @@ import { ScrollView, View, VirtualizedList } from 'react-native';
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
 import { Typographies } from '~/shared/components/typographies';
+import { CoreData } from '~/shared/data/core/types';
 import { useNextMatches } from '~/shared/hooks/data/use-next-matches';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
@@ -17,7 +18,7 @@ export const NextMatchesModal = React.memo(() => {
 
   const matchs = useNextMatches();
 
-  if (!matchs.length) {
+  if (!matchs?.length) {
     return (
       <ModalLayout>
         <View style={styles.noMatchesContainer}>
@@ -30,11 +31,11 @@ export const NextMatchesModal = React.memo(() => {
   return (
     <ModalLayout useScrollView={false}>
       <View style={styles.matchesContainer}>
-        <VirtualizedList
+        <VirtualizedList<CoreData.Match>
           data={matchs}
           getItem={(data, index) => data[index]}
           getItemCount={(data) => data.length}
-          keyExtractor={(item) => item.karmineEvent.id}
+          keyExtractor={(match) => match.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item: match }) =>
             match && (
@@ -43,15 +44,18 @@ export const NextMatchesModal = React.memo(() => {
                 date={match.date}
                 status="upcoming"
                 bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}
-                game={match.matchDetails.game}>
-                {match.teams.map((team: { logoUrl: string; name: string }, index: number) => (
-                  <MatchTeam
-                    key={`${match.id}-${team.name}-${index}`}
-                    logo={team.logoUrl}
-                    name={team.name}
-                    score="-"
-                  />
-                ))}
+                game={match.matchDetails.competitionName}>
+                {match.teams.map(
+                  (team, index: number) =>
+                    team && (
+                      <MatchTeam
+                        key={`${match.id}-${team.name}-${index}`}
+                        logo={team.logoUrl}
+                        name={team.name}
+                        score="-"
+                      />
+                    )
+                )}
               </MatchScore>
             )
           }

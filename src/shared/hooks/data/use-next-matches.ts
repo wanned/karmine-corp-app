@@ -1,47 +1,71 @@
-import { queryOptions, useQueries, useQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import * as datefns from 'date-fns';
 import { useEffect } from 'react';
 import { create } from 'zustand';
 
-import { karmineApi } from '~/shared/apis/karmine/karmine-api';
-import { parseMatch } from '~/shared/data/parse-matchs/parse-match';
-import { Match } from '~/shared/types/data/Matchs';
+import { useDataFetcher } from './use-data-fetcher';
+
+import { CoreData } from '~/shared/data/core/types';
 
 interface NextMatches {
-  nextMatches: Match[];
-  setNextMatches: (matches: Match[]) => void;
+  nextMatches: CoreData.Match[];
+  addMatchResult: (match: CoreData.Match) => void;
 }
 
 const useNextMatchesStore = create<NextMatches>((set) => ({
   nextMatches: [],
-  setNextMatches: (matches) => set({ nextMatches: matches }),
+  addMatchResult: (newMatch: CoreData.Match) =>
+    set((state) => {
+      const matchIndex = state.nextMatches?.findIndex((match) => match.id === newMatch.id);
+
+      if (matchIndex === -1) {
+        return {
+          nextMatches: [...state.nextMatches, newMatch],
+        };
+      }
+
+      return {
+        nextMatches: [
+          ...state.nextMatches.slice(0, matchIndex),
+          newMatch,
+          ...state.nextMatches.slice(matchIndex + 1),
+        ],
+      };
+    }),
 }));
 
-export const useNextMatches = () => useNextMatchesStore((state) => state.nextMatches);
+export const useNextMatches = () =>
+  useNextMatchesStore((state) =>
+    [...state.nextMatches].sort((a, b) => a.date.getTime() - b.date.getTime())
+  );
 
 export const useInitNextMatches = () => {
-  const setNextMatches = useNextMatchesStore((state) => state.setNextMatches);
+  const dataFetcher = useDataFetcher();
+  const queryClient = useQueryClient();
 
-  const { data: events } = useQuery({
-    queryKey: ['karmineEvents'],
-    queryFn: karmineApi.getEvents,
-  });
-
-  const results = useQueries({
-    queries: events
-      ? events.map((event) => {
-          return queryOptions({
-            queryKey: ['karmineEvent', event.id],
-            queryFn: () => parseMatch(event),
-          });
-        })
-      : [],
-  });
+  const addMatchResult = useNextMatchesStore((state) => state.addMatchResult);
 
   useEffect(() => {
-    const nextMatches = results
-      .map((result) => result.data)
-      .filter((data): data is NonNullable<typeof data> => !!data);
-
-    setNextMatches(nextMatches);
-  }, [results]);
+    dataFetcher.getSchedule({
+      filters: { status: ['upcoming'] },
+      batches: [
+        // Priority 1: next 24h
+        {
+          from: datefns.startOfDay(new Date()),
+          to: datefns.endOfDay(datefns.addDays(new Date(), 7)),
+        },
+        // Priority 2: next 3 days
+        {
+          from: datefns.startOfDay(datefns.addDays(new Date(), 1)),
+          to: datefns.endOfDay(datefns.addDays(new Date(), 7)),
+        },
+        // Priority 3: next 7 days
+        {
+          from: datefns.startOfDay(datefns.addDays(new Date(), 4)),
+          to: datefns.endOfDay(datefns.addDays(new Date(), 7)),
+        },
+      ],
+      onResult: addMatchResult,
+    });
+  }, [queryClient, dataFetcher]);
 };

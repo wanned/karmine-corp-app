@@ -1,9 +1,9 @@
-import { Match } from '~/shared/types/data/Matchs';
+import { CoreData } from '~/shared/data/core/types';
 import { isSameDay } from '~/shared/utils/is-same-day';
 
-export type GroupedMatchesByDay = [Date, Match[]][];
+export type GroupedMatchesByDay = [Date, CoreData.Match[]][];
 
-export const groupMatchesByDay = (matches: (Match | undefined)[]): GroupedMatchesByDay => {
+export const groupMatchesByDay = (matches: (CoreData.Match | undefined)[]): GroupedMatchesByDay => {
   const groupedMatches: GroupedMatchesByDay = [];
 
   matches.forEach((match) => {

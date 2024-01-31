@@ -16,27 +16,25 @@ export const NextMatches = ({ viewMoreButton, max }: NextMatchesProps) => {
 
   const matchs = useNextMatches();
 
-  if (!matchs.length) {
+  if (!matchs?.length) {
     return null;
   }
 
   return (
     <Section title={translate('home.nextMatchesTitle')}>
-      {matchs.slice(0, max).map(
-        (match, index) =>
-          match && (
-            <MatchScore
-              key={index}
-              date={match.date}
-              status="upcoming"
-              bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}
-              game={match.matchDetails.game}>
-              {match.teams.map((team, index) => (
-                <MatchTeam key={index} logo={team.logoUrl} name={team.name} score="-" />
-              ))}
-            </MatchScore>
-          )
-      )}
+      {matchs.slice(0, max).map((match) => (
+        <MatchScore
+          key={match.id}
+          date={match.date}
+          status="upcoming"
+          bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}
+          game={match.matchDetails.competitionName}>
+          {match.teams.map(
+            (team, index) =>
+              team && <MatchTeam key={index} logo={team.logoUrl} name={team.name} score="-" />
+          )}
+        </MatchScore>
+      ))}
       {viewMoreButton}
     </Section>
   );
