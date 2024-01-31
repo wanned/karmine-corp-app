@@ -10,13 +10,13 @@ export async function getTeamsFromEvent(
       name: team.name,
       logoUrl: team.image,
       score:
-        team.result.outcome !== null ?
-          {
-            score: team.result.gameWins,
-            scoreType: 'gameWins',
-            isWinner: team.result.outcome === 'win',
-          }
-        : undefined,
+        team.result !== null && team.result.outcome !== null
+          ? {
+              score: team.result.gameWins,
+              scoreType: 'gameWins',
+              isWinner: team.result.outcome === 'win',
+            }
+          : undefined,
     }) satisfies CoreData.LeagueOfLegendsMatch['teams'][number];
 
   const teamA = externalMatch.lol.match.teams[0];

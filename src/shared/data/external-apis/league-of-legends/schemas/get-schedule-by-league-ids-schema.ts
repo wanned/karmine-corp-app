@@ -4,10 +4,12 @@ const teamSchema = z.object({
   name: z.string(),
   code: z.string(),
   image: z.string().url(),
-  result: z.object({
-    outcome: z.enum(['win', 'loss']).nullable(),
-    gameWins: z.number().int(),
-  }),
+  result: z
+    .object({
+      outcome: z.enum(['win', 'loss']).nullable(),
+      gameWins: z.number().int(),
+    })
+    .nullable(),
 });
 
 export const getScheduleByLeagueIdsSchema = z.object({
