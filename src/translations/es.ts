@@ -13,12 +13,16 @@ export const esTranslations: Translations['es'] = {
   },
   calendar: {
     screenName: 'Calendario',
+    noMatchesToday: 'No hay partido hoy',
   },
   teams: {
     screenName: 'Equipos',
+    leaderboardTitle: 'Classificación',
+    playersTitle: 'Miembros',
   },
   settings: {
     screenName: 'Configuración',
+    version: 'Versión',
     notifications: {
       title: 'Notificaciones',
       description: 'Elija los juegos que recibirá notificaciones.',
@@ -36,6 +40,15 @@ export const esTranslations: Translations['es'] = {
         fr: 'Français',
       },
     },
+    other: {
+      title: 'Otros',
+      buttonTitles: {
+        bugReport: 'Reportar un error',
+        karmineCorpWebsite: 'Ir a karminecorp.fr',
+        karmineCorpTwitter: 'Visitar el X de Karmine Corp',
+        credits: 'Créditos',
+      },
+    },
   },
   games: {
     LeagueOfLegendsLFL: 'LFL',
@@ -47,5 +60,18 @@ export const esTranslations: Translations['es'] = {
     TrackMania: 'Trackmania',
     ValorantVCT: 'Valorant',
     ValorantVCT_GC: 'Valorant Femenino',
+  },
+  gameDetails: {
+    gamesTitle: 'Games',
+    playersTitle: 'Jugadores',
+    gamePrefix: 'Game',
+    watchReplayText: 'Ver el replay',
+    goalsText: 'Goles',
+    stopsText: 'Paradas',
+    totalText: 'Total de puntos',
+    beNotifiedButtonText: 'Ser notificado',
+    cancelNotificationButtonText: 'Cancelar la notificación',
+    watchStreamButtonText: 'Ver el stream',
+    shareStreamButtonText: 'Compartir el stream',
   },
 };

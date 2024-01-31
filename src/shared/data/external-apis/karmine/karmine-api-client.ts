@@ -60,4 +60,10 @@ export class KarmineApiClient {
 
     return twitch;
   }
+
+  public async getGames() {
+    const games = await this.fetch('/games', karmineApiSchemas.getGames);
+
+    return games;
+  }
 }

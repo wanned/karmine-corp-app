@@ -12,7 +12,7 @@ interface LastResultsProps {
 export const LastResults = ({ viewMoreButton, max }: LastResultsProps) => {
   const translate = useTranslate();
 
-  const { data: matchs } = useMatchesResults();
+  const matchs = useMatchesResults();
 
   if (!matchs?.length) {
     return null;
@@ -36,10 +36,11 @@ export const LastResults = ({ viewMoreButton, max }: LastResultsProps) => {
                   name={team.name}
                   isWinner={team.score?.isWinner}
                   score={
-                    team.score === undefined ? '-'
-                    : team.score.scoreType === 'top' ?
-                      `TOP ${team.score.score}`
-                    : team.score.score
+                    team.score === undefined
+                      ? '-'
+                      : team.score.scoreType === 'top'
+                        ? `TOP ${team.score.score}`
+                        : team.score.score
                   }
                 />
               )

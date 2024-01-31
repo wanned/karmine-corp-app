@@ -14,7 +14,7 @@ interface NextMatchesProps {
 export const NextMatches = ({ viewMoreButton, max }: NextMatchesProps) => {
   const translate = useTranslate();
 
-  const { data: matchs } = useNextMatches();
+  const matchs = useNextMatches();
 
   if (!matchs?.length) {
     return null;

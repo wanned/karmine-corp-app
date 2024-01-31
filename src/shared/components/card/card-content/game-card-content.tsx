@@ -96,7 +96,7 @@ const TeamScore = ({ logo, name, score, isWinner, position }: TeamScoreProps) =>
           {score.toString()}
         </Typographies.VeryBig>
       ) : checkSingleNumber(score) ? (
-        <OutlinedNumber>{score}</OutlinedNumber>
+        <OutlinedNumber size="small">{score}</OutlinedNumber>
       ) : (
         <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
           {score.toString()}

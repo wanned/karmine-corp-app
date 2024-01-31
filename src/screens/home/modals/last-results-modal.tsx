@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, VirtualizedList } from 'react-native';
+import { ScrollView, View, VirtualizedList } from 'react-native';
 
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
@@ -16,7 +16,7 @@ export const LastResultsModal = React.memo(() => {
 
   const translate = useTranslate();
 
-  const { data: matchs } = useMatchesResults();
+  const matchs = useMatchesResults();
 
   if (!matchs?.length) {
     return (
@@ -29,7 +29,7 @@ export const LastResultsModal = React.memo(() => {
   }
 
   return (
-    <ModalLayout>
+    <ModalLayout useScrollView={false}>
       <View style={styles.matchesContainer}>
         <VirtualizedList<CoreData.Match>
           data={matchs}
@@ -78,8 +78,7 @@ const getStyles = createStylesheet((theme) => ({
     alignItems: 'center',
   },
   matchesContainer: {
-    marginTop: 8,
-    paddingHorizontal: 16,
     flex: 1,
+    paddingHorizontal: 16,
   },
 }));
