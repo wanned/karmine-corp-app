@@ -32,24 +32,29 @@ export const MediaCardContent = ({ title, date, likes, views, onPress }: MediaCa
   return (
     <Pressable onPress={onPress}>
       <View style={styles.container}>
-        <View>
-          <Text numberOfLines={2} ellipsizeMode="tail">
-            <Typographies.Title1 color={styles.title.color}>{title}</Typographies.Title1>
-          </Text>
+        <View style={styles.titleContainer}>
+          <Typographies.Title1 color={styles.title.color} maxLines={2}>
+            {title}
+          </Typographies.Title1>
         </View>
         <View style={styles.stats}>
           <Typographies.Label color={styles.date.color} verticalTrim>
             {date}
           </Typographies.Label>
-          <Typographies.Body color={styles.views.color}> · </Typographies.Body>
-          <Typographies.Body color={styles.views.color}>
+          <Typographies.Body color={styles.views.color} verticalTrim>
+            {' '}
+            ·{' '}
+          </Typographies.Body>
+          <Typographies.Body color={styles.views.color} verticalTrim>
             {formatNumber(views)} {translate('home.views')} · {formatNumber(likes)}{' '}
             {translate('home.likes')}
           </Typographies.Body>
         </View>
         <View style={{ flex: 1 }} />
         {/* TODO: set trimmed property to true */}
-        <Typographies.Body color={styles.plateform.color}>youtube.com</Typographies.Body>
+        <Typographies.Body color={styles.plateform.color} verticalTrim>
+          youtube.com
+        </Typographies.Body>
       </View>
     </Pressable>
   );
@@ -57,8 +62,10 @@ export const MediaCardContent = ({ title, date, likes, views, onPress }: MediaCa
 
 const getStyles = createStylesheet((theme) => ({
   container: {
-    width: '80%',
     height: '100%',
+  },
+  titleContainer: {
+    width: '80%',
   },
   title: {
     color: theme.colors.foreground,
@@ -75,6 +82,7 @@ const getStyles = createStylesheet((theme) => ({
   stats: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 12,
   },
   plateform: {
     color: theme.colors.subtleForeground,

@@ -69,4 +69,14 @@ export namespace CoreData {
     duration?: number;
     winnerTeam?: 'home' | 'away';
   }
+
+  export interface YoutubeVideo {
+    id: string;
+    title: string;
+    url: string;
+    publishedAt: Date;
+    views: number;
+    likes: number;
+    thumbnailUrl: string;
+  }
 }

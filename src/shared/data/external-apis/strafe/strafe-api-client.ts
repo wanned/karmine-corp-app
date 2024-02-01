@@ -5,6 +5,7 @@ import { strafeApiSchemas } from './schemas/strafe-api-schemas';
 export class StrafeApiClient {
   private STRAFE_API_KEY =
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMDAwLCJpYXQiOjE2MTE2NTM0MzcuMzMzMDU5fQ.n9StQPQdpNIx3E4FKFntFuzKWolstKJRd-T4LwXmfmo';
+  private readonly STRAFE_API_URL = 'https://flask-api.strafe.com';
 
   private fetch_: typeof fetch;
 
@@ -13,7 +14,7 @@ export class StrafeApiClient {
   }
 
   private async fetch<S extends z.Schema<any>>(url: string, schema?: S): Promise<z.output<S>> {
-    const response = await this.fetch_(url, {
+    const response = await this.fetch_(`${this.STRAFE_API_URL}${url}`, {
       headers: { Authorization: `Bearer ${this.STRAFE_API_KEY}` },
     });
 
@@ -60,17 +61,14 @@ export class StrafeApiClient {
 
   public async getCalendar(date: Date) {
     return this.fetch(
-      `https://flask-api.strafe.com/v1.7/calendar/${date.getFullYear()}-${
-        date.getMonth() + 1
-      }-${date.getDate()}`,
+      `/v1.7/calendar/${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
       strafeApiSchemas.getCalendar
     ).then(({ data }) => data);
   }
 
   public async getMatch(matchId: number) {
-    return this.fetch(
-      `https://flask-api.strafe.com/v2.2/match/${matchId}`,
-      strafeApiSchemas.getMatch
-    ).then(({ data }) => data.live.map(({ data }) => data));
+    return this.fetch(`/v2.2/match/${matchId}`, strafeApiSchemas.getMatch).then(({ data }) =>
+      data.live.map(({ data }) => data)
+    );
   }
 }
