@@ -39,12 +39,21 @@ export const useInitCalendar = (groupedMatches: { [date: IsoDate]: CoreData.Matc
   const setMatchDays = useSetAtom(matchDaysAtom);
 
   const matchDays = useMemo(() => {
-    return Object.fromEntries(
+    const matchDays = Object.fromEntries(
       Object.entries(groupedMatches).map(([date, matches]) => [
         getComparableDay(new Date(date)),
         matches,
       ])
     );
+
+    const today = new Date();
+    const todayStr = getComparableDay(today);
+
+    if (!matchDays[todayStr]) {
+      matchDays[todayStr] = [];
+    }
+
+    return matchDays;
   }, [groupedMatches]);
 
   useEffect(() => {

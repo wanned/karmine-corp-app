@@ -18,7 +18,7 @@ import { getComparableDay } from '../../utils/get-comparable-day';
 import { CoreData } from '~/shared/data/core/types';
 
 export const MatchesScrollLists = React.memo(() => {
-  const flatListRef = useRef<FlatList<(typeof matchDays)[string]>>(null);
+  const flatListRef = useRef<FlatList<(typeof data)[number]>>(null);
   const flatListIsFocused = useRef(false);
 
   const { width: screenWidth } = useWindowDimensions();
@@ -71,16 +71,17 @@ export const MatchesScrollLists = React.memo(() => {
     selectDate(getComparableDay(new Date(newDate)));
   }, []);
 
-  const data = useMemo(
-    () => Object.values(matchDays).sort((a, b) => a[0].date.getTime() - b[0].date.getTime()),
-    [matchDays]
-  );
+  const data = useMemo(() => {
+    return Object.entries(matchDays).sort(
+      ([a], [b]) => new Date(a).getTime() - new Date(b).getTime()
+    );
+  }, [matchDays]);
 
   return (
-    <FlatList<(typeof matchDays)[string]>
+    <FlatList<(typeof data)[number]>
       data={data}
       renderItem={_MatchesList}
-      keyExtractor={(matches) => matches[0].id}
+      keyExtractor={([day]) => day}
       ref={flatListRef}
       style={{ width: screenWidth, position: 'relative', left: -16 }}
       getItemLayout={(_, index) => ({
@@ -103,6 +104,6 @@ export const MatchesScrollLists = React.memo(() => {
   );
 });
 
-function _MatchesList({ item: matches }: { item: CoreData.Match[] }) {
+function _MatchesList({ item: [, matches] }: { item: [string, CoreData.Match[]] }) {
   return <MatchesList matches={matches} />;
 }
