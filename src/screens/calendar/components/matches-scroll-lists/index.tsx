@@ -56,6 +56,7 @@ export const MatchesScrollLists = React.memo(() => {
       if (!flatListIsFocused.current) return;
 
       const newDate = Object.keys(matchDays).sort()[newIndex];
+      if (newDate === undefined) return;
       selectDate(getComparableDay(new Date(newDate)));
     },
     [selectDate, matchDays, screenWidth]
@@ -66,6 +67,7 @@ export const MatchesScrollLists = React.memo(() => {
     if (expectedSelectedIndex.current === null) return;
 
     const newDate = Object.keys(matchDays).sort()[expectedSelectedIndex.current];
+    if (newDate === undefined) return;
     selectDate(getComparableDay(new Date(newDate)));
   }, []);
 
