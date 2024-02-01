@@ -1,57 +1,60 @@
+import { useAtom, useAtomValue } from 'jotai';
 import React, { useMemo } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { useCalendarState } from '../hooks/use-calendar-state';
+import { matchDaysAtom, selectedDateAtom } from '../hooks/use-calendar';
+import { getComparableDay } from '../utils/get-comparable-day';
 
 import { Typographies } from '~/shared/components/typographies';
 import { useDate } from '~/shared/hooks/use-date';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
-import { IsoDate } from '~/shared/types/IsoDate';
 import { isSameDay } from '~/shared/utils/is-same-day';
 
 interface DayButtonProps {
-  isoDate: IsoDate;
-  isMatchDay: boolean;
+  day: string;
 }
 
-export const DayButton = React.memo(({ isoDate, isMatchDay }: DayButtonProps) => {
-  const date = useMemo(() => new Date(isoDate), [isoDate]);
-
+export const DayButton = React.memo(({ day }: DayButtonProps) => {
   const styles = useStyles(getStyles);
 
-  const isToday = useMemo(() => isSameDay(date, new Date()), [date]);
-
-  const isSelected = useCalendarState(({ isSelected: isSameDay }) => isSameDay(date));
-  const selectDate = useCalendarState(({ setSelectedDate }) => setSelectedDate);
+  const [selectedDate, selectDate] = useAtom(selectedDateAtom);
+  const matchDays = useAtomValue(matchDaysAtom);
+  const isMatchDay = useMemo(() => day in matchDays, [day, matchDays]);
+  const isSelected = useMemo(() => day === selectedDate, [day, selectedDate]);
 
   const { formatDate } = useDate();
 
-  const dayContainerStyle =
-    StyleSheet.flatten([
-      styles.dayContainer,
-      isMatchDay && styles.matchDayContainer,
-      isToday && styles.todayContainer,
-      isSelected && styles.selectedDayContainer,
-    ]) ?? {};
+  return useMemo(() => {
+    const date = new Date(day);
+    const isToday = isSameDay(date, new Date());
 
-  const textColor = (dayContainerStyle as { color?: string }).color;
+    const dayContainerStyle =
+      StyleSheet.flatten([
+        styles.dayContainer,
+        isMatchDay && styles.matchDayContainer,
+        isToday && styles.todayContainer,
+        isSelected && styles.selectedDayContainer,
+      ]) ?? {};
 
-  return (
-    <TouchableOpacity
-      disabled={!isMatchDay}
-      onPress={() => {
-        selectDate(date);
-      }}
-      style={styles.container}>
-      <View style={dayContainerStyle}>
-        <Typographies.Body color={textColor}>{formatDate(date, 'EEE')}</Typographies.Body>
-        <Typographies.Title2 color={textColor}>{formatDate(date, 'd')}</Typographies.Title2>
-        <Typographies.Body color={textColor}>{formatDate(date, 'MMM')}</Typographies.Body>
-      </View>
-      {isMatchDay && <View style={styles.matchDayIndicator} />}
-    </TouchableOpacity>
-  );
+    const textColor = (dayContainerStyle as { color?: string }).color;
+
+    return (
+      <TouchableOpacity
+        disabled={!isMatchDay}
+        onPress={() => {
+          selectDate(getComparableDay(date));
+        }}
+        style={styles.container}>
+        <View style={dayContainerStyle}>
+          <Typographies.Body color={textColor}>{formatDate(date, 'EEE')}</Typographies.Body>
+          <Typographies.Title2 color={textColor}>{formatDate(date, 'd')}</Typographies.Title2>
+          <Typographies.Body color={textColor}>{formatDate(date, 'MMM')}</Typographies.Body>
+        </View>
+        {isMatchDay && <View style={styles.matchDayIndicator} />}
+      </TouchableOpacity>
+    );
+  }, [isMatchDay, isSelected, selectDate, day]);
 });
 
 export const dayButtonConstants = {
