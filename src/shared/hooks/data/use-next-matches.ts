@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as datefns from 'date-fns';
-import { atom, useAtom } from 'jotai';
+import { atom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 
 import { useDataFetcher } from './use-data-fetcher';
@@ -9,17 +9,15 @@ import { groupedMatchesAtom, useAddMatches } from './use-matches';
 const nextMatchesAtom = atom((get) => {
   const groupedMatches = get(groupedMatchesAtom);
 
-  const nowTime = new Date().getTime();
-
   const nextMatches = Object.values(groupedMatches)
-    .map((matches) => matches.filter((match) => match.date.getTime() > nowTime))
+    .map((matches) => matches.filter((match) => match.status === 'upcoming'))
     .flat()
     .sort((a, b) => a.date.getTime() - b.date.getTime());
 
   return nextMatches;
 });
 export const useNextMatches = () => {
-  const [nextMatches] = useAtom(nextMatchesAtom);
+  const nextMatches = useAtomValue(nextMatchesAtom);
   return nextMatches;
 };
 
