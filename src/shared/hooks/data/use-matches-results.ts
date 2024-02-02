@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as datefns from 'date-fns';
-import { atom, useAtom, useAtomValue } from 'jotai';
+import { atom, useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 
 import { useDataFetcher } from './use-data-fetcher';
@@ -10,7 +10,7 @@ const matchesResultsAtom = atom((get) => {
   const groupedMatches = get(groupedMatchesAtom);
 
   const matchesResults = Object.values(groupedMatches)
-    .map((matches) => matches.filter((match) => match.status === 'finished' || match.status === 'live'))
+    .map((matches) => matches.filter((match) => match.status === 'finished'))
     .flat()
     .sort((a, b) => b.date.getTime() - a.date.getTime());
 
@@ -29,7 +29,7 @@ export const useInitMatchesResults = () => {
 
   useEffect(() => {
     dataFetcher.getSchedule({
-      filters: { status: ['finished', 'live'] },
+      filters: { status: ['finished'] },
       batches: [
         // Priority 1: last 24h
         {

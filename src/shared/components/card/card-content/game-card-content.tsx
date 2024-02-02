@@ -13,13 +13,13 @@ import { createStylesheet } from '~/shared/styles/create-stylesheet';
 interface TeamProps {
   logo: string;
   name: string;
-  score: string | number;
+  score?: string | number;
   isWinner?: boolean;
 }
 
 interface GameCardContentProps {
   teamLeft: TeamProps;
-  teamRight: TeamProps;
+  teamRight?: TeamProps;
   showLivePill?: boolean;
 }
 
@@ -44,7 +44,7 @@ export const GameCardContent = ({
       </View>
       <View style={styles.teamsContainer}>
         <TeamScore {...teamLeft} position="left" />
-        <TeamScore {...teamRight} position="right" />
+        {teamRight && <TeamScore {...teamRight} position="right" />}
       </View>
     </View>
   );
@@ -91,17 +91,15 @@ const TeamScore = ({ logo, name, score, isWinner, position }: TeamScoreProps) =>
         <Typographies.Title3 color={styles.teamNameContainer.color}>{name}</Typographies.Title3>
       </View>
 
-      {isWinner ? (
-        <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
-          {score.toString()}
-        </Typographies.VeryBig>
-      ) : checkSingleNumber(score) ? (
-        <OutlinedNumber size="small">{score}</OutlinedNumber>
-      ) : (
-        <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
-          {score.toString()}
-        </Typographies.VeryBig>
-      )}
+      {score !== undefined &&
+        (isWinner ?
+          <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
+            {score.toString()}
+          </Typographies.VeryBig>
+        : checkSingleNumber(score) ? <OutlinedNumber size="small">{score}</OutlinedNumber>
+        : <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
+            {score.toString()}
+          </Typographies.VeryBig>)}
     </View>
   );
 };
