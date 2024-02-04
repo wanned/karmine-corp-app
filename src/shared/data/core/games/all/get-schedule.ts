@@ -136,13 +136,13 @@ async function getTeamsFromEvent(event: BaseKarmineEvent): Promise<CoreData.Base
     {
       name: teamNames[0],
       logoUrl:
-        event.team_domicile ??
+        event.team_domicile?.replace('https:///', 'https://') ??
         'https://medias.kametotv.fr/karmine/teams/Karmine Corp-LeagueOfLegendsLEC.png',
       score: getTeamScore(event, 'domicile'),
     },
     {
       name: teamNames[1],
-      logoUrl: event.team_exterieur ?? '',
+      logoUrl: event.team_exterieur?.replace('https:///', 'https://') ?? '',
       score: getTeamScore(event, 'exterieur'),
     },
   ];
