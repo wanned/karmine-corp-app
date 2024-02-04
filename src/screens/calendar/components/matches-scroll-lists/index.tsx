@@ -1,3 +1,4 @@
+import { useAtomValue, useSetAtom } from 'jotai';
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   FlatList,
@@ -7,102 +8,102 @@ import {
 } from 'react-native';
 
 import { MatchesList } from './matches-page';
-import { useCalendarState } from '../../hooks/use-calendar-state';
-import { GroupedMatchesByDay } from '../../utils/group-matches-by-day';
+import {
+  matchDaysAtom,
+  selectedDateAtom,
+  selectedIndexOnlyWithMatchAtom,
+} from '../../hooks/use-calendar';
+import { getComparableDay } from '../../utils/get-comparable-day';
 
-import { isSameDay } from '~/shared/utils/is-same-day';
+import { CoreData } from '~/shared/data/core/types';
 
-interface MatchesScrollListsProps {
-  groupedMatches: GroupedMatchesByDay;
-}
-
-export const MatchesScrollLists = React.memo(({ groupedMatches }: MatchesScrollListsProps) => {
-  const flatListRef = useRef<FlatList<GroupedMatchesByDay[number]>>(null);
-  const flatListFocused = useRef(false);
-  const lastContentOffset = useRef<number | null>(null);
+export const MatchesScrollLists = React.memo(() => {
+  const flatListRef = useRef<FlatList<(typeof data)[number]>>(null);
+  const flatListIsFocused = useRef(false);
 
   const { width: screenWidth } = useWindowDimensions();
 
-  const expectedSelectedDate = useRef<Date | null>(null);
-  const selectedDate = useCalendarState(({ selectedDate }) => selectedDate);
-  const setSelectedDate = useCalendarState(({ setSelectedDate }) => setSelectedDate);
+  const selectDate = useSetAtom(selectedDateAtom);
+  const selectedIndex = useAtomValue(selectedIndexOnlyWithMatchAtom);
+  const matchDays = useAtomValue(matchDaysAtom);
 
-  const initialIndex = useMemo(() => {
-    const index = groupedMatches.findIndex(([day]) => isSameDay(day, selectedDate));
-    return index === -1 ? undefined : index;
-  }, [groupedMatches, selectedDate]);
+  const expectedSelectedIndex = useRef<number | null>(null);
 
-  useEffect(() => {
-    const index = groupedMatches.findIndex(([day]) => isSameDay(day, selectedDate));
+  const scrollToSelectedIndex = useCallback(
+    (animated = true) => {
+      if (selectedIndex === null) return;
+      if (flatListIsFocused.current && selectedIndex === expectedSelectedIndex.current) return;
 
-    if (
-      index === -1 ||
-      (expectedSelectedDate.current !== null &&
-        isSameDay(expectedSelectedDate.current, selectedDate))
-    )
-      return;
+      flatListRef.current?.scrollToIndex({
+        index: selectedIndex,
+        animated,
+      });
 
-    lastContentOffset.current = null;
-    expectedSelectedDate.current = null;
+      flatListIsFocused.current = false;
+    },
+    [selectedIndex]
+  );
 
-    flatListRef.current?.scrollToIndex({ index, animated: true });
-  }, [groupedMatches, selectedDate]);
-
-  const onScrollBeginDrag = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    lastContentOffset.current = event.nativeEvent.contentOffset.x;
-    flatListFocused.current = true;
-  }, []);
+  useEffect(() => scrollToSelectedIndex(true), [selectedIndex]);
+  useEffect(() => scrollToSelectedIndex(false), [matchDays]);
 
   const onScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      if (lastContentOffset.current === null) return;
+      const newIndex = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
 
-      const currentContentOffset = event.nativeEvent.contentOffset.x;
-      const diff = Math.abs(lastContentOffset.current - currentContentOffset);
+      expectedSelectedIndex.current = newIndex;
 
-      if (diff < screenWidth / 2) return;
+      if (!flatListIsFocused.current) return;
 
-      const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
-
-      const [date] = groupedMatches[index];
-
-      expectedSelectedDate.current = date;
-
-      if (flatListFocused.current) return;
-
-      setSelectedDate(expectedSelectedDate.current);
+      const newDate = Object.keys(matchDays).sort()[newIndex];
+      if (newDate === undefined) return;
+      selectDate(getComparableDay(new Date(newDate)));
     },
-    [groupedMatches, screenWidth, setSelectedDate]
+    [selectDate, matchDays, screenWidth]
   );
 
+  const onScrollBeginDrag = useCallback(() => (flatListIsFocused.current = true), []);
   const onScrollEndDrag = useCallback(() => {
-    flatListFocused.current = false;
+    if (expectedSelectedIndex.current === null) return;
 
-    if (expectedSelectedDate.current === null) return;
+    const newDate = Object.keys(matchDays).sort()[expectedSelectedIndex.current];
+    if (newDate === undefined) return;
+    selectDate(getComparableDay(new Date(newDate)));
+  }, []);
 
-    setSelectedDate(expectedSelectedDate.current);
-  }, [setSelectedDate]);
+  const data = useMemo(() => {
+    return Object.entries(matchDays).sort(
+      ([a], [b]) => new Date(a).getTime() - new Date(b).getTime()
+    );
+  }, [matchDays]);
 
   return (
-    <FlatList<GroupedMatchesByDay[number]>
-      style={{ width: screenWidth, position: 'relative', left: -16 }}
+    <FlatList<(typeof data)[number]>
+      data={data}
+      renderItem={_MatchesList}
+      keyExtractor={([day]) => day}
       ref={flatListRef}
-      decelerationRate="fast"
-      onScrollBeginDrag={onScrollBeginDrag}
-      onScroll={onScroll}
-      onScrollEndDrag={onScrollEndDrag}
-      pagingEnabled
-      horizontal
-      data={groupedMatches}
-      showsHorizontalScrollIndicator={false}
-      renderItem={({ item: [, matches] }) => <MatchesList matches={matches} />}
-      initialNumToRender={1}
-      initialScrollIndex={initialIndex}
+      style={{ width: screenWidth, position: 'relative', left: -16 }}
       getItemLayout={(_, index) => ({
         length: screenWidth,
         offset: screenWidth * index,
         index,
       })}
+      pagingEnabled
+      decelerationRate="fast"
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      onScroll={onScroll}
+      onScrollBeginDrag={onScrollBeginDrag}
+      onScrollEndDrag={onScrollEndDrag}
+      initialNumToRender={1}
+      initialScrollIndex={selectedIndex}
+      maxToRenderPerBatch={3}
+      windowSize={3}
     />
   );
 });
+
+function _MatchesList({ item: [, matches] }: { item: [string, CoreData.Match[]] }) {
+  return <MatchesList matches={matches} />;
+}

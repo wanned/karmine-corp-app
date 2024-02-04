@@ -1,49 +1,33 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as datefns from 'date-fns';
+import { atom, useAtom } from 'jotai';
 import { useEffect } from 'react';
-import { create } from 'zustand';
 
 import { useDataFetcher } from './use-data-fetcher';
+import { groupedMatchesAtom, useAddMatches } from './use-matches';
 
-import { CoreData } from '~/shared/data/core/types';
+const nextMatchesAtom = atom((get) => {
+  const groupedMatches = get(groupedMatchesAtom);
 
-interface NextMatches {
-  nextMatches: CoreData.Match[];
-  addMatchResult: (match: CoreData.Match) => void;
-}
+  const nowTime = new Date().getTime();
 
-const useNextMatchesStore = create<NextMatches>((set) => ({
-  nextMatches: [],
-  addMatchResult: (newMatch: CoreData.Match) =>
-    set((state) => {
-      const matchIndex = state.nextMatches?.findIndex((match) => match.id === newMatch.id);
+  const nextMatches = Object.values(groupedMatches)
+    .map((matches) => matches.filter((match) => match.date.getTime() > nowTime))
+    .flat()
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
 
-      if (matchIndex === -1) {
-        return {
-          nextMatches: [...state.nextMatches, newMatch],
-        };
-      }
-
-      return {
-        nextMatches: [
-          ...state.nextMatches.slice(0, matchIndex),
-          newMatch,
-          ...state.nextMatches.slice(matchIndex + 1),
-        ],
-      };
-    }),
-}));
-
-export const useNextMatches = () =>
-  useNextMatchesStore((state) =>
-    [...state.nextMatches].sort((a, b) => a.date.getTime() - b.date.getTime())
-  );
+  return nextMatches;
+});
+export const useNextMatches = () => {
+  const [nextMatches] = useAtom(nextMatchesAtom);
+  return nextMatches;
+};
 
 export const useInitNextMatches = () => {
   const dataFetcher = useDataFetcher();
   const queryClient = useQueryClient();
 
-  const addMatchResult = useNextMatchesStore((state) => state.addMatchResult);
+  const addMatches = useAddMatches();
 
   useEffect(() => {
     dataFetcher.getSchedule({
@@ -65,7 +49,7 @@ export const useInitNextMatches = () => {
           to: datefns.endOfDay(datefns.addDays(new Date(), 7)),
         },
       ],
-      onResult: addMatchResult,
+      onResult: addMatches,
     });
   }, [queryClient, dataFetcher]);
 };

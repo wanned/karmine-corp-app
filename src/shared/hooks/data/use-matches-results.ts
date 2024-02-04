@@ -1,49 +1,33 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as datefns from 'date-fns';
+import { atom, useAtom } from 'jotai';
 import { useEffect } from 'react';
-import { create } from 'zustand';
 
 import { useDataFetcher } from './use-data-fetcher';
+import { groupedMatchesAtom, useAddMatches } from './use-matches';
 
-import { CoreData } from '~/shared/data/core/types';
+const matchesResultsAtom = atom((get) => {
+  const groupedMatches = get(groupedMatchesAtom);
 
-interface MatchesResults {
-  matchesResults: CoreData.Match[];
-  addMatchResult: (match: CoreData.Match) => void;
-}
+  const nowTime = new Date().getTime();
 
-const useMatchesResultsStore = create<MatchesResults>((set) => ({
-  matchesResults: [],
-  addMatchResult: (newMatch: CoreData.Match) =>
-    set((state) => {
-      const matchIndex = state.matchesResults?.findIndex((match) => match.id === newMatch.id);
+  const matchesResults = Object.values(groupedMatches)
+    .map((matches) => matches.filter((match) => match.date.getTime() < nowTime))
+    .flat()
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
 
-      if (matchIndex === -1) {
-        return {
-          matchesResults: [...state.matchesResults, newMatch],
-        };
-      }
-
-      return {
-        matchesResults: [
-          ...state.matchesResults.slice(0, matchIndex),
-          newMatch,
-          ...state.matchesResults.slice(matchIndex + 1),
-        ],
-      };
-    }),
-}));
-
-export const useMatchesResults = () =>
-  useMatchesResultsStore((state) =>
-    [...state.matchesResults].sort((a, b) => b.date.getTime() - a.date.getTime())
-  );
+  return matchesResults;
+});
+export const useMatchesResults = () => {
+  const [matchesResults] = useAtom(matchesResultsAtom);
+  return matchesResults;
+};
 
 export const useInitMatchesResults = () => {
   const dataFetcher = useDataFetcher();
   const queryClient = useQueryClient();
 
-  const addMatchResult = useMatchesResultsStore((state) => state.addMatchResult);
+  const addMatches = useAddMatches();
 
   useEffect(() => {
     dataFetcher.getSchedule({
@@ -70,7 +54,7 @@ export const useInitMatchesResults = () => {
           to: datefns.endOfDay(datefns.subDays(new Date(), 7)),
         },
       ],
-      onResult: addMatchResult,
+      onResult: addMatches,
     });
   }, [queryClient, dataFetcher]);
 };
