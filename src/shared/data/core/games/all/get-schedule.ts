@@ -20,10 +20,12 @@ export async function getSchedule({
   apis,
 }: DataFetcher.GetScheduleParams): Promise<CoreData.Match[]> {
   const matches = await Promise.all([
-    ...(filters.status?.includes('finished') ?
+    ...(filters.status?.includes('finished') || (filters.status?.length ?? 0) === 0 ?
       [getMatchesResults({ onResult, filters, apis })]
     : []),
-    ...(filters.status?.includes('upcoming') ? [getNextMatches({ onResult, filters, apis })] : []),
+    ...(filters.status?.includes('upcoming') || (filters.status?.length ?? 0) === 0 ?
+      [getNextMatches({ onResult, filters, apis })]
+    : []),
   ]);
 
   return matches.flat();
@@ -40,7 +42,7 @@ async function getMatchesResults({
 
   return await Promise.all(
     eventsResults.map(async (eventResult) => {
-      const match = await karmineEventToCoreMatch(eventResult);
+      const match = await karmineEventToCoreMatch(eventResult, 'finished');
       onResult(match);
       return match;
     })
@@ -58,7 +60,7 @@ async function getNextMatches({
 
   return await Promise.all(
     events.map(async (eventResult) => {
-      const match = await karmineEventToCoreMatch(eventResult);
+      const match = await karmineEventToCoreMatch(eventResult, 'upcoming');
       onResult(match);
       return match;
     })
@@ -80,7 +82,10 @@ function filterKarmineEvents(
   return true;
 }
 
-async function karmineEventToCoreMatch(event: BaseKarmineEvent): Promise<CoreData.Match> {
+async function karmineEventToCoreMatch(
+  event: BaseKarmineEvent,
+  status: CoreData.Match['status']
+): Promise<CoreData.Match> {
   const teams = await getTeamsFromEvent(event);
 
   return {
@@ -88,7 +93,7 @@ async function karmineEventToCoreMatch(event: BaseKarmineEvent): Promise<CoreDat
     teams,
     date: event.start,
     streamLink: event.streamLink ?? null,
-    status: 'finished',
+    status,
     matchDetails: {
       competitionName: event.competition_name as CoreData.CompetitionName,
     },
