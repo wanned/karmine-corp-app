@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { BaseText } from './base-text';
 import { TypographyProps } from './typography';
 
-export const VeryBig = ({ children, color, verticalTrim = false }: TypographyProps) => {
+export const VeryBig = ({ children, color, maxLines, verticalTrim = false }: TypographyProps) => {
   return (
     <View
       style={{
@@ -15,7 +15,8 @@ export const VeryBig = ({ children, color, verticalTrim = false }: TypographyPro
           color={color}
           fontSize={44.5}
           lineHeight={verticalTrim ? 58 : undefined}
-          fontWeight="ExtraBold">
+          fontWeight="ExtraBold"
+          maxLines={maxLines}>
           {children}
         </BaseText>
       </View>

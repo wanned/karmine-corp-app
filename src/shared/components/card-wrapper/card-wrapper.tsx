@@ -8,11 +8,14 @@ import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 interface CardWrapperProps {
-  cardsData: {
-    id: string;
-    content: React.ReactNode;
-    image: { uri: string };
-  }[];
+  cardsData: (
+    | {
+        id: string;
+        content: React.ReactNode;
+        image: { uri: string };
+      }
+    | undefined
+  )[];
   height: number;
 }
 
@@ -20,7 +23,13 @@ export const CardWrapper = ({ cardsData, height }: CardWrapperProps) => {
   const styles = useStyles(getStyles);
   const { width } = useWindowDimensions();
 
+  const definedCardsData = cardsData.filter(
+    (card): card is NonNullable<typeof card> => card !== undefined
+  );
+
   const [activePageIndex, setActivePageIndex] = useState(0);
+
+  if (definedCardsData.length === 0) return null;
 
   return (
     <View>
@@ -33,14 +42,14 @@ export const CardWrapper = ({ cardsData, height }: CardWrapperProps) => {
         onPageSelected={({ nativeEvent: { position } }) => {
           setActivePageIndex(position);
         }}>
-        {cardsData.map((card) => (
+        {definedCardsData.map((card) => (
           <View style={{ marginHorizontal: 16 }} key={card.id}>
             <Card image={card.image}>{card.content}</Card>
           </View>
         ))}
       </PagerView>
       <View style={styles.dots}>
-        {cardsData?.map((_, index) => (
+        {definedCardsData?.map((_, index) => (
           <View style={[styles.dot, activePageIndex === index && styles.activeDot]} key={index} />
         ))}
       </View>

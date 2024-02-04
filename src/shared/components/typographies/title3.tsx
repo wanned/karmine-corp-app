@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { BaseText } from './base-text';
 import { TypographyProps } from './typography';
 
-export const Title3 = ({ children, color, verticalTrim = false }: TypographyProps) => {
+export const Title3 = ({ children, color, maxLines, verticalTrim = false }: TypographyProps) => {
   return (
     <View
       style={{
@@ -15,7 +15,8 @@ export const Title3 = ({ children, color, verticalTrim = false }: TypographyProp
           color={color}
           fontSize={12}
           fontWeight="Bold"
-          lineHeight={verticalTrim ? 20 : undefined}>
+          lineHeight={verticalTrim ? 20 : undefined}
+          maxLines={maxLines}>
           {children}
         </BaseText>
       </View>

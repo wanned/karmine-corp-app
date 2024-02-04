@@ -42,6 +42,7 @@ interface TextProps {
   color?: string;
   lineHeight?: number;
   textTransform?: 'uppercase' | 'lowercase' | 'capitalize';
+  maxLines?: number;
 }
 
 export const BaseText = ({
@@ -51,6 +52,7 @@ export const BaseText = ({
   color,
   lineHeight,
   textTransform,
+  maxLines,
 }: TextProps) => {
   const separatedText = useMemo(
     () => separateTextByNumber(Array.isArray(children) ? children.join('') : children),
@@ -72,7 +74,12 @@ export const BaseText = ({
     lineHeight,
     // NOTE: This is a hack to fix the issue with the font being cut off at the top.
     // See: https://github.com/facebook/react-native/issues/29507
-    ...(lineHeight && fontSize && { marginTop: fontSize - lineHeight }),
+    ...(lineHeight &&
+      fontSize && {
+        marginTop: fontSize - lineHeight,
+        position: 'relative' as const,
+        top: lineHeight - fontSize,
+      }),
   };
   const numberFontStyle = {
     ...defaultFontStyle,
@@ -81,7 +88,7 @@ export const BaseText = ({
   };
 
   return (
-    <Text style={defaultFontStyle}>
+    <Text style={defaultFontStyle} numberOfLines={maxLines} ellipsizeMode="tail">
       {separatedText.map(({ type, value }, index) => {
         if (type === 'number') {
           return (

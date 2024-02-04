@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { BaseText } from './base-text';
 import { TypographyProps } from './typography';
 
-export const Label = ({ children, color, verticalTrim = false }: TypographyProps) => {
+export const Label = ({ children, color, maxLines, verticalTrim = false }: TypographyProps) => {
   return (
     <View
       style={{
@@ -16,7 +16,8 @@ export const Label = ({ children, color, verticalTrim = false }: TypographyProps
           fontSize={12}
           lineHeight={verticalTrim ? 16 : undefined}
           fontWeight="SemiBold"
-          textTransform="uppercase">
+          textTransform="uppercase"
+          maxLines={maxLines}>
           {children}
         </BaseText>
       </View>
