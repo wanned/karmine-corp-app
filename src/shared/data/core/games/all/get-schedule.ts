@@ -20,10 +20,12 @@ export async function getSchedule({
   apis,
 }: DataFetcher.GetScheduleParams): Promise<CoreData.Match[]> {
   const matches = await Promise.all([
-    ...(filters.status?.includes('finished') ?
+    ...(filters.status?.includes('finished') || (filters.status?.length ?? 0) === 0 ?
       [getMatchesResults({ onResult, filters, apis })]
     : []),
-    ...(filters.status?.includes('upcoming') ? [getNextMatches({ onResult, filters, apis })] : []),
+    ...(filters.status?.includes('upcoming') || (filters.status?.length ?? 0) === 0 ?
+      [getNextMatches({ onResult, filters, apis })]
+    : []),
   ]);
 
   return matches.flat();
@@ -40,7 +42,7 @@ async function getMatchesResults({
 
   return await Promise.all(
     eventsResults.map(async (eventResult) => {
-      const match = await karmineEventToCoreMatch(eventResult);
+      const match = await karmineEventToCoreMatch(eventResult, 'finished');
       onResult(match);
       return match;
     })
@@ -58,7 +60,7 @@ async function getNextMatches({
 
   return await Promise.all(
     events.map(async (eventResult) => {
-      const match = await karmineEventToCoreMatch(eventResult);
+      const match = await karmineEventToCoreMatch(eventResult, 'upcoming');
       onResult(match);
       return match;
     })
@@ -69,10 +71,17 @@ function filterKarmineEvents(
   event: BaseKarmineEvent,
   filters: DataFetcher.GetScheduleParams['filters']
 ): boolean {
-  // We don't want to fetch events that are not related to League of Legends
-  // because they are fetched by another service
-  if (event.competition_name === CoreData.CompetitionName.LeagueOfLegendsLEC) return false;
-  if (event.competition_name === CoreData.CompetitionName.LeagueOfLegendsLFL) return false;
+  if (
+    filters.notGames !== undefined &&
+    filters.notGames.includes(event.competition_name as CoreData.CompetitionName)
+  )
+    return false;
+
+  if (
+    filters.games !== undefined &&
+    !filters.games.includes(event.competition_name as CoreData.CompetitionName)
+  )
+    return false;
 
   if (filters.date?.from !== undefined && event.start < filters.date.from) return false;
   if (filters.date?.to !== undefined && event.start > filters.date.to) return false;
@@ -80,7 +89,10 @@ function filterKarmineEvents(
   return true;
 }
 
-async function karmineEventToCoreMatch(event: BaseKarmineEvent): Promise<CoreData.Match> {
+async function karmineEventToCoreMatch(
+  event: BaseKarmineEvent,
+  status: CoreData.Match['status']
+): Promise<CoreData.Match> {
   const teams = await getTeamsFromEvent(event);
 
   return {
@@ -88,7 +100,7 @@ async function karmineEventToCoreMatch(event: BaseKarmineEvent): Promise<CoreDat
     teams,
     date: event.start,
     streamLink: event.streamLink ?? null,
-    status: 'finished',
+    status,
     matchDetails: {
       competitionName: event.competition_name as CoreData.CompetitionName,
     },
@@ -96,18 +108,7 @@ async function karmineEventToCoreMatch(event: BaseKarmineEvent): Promise<CoreDat
 }
 
 async function getTeamsFromEvent(event: BaseKarmineEvent): Promise<CoreData.BaseMatch['teams']> {
-  let teamNames = [
-    ...new Set(
-      event.title
-        .replace(/\[.*\]/g, '')
-        .split(/(?: vs )|(?:;)/)
-        .map((teamName) => teamName.trim())
-    ),
-  ];
-
-  if (teamNames.length > 2) {
-    teamNames = teamNames.filter((teamName) => teamName.startsWith('KC'));
-  }
+  const teamNames = getTeamNamesFromEvent(event);
 
   if (teamNames.length === 1 && event.player !== null) {
     return [
@@ -145,6 +146,76 @@ async function getTeamsFromEvent(event: BaseKarmineEvent): Promise<CoreData.Base
       score: getTeamScore(event, 'exterieur'),
     },
   ];
+}
+
+function getTeamNamesFromEvent(event: BaseKarmineEvent): string[] {
+  let teamNames = [
+    ...new Set(
+      event.title
+        .replace(/\[.*\]/g, '')
+        .split(/(?: vs )|(?:;)/)
+        .map((teamName) => teamName.trim())
+    ),
+  ];
+
+  if (teamNames.length > 2) {
+    // It should never happen, but if it does, we only want to keep the team names that start with 'KC'
+    teamNames = teamNames.filter((teamName) => teamName.startsWith('KC'));
+  }
+
+  if (teamNames.length === 2) {
+    teamNames[0] = getTeamNameFromImageUrl(event.team_domicile) ?? teamNames[0];
+    teamNames[1] = getTeamNameFromImageUrl(event.team_exterieur) ?? teamNames[1];
+  }
+
+  for (let i = 0; i < teamNames.length; i++) {
+    if (teamNames[i].startsWith('KC')) teamNames[i] = 'Karmine Corp';
+  }
+
+  return teamNames;
+}
+
+function getTeamNameFromImageUrl(imageUrl: string | null): string | undefined {
+  if (imageUrl === null) {
+    return undefined;
+  }
+
+  const imageName = imageUrl.split('/').at(-1)?.split('.').slice(0, -1).join(' ');
+
+  if (imageName === undefined) {
+    return undefined;
+  }
+
+  let teamName = imageName.split('-').at(0)?.split('logo').at(0);
+
+  if (teamName === undefined) {
+    return undefined;
+  }
+
+  if (teamName.toLowerCase().startsWith('no_team') || teamName.toLowerCase() === 'valorant') {
+    return undefined;
+  }
+
+  if (teamName.toLowerCase().endsWith('_w')) {
+    teamName = teamName.slice(0, -2);
+  }
+
+  if (
+    teamName[0].toLowerCase() === teamName[0] &&
+    teamName.slice(1).toUpperCase() === teamName.slice(1)
+  ) {
+    // If the team name looks like 'kARMINE', it is likely that the name is not formatted correctly
+    // and we should capitalize the first letter of each word
+
+    teamName = teamName
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+
+  teamName = teamName.replace(/_/g, ' ').trim();
+
+  return teamName;
 }
 
 function getTeamScore(

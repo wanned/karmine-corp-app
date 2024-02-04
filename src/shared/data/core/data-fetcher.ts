@@ -1,8 +1,10 @@
 import { getSchedule as getAllMatches } from './games/all/get-schedule';
 import { getSchedule as getLeagueOfLegendsMatches } from './games/league-of-legends/get-schedule';
+import { getSchedule as getRocketLeagueMatches } from './games/rocket-league/get-schedule';
 import { CoreData, CoreData as _CoreData } from './types';
 import { KarmineApiClient } from '../external-apis/karmine/karmine-api-client';
 import { LolEsportApiClient } from '../external-apis/league-of-legends/lol-esport-api-client';
+import { OctaneApiClient } from '../external-apis/octane/octane-api-client';
 import { StrafeApiClient } from '../external-apis/strafe/strafe-api-client';
 import { YoutubeApiClient } from '../external-apis/youtube/youtube-api-client';
 
@@ -11,6 +13,7 @@ export namespace DataFetcher {
     karmine: KarmineApiClient;
     lolEsport: LolEsportApiClient;
     strafe: StrafeApiClient;
+    octane: OctaneApiClient;
   }
 
   export interface GetScheduleParams {
@@ -18,6 +21,8 @@ export namespace DataFetcher {
     filters: {
       status?: _CoreData.Match['status'][];
       date?: { from?: Date; to?: Date };
+      notGames?: CoreData.CompetitionName[];
+      games?: CoreData.CompetitionName[];
     };
     batches?: { from: Date; to: Date }[];
     apis: Apis;
@@ -40,11 +45,26 @@ export class DataFetcher {
       karmine: new KarmineApiClient({ fetch_: this.fetch_ }),
       lolEsport: new LolEsportApiClient({ fetch_: this.fetch_ }),
       strafe: new StrafeApiClient({ fetch_: this.fetch_ }),
+      octane: new OctaneApiClient({ fetch_: this.fetch_ }),
     };
 
     const matches = await Promise.all([
-      getAllMatches({ onResult, filters, batches, apis }),
+      getAllMatches({
+        onResult,
+        filters: {
+          ...filters,
+          notGames: [
+            ...(filters.notGames ?? []),
+            CoreData.CompetitionName.RocketLeague,
+            CoreData.CompetitionName.LeagueOfLegendsLEC,
+            CoreData.CompetitionName.LeagueOfLegendsLFL,
+          ],
+        },
+        batches,
+        apis,
+      }),
       getLeagueOfLegendsMatches({ onResult, filters, batches, apis }),
+      getRocketLeagueMatches({ onResult, filters, batches, apis }),
     ]);
 
     return matches.flat();
