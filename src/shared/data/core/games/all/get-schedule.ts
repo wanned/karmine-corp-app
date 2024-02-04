@@ -71,10 +71,17 @@ function filterKarmineEvents(
   event: BaseKarmineEvent,
   filters: DataFetcher.GetScheduleParams['filters']
 ): boolean {
-  // We don't want to fetch events that are not related to League of Legends
-  // because they are fetched by another service
-  if (event.competition_name === CoreData.CompetitionName.LeagueOfLegendsLEC) return false;
-  if (event.competition_name === CoreData.CompetitionName.LeagueOfLegendsLFL) return false;
+  if (
+    filters.notGames !== undefined &&
+    filters.notGames.includes(event.competition_name as CoreData.CompetitionName)
+  )
+    return false;
+
+  if (
+    filters.games !== undefined &&
+    !filters.games.includes(event.competition_name as CoreData.CompetitionName)
+  )
+    return false;
 
   if (filters.date?.from !== undefined && event.start < filters.date.from) return false;
   if (filters.date?.to !== undefined && event.start > filters.date.to) return false;

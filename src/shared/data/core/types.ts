@@ -41,8 +41,9 @@ export namespace CoreData {
     matchDetails: MD;
   }
 
-  export type Match = LeagueOfLegendsMatch | BaseMatch;
+  export type Match = LeagueOfLegendsMatch | RocketLeagueMatch | BaseMatch;
   export type LeagueOfLegendsMatch = BaseMatch<LeagueOfLegendsMatchDetails>;
+  export type RocketLeagueMatch = BaseMatch<RocketLeagueMatchDetails>;
 
   interface LeagueOfLegendsMatchDetails extends BaseMatchDetails {
     competitionName: CompetitionName.LeagueOfLegendsLFL | CompetitionName.LeagueOfLegendsLEC;
@@ -68,6 +69,24 @@ export namespace CoreData {
     status: 'live' | 'finished';
     duration?: number;
     winnerTeam?: 'home' | 'away';
+  }
+
+  interface RocketLeagueMatchDetails extends BaseMatchDetails {
+    competitionName: CompetitionName.RocketLeague;
+    games: (RocketLeagueGame | undefined)[];
+    bo?: number;
+    players: Record<'home' | 'away', Player[]>;
+  }
+
+  interface RocketLeagueGame {
+    teams: Record<
+      'home' | 'away',
+      {
+        goals: number;
+        stops: number;
+        totalPoints: number;
+      }
+    >;
   }
 
   export interface YoutubeVideo {
