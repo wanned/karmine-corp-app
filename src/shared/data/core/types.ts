@@ -30,6 +30,8 @@ export namespace CoreData {
 
   interface BaseMatchDetails {
     competitionName: CompetitionName;
+    bo?: number;
+    players?: Record<'home' | 'away', Player[]>;
   }
 
   export interface BaseMatch<MD extends BaseMatchDetails = BaseMatchDetails> {
@@ -48,11 +50,9 @@ export namespace CoreData {
   interface LeagueOfLegendsMatchDetails extends BaseMatchDetails {
     competitionName: CompetitionName.LeagueOfLegendsLFL | CompetitionName.LeagueOfLegendsLEC;
     games: LeagueOfLegendsGame[];
-    bo: number;
-    players: Record<'home' | 'away', Player[]>;
   }
 
-  interface LeagueOfLegendsGame {
+  export interface LeagueOfLegendsGame {
     draft: Record<
       'home' | 'away',
       {
@@ -74,11 +74,9 @@ export namespace CoreData {
   interface RocketLeagueMatchDetails extends BaseMatchDetails {
     competitionName: CompetitionName.RocketLeague;
     games: (RocketLeagueGame | undefined)[];
-    bo?: number;
-    players: Record<'home' | 'away', Player[]>;
   }
 
-  interface RocketLeagueGame {
+  export interface RocketLeagueGame {
     teams: Record<
       'home' | 'away',
       {

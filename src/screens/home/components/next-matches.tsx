@@ -23,12 +23,7 @@ export const NextMatches = ({ viewMoreButton, max }: NextMatchesProps) => {
   return (
     <Section title={translate('home.nextMatchesTitle')}>
       {matchs.slice(0, max).map((match) => (
-        <MatchScore
-          key={match.id}
-          date={match.date}
-          status="upcoming"
-          bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}
-          game={match.matchDetails.competitionName}>
+        <MatchScore key={match.id} match={match}>
           {match.teams.map(
             (team, index) =>
               team && <MatchTeam key={index} logo={team.logoUrl} name={team.name} score="-" />

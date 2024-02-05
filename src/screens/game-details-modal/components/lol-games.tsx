@@ -3,23 +3,15 @@ import { StyleSheet, View } from 'react-native';
 
 import { Buttons } from '~/shared/components/buttons';
 import { Typographies } from '~/shared/components/typographies';
+import { CoreData } from '~/shared/data/core/types';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
-import {
-  LeagueOfLegendsGame,
-  LeagueOfLegendsMatchDetails,
-  Match,
-} from '~/shared/types/data/Matchs';
 
-interface LolGamesProps {
-  match: Match & {
-    matchDetails: LeagueOfLegendsMatchDetails;
-  };
-}
+interface LolGamesProps extends CoreData.LeagueOfLegendsMatch {}
 
-interface LolGameProps extends LeagueOfLegendsGame {
+interface LolGameProps extends CoreData.LeagueOfLegendsGame {
   number: number;
 }
 
@@ -46,14 +38,16 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
         <Typographies.Title2 verticalTrim>
           {translate('gameDetails.gamePrefix')} {number.toString()}
         </Typographies.Title2>
-        <Typographies.Body color={theme.colors.subtleForeground} verticalTrim>
-          {formatMatchDuration(duration)}
-        </Typographies.Body>
+        {duration !== undefined && (
+          <Typographies.Body color={theme.colors.subtleForeground} verticalTrim>
+            {formatMatchDuration(duration)}
+          </Typographies.Body>
+        )}
       </View>
       <View style={styles.scoresContainer}>
         <View style={StyleSheet.compose(styles.scoreContainer, styles.scoreContainerLeft)}>
           <View style={styles.championsContainer}>
-            {draft.blue.picks.map((pick, index) => (
+            {draft.home.picks.map((pick, index) => (
               <Image
                 key={index}
                 source={{ uri: pick.champion.imageUrl }}
@@ -61,11 +55,11 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
               />
             ))}
           </View>
-          <Typographies.Body>{score.blue.toString()}</Typographies.Body>
+          <Typographies.Body>{score.home.toString()}</Typographies.Body>
         </View>
         <View style={StyleSheet.compose(styles.scoreContainer, styles.scoreContainerRight)}>
           <View style={styles.championsContainer}>
-            {draft.red.picks.map((pick, index) => (
+            {draft.away.picks.map((pick, index) => (
               <Image
                 key={index}
                 source={{ uri: pick.champion.imageUrl }}
@@ -73,7 +67,7 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
               />
             ))}
           </View>
-          <Typographies.Body>{score.red.toString()}</Typographies.Body>
+          <Typographies.Body>{score.away.toString()}</Typographies.Body>
         </View>
       </View>
       <Buttons.Text text={translate('gameDetails.watchReplayText')} onPress={() => {}} />
@@ -81,7 +75,7 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
   );
 };
 
-export const LolGames = ({ match: { matchDetails } }: LolGamesProps) => {
+export const LolGames = ({ matchDetails }: LolGamesProps) => {
   const styles = useStyles(getStyles);
 
   return (

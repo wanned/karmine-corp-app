@@ -29,7 +29,6 @@ export type ModalsParamList = {
   lastResultsModal: undefined;
   gameDetailsModal: {
     match: CoreData.Match;
-    gamesComponent: (props: { match: CoreData.Match }) => React.ReactNode;
   };
 };
 

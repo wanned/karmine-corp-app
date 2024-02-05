@@ -2,16 +2,20 @@ import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
-import { Player as PlayerProps } from './types/player';
-
 import { Typographies } from '~/shared/components/typographies';
+import { CoreData } from '~/shared/data/core/types';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export const Player = ({ picture, name, role, position }: PlayerProps) => {
+interface PlayerProps {
+  player: CoreData.Player;
+  position: 'left' | 'right';
+}
+
+export const Player = ({ player, position }: PlayerProps) => {
   const theme = useTheme();
 
   const styles = useStyles(getStyles);
@@ -23,27 +27,28 @@ export const Player = ({ picture, name, role, position }: PlayerProps) => {
         position === 'right' ? styles.containerRightPosition : {}
       )}>
       <View style={styles.pictureContainer}>
-        {picture ? (
+        {player.imageUrl ?
           <Image
-            source={{ uri: picture }}
+            source={{ uri: player.imageUrl }}
             cachePolicy="memory-disk"
             style={{ width: 70, height: 70 }}
           />
-        ) : (
-          <View style={styles.noPictureContainer}>
+        : <View style={styles.noPictureContainer}>
             <Iconify icon="solar:user-bold" size={40} color={theme.colors.subtleForeground} />
           </View>
-        )}
+        }
       </View>
       <View
         style={StyleSheet.compose(
           styles.textsContainer,
           position === 'right' ? styles.textsContainerRightPosition : {}
         )}>
-        <Typographies.Body>{name}</Typographies.Body>
-        <Typographies.Body color={theme.colors.subtleForeground}>
-          {capitalize(role)}
-        </Typographies.Body>
+        <Typographies.Body>{player.name}</Typographies.Body>
+        {player.role && (
+          <Typographies.Body color={theme.colors.subtleForeground}>
+            {capitalize(player.role)}
+          </Typographies.Body>
+        )}
       </View>
     </View>
   );
