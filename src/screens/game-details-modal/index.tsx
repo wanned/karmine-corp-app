@@ -190,6 +190,10 @@ function GameDetails({ match }: { match: CoreData.Match }) {
     return null;
   }
 
+  if ('games' in match.matchDetails && match.matchDetails.games.length === 0) {
+    return null;
+  }
+
   return <Section title={translate('gameDetails.gamesTitle')}>{GameDetailsComponent}</Section>;
 }
 
@@ -214,7 +218,7 @@ function GameDetailsPlayers({ match }: { match: CoreData.Match }) {
         </View>
         <View style={styles.playersTeamContainer}>
           {awayPlayers.map((player) => (
-            <Player key={player.name} position="left" player={player} />
+            <Player key={player.name} position="right" player={player} />
           ))}
         </View>
       </View>

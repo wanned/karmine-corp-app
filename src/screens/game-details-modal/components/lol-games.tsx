@@ -1,5 +1,6 @@
 import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
+import { Iconify } from 'react-native-iconify';
 
 import { Buttons } from '~/shared/components/buttons';
 import { Typographies } from '~/shared/components/typographies';
@@ -32,6 +33,10 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
     return `${paddedMinutes}:${paddedSeconds}`;
   }
 
+  const crown = (
+    <Iconify icon="solar:crown-bold" size={16} color={styles.crown.color} style={styles.crown} />
+  );
+
   return (
     <View>
       <View style={styles.headerContainer}>
@@ -56,6 +61,7 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
             ))}
           </View>
           <Typographies.Body>{score.home.toString()}</Typographies.Body>
+          {score.home > score.away ? crown : null}
         </View>
         <View style={StyleSheet.compose(styles.scoreContainer, styles.scoreContainerRight)}>
           <View style={styles.championsContainer}>
@@ -68,6 +74,7 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
             ))}
           </View>
           <Typographies.Body>{score.away.toString()}</Typographies.Body>
+          {score.away > score.home ? crown : null}
         </View>
       </View>
       <Buttons.Text text={translate('gameDetails.watchReplayText')} onPress={() => {}} />
@@ -106,7 +113,8 @@ const getStyles = createStylesheet((theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 4,
+    marginTop: 8,
+    marginBottom: 12,
   },
   scoreContainer: {
     alignItems: 'center',
@@ -117,5 +125,10 @@ const getStyles = createStylesheet((theme) => ({
   },
   scoreContainerRight: {
     flexDirection: 'row-reverse',
+  },
+  crown: {
+    position: 'relative',
+    color: '#F9D370',
+    top: -1.5,
   },
 }));

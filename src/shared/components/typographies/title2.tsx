@@ -10,7 +10,7 @@ export const Title2 = ({ children, color, maxLines, verticalTrim = false }: Typo
         height: verticalTrim ? 11 : undefined,
         justifyContent: 'flex-end',
       }}>
-      <View style={{ position: 'relative', top: verticalTrim ? 4 : undefined }}>
+      <View style={{ position: 'relative', top: verticalTrim ? 0 : undefined }}>
         <BaseText
           color={color}
           fontSize={16}

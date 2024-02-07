@@ -18,10 +18,12 @@ import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 interface ModalHeaderBarProps {
   opacifyOnScroll?: boolean;
-  handleScrollRef?: MutableRefObject<NonNullable<ScrollView['props']['onScroll']> | undefined>;
+  setHandleScroll?: (
+    handleScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
+  ) => void;
 }
 
-export const ModalHeaderBar = ({ opacifyOnScroll, handleScrollRef }: ModalHeaderBarProps) => {
+export const ModalHeaderBar = ({ opacifyOnScroll, setHandleScroll }: ModalHeaderBarProps) => {
   const navigation = useNavigation();
   const safeAreaInsets = useSafeAreaInsets();
   const styles = useStyles(getStyles);
@@ -32,8 +34,8 @@ export const ModalHeaderBar = ({ opacifyOnScroll, handleScrollRef }: ModalHeader
     });
 
   useEffect(() => {
-    if (handleScrollRef) {
-      handleScrollRef.current = handleModalScroll;
+    if (setHandleScroll) {
+      setHandleScroll(() => handleModalScroll);
     }
   }, [handleModalScroll]);
 

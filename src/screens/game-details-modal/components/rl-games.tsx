@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
 import { Buttons } from '~/shared/components/buttons';
@@ -33,15 +33,15 @@ const ScoreLine = ({ leftTeamScore, rightTeamScore, label, showCrown = false }: 
     : null;
 
   return (
-    <View style={styles.scoreContainer}>
-      <View style={styles.scoreCrownContainer}>
+    <View style={styles.scoreLineContainer}>
+      <View style={styles.scoreContainer}>
         <Typographies.Body>{leftTeamScore.toString()}</Typographies.Body>
         {leftTeamScore > rightTeamScore ? crown : null}
       </View>
       <Typographies.Body color={theme.colors.subtleForeground}>{label}</Typographies.Body>
-      <View style={styles.scoreCrownContainer}>
-        {rightTeamScore > leftTeamScore ? crown : null}
+      <View style={StyleSheet.compose(styles.scoreContainer, styles.rightScoreContainer)}>
         <Typographies.Body>{rightTeamScore.toString()}</Typographies.Body>
+        {rightTeamScore > leftTeamScore ? crown : null}
       </View>
     </View>
   );
@@ -103,21 +103,26 @@ const getStyles = createStylesheet((theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    marginBottom: 6,
   },
   scoresContainer: {
-    paddingVertical: 8,
+    marginBottom: 12,
     gap: 4,
   },
-  scoreContainer: {
+  scoreLineContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
   },
-  scoreCrownContainer: {
+  scoreContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    flex: 1,
+  },
+  rightScoreContainer: {
+    flexDirection: 'row-reverse',
   },
   crown: {
     position: 'relative',
