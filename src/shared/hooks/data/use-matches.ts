@@ -1,4 +1,4 @@
-import { atom, useAtom } from 'jotai';
+import { atom, useAtom, useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 
 import { CoreData } from '~/shared/data/core/types';
@@ -14,7 +14,7 @@ export const useGroupedMatches = () => {
 };
 
 export const useAddMatches = () => {
-  const [, setGroupedMatches] = useAtom(groupedMatchesAtom);
+  const setGroupedMatches = useSetAtom(groupedMatchesAtom);
 
   const addMatches = useCallback(
     (...matches: CoreData.Match[]) => {

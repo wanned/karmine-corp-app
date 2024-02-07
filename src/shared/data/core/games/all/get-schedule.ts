@@ -40,13 +40,12 @@ async function getMatchesResults({
     .getEventsResults()
     .then((events) => events.filter((event) => filterKarmineEvents(event, filters)));
 
-  return await Promise.all(
-    eventsResults.map(async (eventResult) => {
-      const match = await karmineEventToCoreMatch(eventResult, 'finished');
-      onResult(match);
-      return match;
-    })
+  const matches = await Promise.all(
+    eventsResults.map(async (eventResult) => await karmineEventToCoreMatch(eventResult, 'finished'))
   );
+  onResult(...matches);
+
+  return matches;
 }
 
 async function getNextMatches({

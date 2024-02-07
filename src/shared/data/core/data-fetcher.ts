@@ -17,7 +17,7 @@ export namespace DataFetcher {
   }
 
   export interface GetScheduleParams {
-    onResult: (match: _CoreData.Match) => void;
+    onResult: (...matches: _CoreData.Match[]) => void;
     filters: {
       status?: _CoreData.Match['status'][];
       date?: { from?: Date; to?: Date };
