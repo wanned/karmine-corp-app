@@ -7,6 +7,8 @@ import { DataFetcher } from '../../../data-fetcher';
 import { CoreData } from '../../../types';
 import { groupMatchByBatch } from '../../../utils/group-match-by-batch';
 
+import pLimit from '~/shared/utils/p-limit';
+
 export async function getSchedule({
   onResult,
   filters,
@@ -34,17 +36,21 @@ export async function getSchedule({
   const results: CoreData.RocketLeagueMatch[] = [];
 
   for (const matches of groupedMatches) {
+    const limitConcurrency = pLimit(1);
+
     results.push(
       ...(
         await Promise.all(
-          matches.map(async (rlApiMatch) => {
-            const match = await getCoreMatch({ apis }, rlApiMatch);
-            if (match === undefined) return undefined;
+          matches.map(async (rlApiMatch) =>
+            limitConcurrency(async () => {
+              const match = await getCoreMatch({ apis }, rlApiMatch);
+              if (match === undefined) return undefined;
 
-            onResult(match);
+              onResult(match);
 
-            return match;
-          })
+              return match;
+            })
+          )
         )
       ).filter(Boolean)
     );
