@@ -1,10 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as datefns from 'date-fns';
 import { atom, useAtomValue } from 'jotai';
-import { useEffect } from 'react';
+import { selectAtom } from 'jotai/utils';
+import { useCallback, useEffect } from 'react';
 
 import { useDataFetcher } from './use-data-fetcher';
 import { groupedMatchesAtom, useAddMatches } from './use-matches';
+
+import { CoreData } from '~/shared/data/core/types';
 
 const nextMatchesAtom = atom((get) => {
   const groupedMatches = get(groupedMatchesAtom);
@@ -16,9 +19,24 @@ const nextMatchesAtom = atom((get) => {
 
   return nextMatches;
 });
-export const useNextMatches = () => {
-  const nextMatches = useAtomValue(nextMatchesAtom);
-  return nextMatches;
+export const useNextMatches = (n?: number) => {
+  return useAtomValue(
+    selectAtom(
+      nextMatchesAtom,
+      useCallback((nextMatches) => (n === undefined ? nextMatches : nextMatches.slice(0, n)), [n]),
+      useCallback(
+        (a: CoreData.Match[], b: CoreData.Match[]) => {
+          if (n === undefined) return Object.is(a, b);
+
+          for (let i = 0; i < n; i++) {
+            if (a[i] !== b[i]) return false;
+          }
+          return true;
+        },
+        [n]
+      )
+    )
+  );
 };
 
 export const useInitNextMatches = () => {
