@@ -1,6 +1,8 @@
 import { Image } from 'expo-image';
 import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 
+import { useAnonymousKcPlayerImage } from '../hooks/use-anonymous-kc-player-image';
+
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
 import { CoreData } from '~/shared/data/core/types';
@@ -48,6 +50,8 @@ interface PlayerProps extends CoreData.KarminePlayer {}
 const Player = ({ name, imageUrl, isStreaming = false }: PlayerProps) => {
   const styles = useStyles(getStyles);
 
+  const anonymousKcPlayerImage = useAnonymousKcPlayerImage();
+
   return (
     <View style={styles.playerContainer}>
       <View style={styles.playerTopContainer}>
@@ -58,9 +62,12 @@ const Player = ({ name, imageUrl, isStreaming = false }: PlayerProps) => {
         )}
         <View style={styles.pictureContainer}>
           <Image
-            source={{ uri: imageUrl }}
+            source={{
+              uri: imageUrl === '' || imageUrl === undefined ? anonymousKcPlayerImage : imageUrl,
+            }}
             cachePolicy="memory-disk"
             style={{ width: 160, height: 160 }}
+            contentFit="scale-down"
           />
         </View>
       </View>
