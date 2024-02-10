@@ -50,13 +50,13 @@ export const Leaderboard = ({ leaderboard }: LeaderboardProps) => {
   );
 };
 
-interface LeaderboardTeamProps extends CoreData.KarmineTeamLeaderboard {
+interface LeaderboardTeamProps extends CoreData.LeaderboardItem {
   isKarmine?: boolean;
 }
 
 const LeaderboardTeam = ({
   logoUrl,
-  name,
+  teamName: name,
   position,
   wins,
   looses,

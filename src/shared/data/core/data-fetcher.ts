@@ -1,5 +1,6 @@
 import defu from 'defu';
 
+import { getLeaderboardForTeam } from './get-leaderboard/games/league-of-legends/get-leaderboard-fot-team';
 import { getSchedule as getAllMatches } from './get-schedule/games/all/get-schedule';
 import { getSchedule as getLeagueOfLegendsMatches } from './get-schedule/games/league-of-legends/get-schedule';
 import { getSchedule as getRocketLeagueMatches } from './get-schedule/games/rocket-league/get-schedule';
@@ -33,6 +34,11 @@ export namespace DataFetcher {
   }
 
   export interface GetPlayersParams {
+    apis: Apis;
+  }
+
+  export interface GetLeaderboardParams {
+    onResult: (leaderboards: CoreData.Leaderboards) => void;
     apis: Apis;
   }
 }
@@ -77,10 +83,28 @@ export class DataFetcher {
     return matches.flat();
   }
 
-  public async getTeams(): Promise<CoreData.KarmineTeams> {
+  public async getPlayers(): Promise<CoreData.KarminePlayers> {
     const players = await getPlayers({ apis: this.apis });
 
     return defu(players);
+  }
+
+  public async getLeaderboard({
+    onResult = () => {},
+  }: Partial<Omit<DataFetcher.GetLeaderboardParams, 'apis'>> = {}): Promise<CoreData.Leaderboards> {
+    return Promise.all([
+      getLeaderboardForTeam(
+        { apis: this.apis, onResult },
+        CoreData.CompetitionName.LeagueOfLegendsLEC
+      ),
+      getLeaderboardForTeam(
+        { apis: this.apis, onResult },
+        CoreData.CompetitionName.LeagueOfLegendsLFL
+      ),
+    ]).then(([LeagueOfLegendsLEC, LeagueOfLegendsLFL]) => ({
+      [CoreData.CompetitionName.LeagueOfLegendsLEC]: LeagueOfLegendsLEC,
+      [CoreData.CompetitionName.LeagueOfLegendsLFL]: LeagueOfLegendsLFL,
+    }));
   }
 
   public async getYoutubeVideos(): Promise<CoreData.YoutubeVideo[]> {

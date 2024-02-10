@@ -107,4 +107,24 @@ export class LolEsportApiClient {
 
     return versions;
   }
+
+  public async getTournamentsForLeague(...leagueIds: string[]) {
+    const { data } = await this.fetch(
+      `${this.LOL_ESPORT_API_URL}/getTournamentsForLeague`,
+      { leagueId: leagueIds.join(',') },
+      lolEsportApiSchemas.getTournamentsForLeague
+    );
+
+    return data;
+  }
+
+  public async getStandingsByTournamentId(tournamentId: string) {
+    const { data } = await this.fetch(
+      `${this.LOL_ESPORT_API_URL}/getStandingsV3`,
+      { tournamentId },
+      lolEsportApiSchemas.getStandingsByTournamentId
+    );
+
+    return data.standings;
+  }
 }

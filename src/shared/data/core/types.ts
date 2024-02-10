@@ -103,19 +103,16 @@ export namespace CoreData {
     isStreaming: boolean;
   }
 
-  // TODO: Rename KarmineTeamLeaderboard as it represent a single team in leaderboard
-  export interface KarmineTeamLeaderboard {
-    name: string;
+  export type KarminePlayers = Partial<Record<CompetitionName, KarminePlayer[]>>;
+
+  export interface LeaderboardItem {
+    teamName: string;
+    teamId: string;
     logoUrl: string;
     position: number;
     wins: number;
     looses: number;
   }
 
-  export interface KarmineTeam {
-    players: KarminePlayer[];
-    leaderboard?: KarmineTeamLeaderboard[];
-  }
-
-  export type KarmineTeams = Partial<Record<CompetitionName, KarmineTeam>>;
+  export type Leaderboards = Partial<Record<CompetitionName, LeaderboardItem[]>>;
 }

@@ -1,25 +1,27 @@
 import { Team } from './components/team';
 
-import { useTeams } from '~/shared/hooks/data/use-teams';
+import { useLeaderboards } from '~/shared/hooks/data/use-leaderboards';
+import { usePlayers } from '~/shared/hooks/data/use-players';
 import { DefaultLayout } from '~/shared/layouts/default-layout';
 
 export default function TeamsScreen() {
-  const { data: teams } = useTeams();
+  const { data: groupedPlayers } = usePlayers();
+  const leaderboards = useLeaderboards();
 
   return (
     <DefaultLayout>
-      {teams === undefined ? null : (
-        Object.entries(teams).map(([game, team]) => (
-          <Team.Container title={game as keyof typeof teams} key={game}>
-            {team.leaderboard && (
+      {groupedPlayers === undefined ? null : (
+        Object.entries(groupedPlayers).map(([game, players]) => (
+          <Team.Container title={game as keyof typeof groupedPlayers} key={game}>
+            {leaderboards[game as keyof typeof groupedPlayers] && (
               <Team.Leaderboard
-                leaderboard={team.leaderboard.map((team) => ({
+                leaderboard={leaderboards[game as keyof typeof groupedPlayers]!.map((team) => ({
                   ...team,
-                  isKarmine: team.name.toLowerCase().includes('karmine'),
+                  isKarmine: team.teamName.toLowerCase().includes('karmine'),
                 }))}
               />
             )}
-            <Team.Players players={team.players} />
+            <Team.Players players={players} />
           </Team.Container>
         ))
       )}

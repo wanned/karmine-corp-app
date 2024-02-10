@@ -20,3 +20,7 @@ export const findLeague = async (params: { id: string } | { slug: string }) =>
   : LOL_LEAGUES.find(({ slug }) => slug === params.slug);
 
 export const getAllLeagues = () => Promise.resolve(LOL_LEAGUES);
+
+export const getLeaguesForTeam = async (
+  team: CoreData.CompetitionName.LeagueOfLegendsLEC | CoreData.CompetitionName.LeagueOfLegendsLFL
+) => LOL_LEAGUES.filter(({ team: t }) => t === team);
