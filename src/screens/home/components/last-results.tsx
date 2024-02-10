@@ -12,7 +12,7 @@ interface LastResultsProps {
 export const LastResults = ({ viewMoreButton, max }: LastResultsProps) => {
   const translate = useTranslate();
 
-  const matchs = useMatchesResults();
+  const matchs = useMatchesResults(max);
 
   if (!matchs?.length) {
     return null;
@@ -20,7 +20,7 @@ export const LastResults = ({ viewMoreButton, max }: LastResultsProps) => {
 
   return (
     <Section title={translate('home.lastResultsTitle')}>
-      {matchs.slice(0, max).map((match) => (
+      {matchs.map((match) => (
         <MatchScore key={match.id} match={match}>
           {match.teams.map(
             (team, index) =>

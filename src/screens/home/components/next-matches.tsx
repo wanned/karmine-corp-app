@@ -14,7 +14,7 @@ interface NextMatchesProps {
 export const NextMatches = ({ viewMoreButton, max }: NextMatchesProps) => {
   const translate = useTranslate();
 
-  const matchs = useNextMatches();
+  const matchs = useNextMatches(max);
 
   if (!matchs?.length) {
     return null;
@@ -22,7 +22,7 @@ export const NextMatches = ({ viewMoreButton, max }: NextMatchesProps) => {
 
   return (
     <Section title={translate('home.nextMatchesTitle')}>
-      {matchs.slice(0, max).map((match) => (
+      {matchs.map((match) => (
         <MatchScore key={match.id} match={match}>
           {match.teams.map(
             (team, index) =>

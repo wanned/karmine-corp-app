@@ -1,5 +1,6 @@
-import { atom, useAtom } from 'jotai';
+import { atom, useAtom, useSetAtom } from 'jotai';
 import { useCallback } from 'react';
+import { InteractionManager } from 'react-native';
 
 import { CoreData } from '~/shared/data/core/types';
 import { IsoDate } from '~/shared/types/IsoDate';
@@ -14,38 +15,40 @@ export const useGroupedMatches = () => {
 };
 
 export const useAddMatches = () => {
-  const [, setGroupedMatches] = useAtom(groupedMatchesAtom);
+  const setGroupedMatches = useSetAtom(groupedMatchesAtom);
 
   const addMatches = useCallback(
     (...matches: CoreData.Match[]) => {
-      setGroupedMatches((prevGroupedMatches) => {
-        const newGroupedMatches = { ...prevGroupedMatches };
+      InteractionManager.runAfterInteractions(() => {
+        setGroupedMatches((prevGroupedMatches) => {
+          const newGroupedMatches = { ...prevGroupedMatches };
 
-        matches.forEach((match) => {
-          const matchDate = match.date;
-          const matchDay = new Date(
-            matchDate.getFullYear(),
-            matchDate.getMonth(),
-            matchDate.getDate()
-          );
-          const matchDayIso = matchDay.toISOString() as IsoDate;
+          matches.forEach((match) => {
+            const matchDate = match.date;
+            const matchDay = new Date(
+              matchDate.getFullYear(),
+              matchDate.getMonth(),
+              matchDate.getDate()
+            );
+            const matchDayIso = matchDay.toISOString() as IsoDate;
 
-          if (!newGroupedMatches[matchDayIso]) {
-            newGroupedMatches[matchDayIso] = [];
-          }
+            if (!newGroupedMatches[matchDayIso]) {
+              newGroupedMatches[matchDayIso] = [];
+            }
 
-          const matchIndex = newGroupedMatches[matchDayIso].findIndex((m) => m.id === match.id);
+            const matchIndex = newGroupedMatches[matchDayIso].findIndex((m) => m.id === match.id);
 
-          if (matchIndex === -1) {
-            newGroupedMatches[matchDayIso].push(match);
-          } else {
-            newGroupedMatches[matchDayIso][matchIndex] = match;
-          }
+            if (matchIndex === -1) {
+              newGroupedMatches[matchDayIso].push(match);
+            } else {
+              newGroupedMatches[matchDayIso][matchIndex] = match;
+            }
 
-          newGroupedMatches[matchDayIso] = [...newGroupedMatches[matchDayIso]];
+            newGroupedMatches[matchDayIso] = [...newGroupedMatches[matchDayIso]];
+          });
+
+          return newGroupedMatches;
         });
-
-        return newGroupedMatches;
       });
     },
     [setGroupedMatches]
