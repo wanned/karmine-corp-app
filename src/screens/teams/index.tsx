@@ -1,46 +1,28 @@
 import { Team } from './components/team';
 
+import { useTeams } from '~/shared/hooks/data/use-teams';
 import { DefaultLayout } from '~/shared/layouts/default-layout';
 
 export default function TeamsScreen() {
+  const { data: teams } = useTeams();
+
   return (
     <DefaultLayout>
-      <Team.Container title="League Of Legends LEC">
-        <Team.Leaderboard
-          leaderboard={[
-            { logo: '', name: 'Fnatic', top: 1, wins: 13, looses: 3 },
-            { logo: '', name: 'Karmine Corp', top: 2, wins: 13, looses: 3, isKarmine: true },
-            { logo: '', name: 'G2', top: 3, wins: 13, looses: 3 },
-            { logo: '', name: 'Rogue', top: 4, wins: 13, looses: 3 },
-          ]}
-        />
-        <Team.Players
-          players={[
-            {
-              picture: 'https://medias.kametotv.fr/karmine/players/uploaded/CABOLEC.png',
-              name: 'Player 1',
-              isStreaming: true,
-            },
-            {
-              picture: 'https://medias.kametotv.fr/karmine/players/uploaded/Atowvfv2.png',
-              name: 'Player 2',
-            },
-            {
-              picture: 'https://medias.kametotv.fr/karmine/players/uploaded/SAKENLEC.png',
-              name: 'Player 3',
-              isStreaming: true,
-            },
-            {
-              picture: 'https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png',
-              name: 'Player 4',
-            },
-            {
-              picture: 'https://medias.kametotv.fr/karmine/players/uploaded/TARGALEC.png',
-              name: 'Player 5',
-            },
-          ]}
-        />
-      </Team.Container>
+      {teams === undefined ? null : (
+        Object.entries(teams).map(([game, team]) => (
+          <Team.Container title={game as keyof typeof teams} key={game}>
+            {team.leaderboard && (
+              <Team.Leaderboard
+                leaderboard={team.leaderboard.map((team) => ({
+                  ...team,
+                  isKarmine: team.name.toLowerCase().includes('karmine'),
+                }))}
+              />
+            )}
+            <Team.Players players={team.players} />
+          </Team.Container>
+        ))
+      )}
     </DefaultLayout>
   );
 }

@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native'
 
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
+import { CoreData } from '~/shared/data/core/types';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
@@ -27,8 +28,13 @@ export const Players = ({ players }: PlayersProps) => {
         horizontal
         contentContainerStyle={styles.playersScrollContainer}
         showsHorizontalScrollIndicator={false}>
-        {players
-          .sort((a, b) => (a.isStreaming ? -1 : 1))
+        {[...players]
+          // Sort by streaming status, then by original order
+          .sort((a, b) =>
+            a.isStreaming === b.isStreaming ? players.indexOf(a) - players.indexOf(b)
+            : a.isStreaming ? -1
+            : 1
+          )
           .map((player) => (
             <Player {...player} key={player.name} />
           ))}
@@ -37,13 +43,9 @@ export const Players = ({ players }: PlayersProps) => {
   );
 };
 
-interface PlayerProps {
-  picture: string;
-  name: string;
-  isStreaming?: boolean;
-}
+interface PlayerProps extends CoreData.KarminePlayer {}
 
-const Player = ({ name, picture, isStreaming = false }: PlayerProps) => {
+const Player = ({ name, imageUrl, isStreaming = false }: PlayerProps) => {
   const styles = useStyles(getStyles);
 
   return (
@@ -56,7 +58,7 @@ const Player = ({ name, picture, isStreaming = false }: PlayerProps) => {
         )}
         <View style={styles.pictureContainer}>
           <Image
-            source={{ uri: picture }}
+            source={{ uri: imageUrl }}
             cachePolicy="memory-disk"
             style={{ width: 160, height: 160 }}
           />

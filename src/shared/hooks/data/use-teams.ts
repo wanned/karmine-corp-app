@@ -2,11 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useDataFetcher } from './use-data-fetcher';
 
-export const useYoutubeVideos = () => {
+export const useTeams = () => {
   const dataFetcher = useDataFetcher();
 
   return useQuery({
-    queryKey: ['youtube-videos'],
-    queryFn: () => dataFetcher.getYoutubeVideos(),
+    queryKey: ['karmine-teams'],
+    queryFn: () => dataFetcher.getTeams(),
   });
 };

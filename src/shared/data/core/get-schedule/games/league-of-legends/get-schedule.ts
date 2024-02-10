@@ -5,7 +5,7 @@ import { getLolMatches } from './get-lol-matches';
 import { getStrafeMatch } from './get-strafe-match';
 import { DataFetcher } from '../../../data-fetcher';
 import { CoreData } from '../../../types';
-import { groupMatchByBatch } from '../../../utils/group-match-by-batch';
+import { groupMatchByBatch } from '../../utils/group-match-by-batch';
 
 import pLimit from '~/shared/utils/p-limit';
 

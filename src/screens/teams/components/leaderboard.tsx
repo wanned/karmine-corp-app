@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Typographies } from '~/shared/components/typographies';
+import { CoreData } from '~/shared/data/core/types';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
@@ -17,7 +18,7 @@ export const Leaderboard = ({ leaderboard }: LeaderboardProps) => {
   const styles = useStyles(getStyles);
 
   const sortedTeams = useMemo(() => {
-    const sortedTeams = [...leaderboard].sort((a, b) => a.top - b.top);
+    const sortedTeams = [...leaderboard].sort((a, b) => a.position - b.position);
 
     const karmineIndex = sortedTeams.findIndex(({ isKarmine }) => isKarmine);
     let minIndex: number | undefined;
@@ -49,19 +50,14 @@ export const Leaderboard = ({ leaderboard }: LeaderboardProps) => {
   );
 };
 
-interface LeaderboardTeamProps {
-  logo: string;
-  name: string;
-  top: number;
-  wins: number;
-  looses: number;
+interface LeaderboardTeamProps extends CoreData.KarmineTeamLeaderboard {
   isKarmine?: boolean;
 }
 
 const LeaderboardTeam = ({
-  logo,
+  logoUrl,
   name,
-  top,
+  position,
   wins,
   looses,
   isKarmine = false,
@@ -75,14 +71,18 @@ const LeaderboardTeam = ({
         isKarmine && styles.leaderboardTeamScoreKarmine
       )}>
       <View style={styles.leaderboardTeamScoreLeftContainer}>
-        <Image source={{ uri: logo }} cachePolicy="memory-disk" style={{ width: 24, height: 24 }} />
+        <Image
+          source={{ uri: logoUrl }}
+          cachePolicy="memory-disk"
+          style={{ width: 24, height: 24 }}
+        />
         <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
           {name}
         </Typographies.Body>
       </View>
       <View style={styles.leaderboardTeamScoreRightContainer}>
         <Typographies.Body color={styles.leaderboardTeamTop.color} verticalTrim>
-          #{top.toString()}
+          #{position.toString()}
         </Typographies.Body>
         <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
           {wins.toString()}V · {looses.toString()}D
