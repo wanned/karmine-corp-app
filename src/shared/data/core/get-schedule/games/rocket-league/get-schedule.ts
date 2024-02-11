@@ -5,7 +5,7 @@ import { getRlMatches } from './get-rl-matches';
 import { getUnlistedRlMatches } from './get-unlisted-rl-matches';
 import { DataFetcher } from '../../../data-fetcher';
 import { CoreData } from '../../../types';
-import { groupMatchByBatch } from '../../../utils/group-match-by-batch';
+import { groupMatchByBatch } from '../../utils/group-match-by-batch';
 
 import pLimit from '~/shared/utils/p-limit';
 

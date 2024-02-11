@@ -1,5 +1,5 @@
-import { DataFetcher } from '../../data-fetcher';
-import { CoreData } from '../../types';
+import { DataFetcher } from '../../../data-fetcher';
+import { CoreData } from '../../../types';
 
 type BaseKarmineEvent = {
   id: number;

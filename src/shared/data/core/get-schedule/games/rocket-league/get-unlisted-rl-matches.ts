@@ -2,7 +2,7 @@ import { isSameDay } from 'date-fns';
 
 import { DataFetcher } from '../../../data-fetcher';
 import { CoreData } from '../../../types';
-import { getSchedule as getAllMatches } from '../../all/get-schedule';
+import { getSchedule as getAllMatches } from '../all/get-schedule';
 
 export async function getUnlistedRlMatches(
   rlMatches: CoreData.RocketLeagueMatch[],

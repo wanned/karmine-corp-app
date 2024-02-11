@@ -98,4 +98,23 @@ export namespace CoreData {
     likes: number;
     thumbnailUrl: string;
   }
+
+  export interface KarminePlayer extends Player {
+    streamLink: string;
+    isStreaming: boolean;
+  }
+
+  export type KarminePlayers = Partial<Record<CompetitionName, KarminePlayer[]>>;
+
+  export interface LeaderboardItem {
+    teamName: string;
+    teamId: string;
+    logoUrl: string;
+    position: number;
+    wins?: number;
+    looses?: number;
+    points?: number;
+  }
+
+  export type Leaderboards = Partial<Record<CompetitionName, LeaderboardItem[]>>;
 }

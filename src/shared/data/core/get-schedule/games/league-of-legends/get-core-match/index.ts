@@ -1,4 +1,4 @@
-import { ExternalMatch } from './../types';
+import { ExternalMatch } from '../types';
 import { getCoreStatus } from './get-core-status';
 import { getMatchDetailsFromEvent } from './get-match-details';
 import { getTeamsFromEvent } from './get-teams-from-event';

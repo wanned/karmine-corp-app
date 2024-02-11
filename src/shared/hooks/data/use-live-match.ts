@@ -1,9 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { atom, useAtomValue } from 'jotai';
-import { useEffect } from 'react';
+import { selectAtom } from 'jotai/utils';
+import { useCallback, useEffect } from 'react';
 
 import { useDataFetcher } from './use-data-fetcher';
 import { groupedMatchesAtom, useAddMatches } from './use-matches';
+
+import { CoreData } from '~/shared/data/core/types';
 
 const liveMatchesAtom = atom((get) => {
   const groupedMatches = get(groupedMatchesAtom);
@@ -15,12 +18,23 @@ const liveMatchesAtom = atom((get) => {
 
   return liveMatches;
 });
+
 export const useLiveMatches = () => {
-  const liveMatches = useAtomValue(liveMatchesAtom);
-  return liveMatches;
+  return useAtomValue(
+    selectAtom(
+      liveMatchesAtom,
+      useCallback((liveMatches) => liveMatches, []),
+      useCallback((a: CoreData.Match[], b: CoreData.Match[]) => {
+        for (let i = 0; i < Math.max(a.length, b.length); i++) {
+          if (a[i] !== b[i]) return false;
+        }
+        return true;
+      }, [])
+    )
+  );
 };
 
-export const useInitMatchesResults = () => {
+export const useInitLiveMatches = () => {
   const dataFetcher = useDataFetcher();
   const queryClient = useQueryClient();
 

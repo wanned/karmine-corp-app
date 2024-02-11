@@ -15,6 +15,8 @@ import RootNavigator from './shared/navigation';
 import { SettingsProvider } from '~/shared/contexts/settings-context';
 import { ThemeContext } from '~/shared/contexts/theme-context';
 import { styleTokens } from '~/shared/styles/tokens';
+import { useInitLiveMatches } from './shared/hooks/data/use-live-match';
+import { useInitLeaderboards } from './shared/hooks/data/use-leaderboards';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -68,6 +70,8 @@ const _App = ({ onLayoutRootView }: { onLayoutRootView: () => void }) => {
 
   useInitNextMatches();
   useInitMatchesResults();
+  useInitLiveMatches();
+  useInitLeaderboards();
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }} onLayout={onLayoutRootView}>

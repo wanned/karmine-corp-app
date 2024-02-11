@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Typographies } from '~/shared/components/typographies';
+import { CoreData } from '~/shared/data/core/types';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
@@ -17,7 +18,7 @@ export const Leaderboard = ({ leaderboard }: LeaderboardProps) => {
   const styles = useStyles(getStyles);
 
   const sortedTeams = useMemo(() => {
-    const sortedTeams = [...leaderboard].sort((a, b) => a.top - b.top);
+    const sortedTeams = [...leaderboard].sort((a, b) => a.position - b.position);
 
     const karmineIndex = sortedTeams.findIndex(({ isKarmine }) => isKarmine);
     let minIndex: number | undefined;
@@ -49,24 +50,21 @@ export const Leaderboard = ({ leaderboard }: LeaderboardProps) => {
   );
 };
 
-interface LeaderboardTeamProps {
-  logo: string;
-  name: string;
-  top: number;
-  wins: number;
-  looses: number;
+interface LeaderboardTeamProps extends CoreData.LeaderboardItem {
   isKarmine?: boolean;
 }
 
 const LeaderboardTeam = ({
-  logo,
-  name,
-  top,
+  logoUrl,
+  teamName: name,
+  position,
   wins,
   looses,
+  points,
   isKarmine = false,
 }: LeaderboardTeamProps) => {
   const styles = useStyles(getStyles);
+  const translate = useTranslate();
 
   return (
     <View
@@ -75,18 +73,31 @@ const LeaderboardTeam = ({
         isKarmine && styles.leaderboardTeamScoreKarmine
       )}>
       <View style={styles.leaderboardTeamScoreLeftContainer}>
-        <Image source={{ uri: logo }} cachePolicy="memory-disk" style={{ width: 24, height: 24 }} />
+        <Image
+          source={{ uri: logoUrl }}
+          cachePolicy="memory-disk"
+          style={{ width: 24, height: 24 }}
+          contentFit="contain"
+        />
         <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
           {name}
         </Typographies.Body>
       </View>
       <View style={styles.leaderboardTeamScoreRightContainer}>
         <Typographies.Body color={styles.leaderboardTeamTop.color} verticalTrim>
-          #{top.toString()}
+          #{position.toString()}
         </Typographies.Body>
-        <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
-          {wins.toString()}V · {looses.toString()}D
-        </Typographies.Body>
+        {wins !== undefined && looses !== undefined ?
+          <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
+            {/* {wins.toString()}V · {looses.toString()}D */}
+            {wins.toString() + translate('teams.winAbbr')} ·{' '}
+            {looses.toString() + translate('teams.lossAbbr')}
+          </Typographies.Body>
+        : points !== undefined ?
+          <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
+            {points.toString() + ' ' + translate('teams.pointsAbbr')}
+          </Typographies.Body>
+        : null}
       </View>
     </View>
   );

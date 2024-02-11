@@ -4,20 +4,24 @@ import { Leaderboard } from './leaderboard';
 import { Players } from './players';
 
 import { Typographies } from '~/shared/components/typographies';
+import { CoreData } from '~/shared/data/core/types';
 import { useStyles } from '~/shared/hooks/use-styles';
+import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 interface TeamContainerProps {
-  title: string;
+  title: CoreData.CompetitionName;
   children: React.ReactNode;
 }
 
 const TeamContainer = ({ children, title }: TeamContainerProps) => {
   const styles = useStyles(getStyles);
 
+  const translate = useTranslate();
+
   return (
     <View>
-      <Typographies.Title2>{title}</Typographies.Title2>
+      <Typographies.Title2>{translate(`games.${title}`)}</Typographies.Title2>
       <View style={styles.container}>{children}</View>
     </View>
   );

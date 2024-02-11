@@ -1,9 +1,15 @@
-import { getSchedule as getAllMatches } from './games/all/get-schedule';
-import { getSchedule as getLeagueOfLegendsMatches } from './games/league-of-legends/get-schedule';
-import { getSchedule as getRocketLeagueMatches } from './games/rocket-league/get-schedule';
+import defu from 'defu';
+
+import { getLeaderboard as getLeagueOfLegendsLeaderboards } from './get-leaderboard/games/league-of-legends/get-leaderboard';
+import { getLeaderboard as getRocketLeagueLeaderboards } from './get-leaderboard/games/rocket-league/get-leaderboard';
+import { getSchedule as getAllMatches } from './get-schedule/games/all/get-schedule';
+import { getSchedule as getLeagueOfLegendsMatches } from './get-schedule/games/league-of-legends/get-schedule';
+import { getSchedule as getRocketLeagueMatches } from './get-schedule/games/rocket-league/get-schedule';
+import { getPlayers } from './get-teams/get-players';
 import { CoreData, CoreData as _CoreData } from './types';
 import { KarmineApiClient } from '../external-apis/karmine/karmine-api-client';
 import { LolEsportApiClient } from '../external-apis/league-of-legends/lol-esport-api-client';
+import { LiquipediaApiClient } from '../external-apis/liquipedia/liquipedia-api-client';
 import { OctaneApiClient } from '../external-apis/octane/octane-api-client';
 import { StrafeApiClient } from '../external-apis/strafe/strafe-api-client';
 import { YoutubeApiClient } from '../external-apis/youtube/youtube-api-client';
@@ -14,6 +20,8 @@ export namespace DataFetcher {
     lolEsport: LolEsportApiClient;
     strafe: StrafeApiClient;
     octane: OctaneApiClient;
+    youtube: YoutubeApiClient;
+    liquipedia: LiquipediaApiClient;
   }
 
   export interface GetScheduleParams {
@@ -27,13 +35,29 @@ export namespace DataFetcher {
     batches?: { from: Date; to: Date }[];
     apis: Apis;
   }
+
+  export interface GetPlayersParams {
+    apis: Apis;
+  }
+
+  export interface GetLeaderboardParams {
+    onResult: (leaderboards: CoreData.Leaderboards) => void;
+    apis: Apis;
+  }
 }
 
 export class DataFetcher {
-  private fetch_: typeof fetch;
+  private apis: DataFetcher.Apis;
 
   constructor({ fetch_ = fetch }: { fetch_?: typeof fetch } = {}) {
-    this.fetch_ = fetch_;
+    this.apis = {
+      karmine: new KarmineApiClient({ fetch_ }),
+      lolEsport: new LolEsportApiClient({ fetch_ }),
+      strafe: new StrafeApiClient({ fetch_ }),
+      octane: new OctaneApiClient({ fetch_ }),
+      youtube: new YoutubeApiClient({ fetch_ }),
+      liquipedia: new LiquipediaApiClient({ fetch_ }),
+    };
   }
 
   public async getSchedule({
@@ -41,13 +65,6 @@ export class DataFetcher {
     filters = {},
     batches = [],
   }: Partial<Omit<DataFetcher.GetScheduleParams, 'apis'>> = {}): Promise<_CoreData.Match[]> {
-    const apis: DataFetcher.Apis = {
-      karmine: new KarmineApiClient({ fetch_: this.fetch_ }),
-      lolEsport: new LolEsportApiClient({ fetch_: this.fetch_ }),
-      strafe: new StrafeApiClient({ fetch_: this.fetch_ }),
-      octane: new OctaneApiClient({ fetch_: this.fetch_ }),
-    };
-
     const matches = await Promise.all([
       getAllMatches({
         onResult,
@@ -61,21 +78,36 @@ export class DataFetcher {
           ],
         },
         batches,
-        apis,
+        apis: this.apis,
       }),
-      getLeagueOfLegendsMatches({ onResult, filters, batches, apis }),
-      getRocketLeagueMatches({ onResult, filters, batches, apis }),
+      getLeagueOfLegendsMatches({ onResult, filters, batches, apis: this.apis }),
+      getRocketLeagueMatches({ onResult, filters, batches, apis: this.apis }),
     ]);
 
     return matches.flat();
   }
 
-  public async getYoutubeVideos(): Promise<CoreData.YoutubeVideo[]> {
-    const youtubeApiClient = new YoutubeApiClient({ fetch_: this.fetch_ });
+  public async getPlayers(): Promise<CoreData.KarminePlayers> {
+    const players = await getPlayers({ apis: this.apis });
 
+    return defu(players);
+  }
+
+  public async getLeaderboard({
+    onResult = () => {},
+  }: Partial<Omit<DataFetcher.GetLeaderboardParams, 'apis'>> = {}): Promise<CoreData.Leaderboards> {
+    const leaderboards = await Promise.all([
+      getLeagueOfLegendsLeaderboards({ onResult, apis: this.apis }),
+      getRocketLeagueLeaderboards({ onResult, apis: this.apis }),
+    ]);
+
+    return defu(...leaderboards);
+  }
+
+  public async getYoutubeVideos(): Promise<CoreData.YoutubeVideo[]> {
     const {
       feed: { entry: videos },
-    } = await youtubeApiClient.getVideos();
+    } = await this.apis.youtube.getVideos();
 
     return videos.map((video) => ({
       id: video['yt:videoId'],

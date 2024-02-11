@@ -23,6 +23,9 @@ export type Translations = Record<
       screenName: string;
       leaderboardTitle: string;
       playersTitle: string;
+      winAbbr: string;
+      lossAbbr: string;
+      pointsAbbr: string;
     };
     settings: {
       screenName: string;
