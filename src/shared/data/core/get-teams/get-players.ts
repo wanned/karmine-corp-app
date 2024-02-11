@@ -17,9 +17,18 @@ export async function getPlayers({
         isStreaming:
           player.twitch_login !== 'undefined_player' &&
           currentTwitch.some((t) => t.twitch_login === player.twitch_login),
+        streamLink: `https://twitch.tv/${fixTwitchLogin(player.twitch_login)}`,
       });
 
       return groupedPlayers;
     }, {})
   );
+}
+
+function fixTwitchLogin(twitchLogin: string) {
+  if (twitchLogin === 'atowrikowww') {
+    return 'atowwwww';
+  }
+
+  return twitchLogin;
 }

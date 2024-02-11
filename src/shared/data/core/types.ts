@@ -100,6 +100,7 @@ export namespace CoreData {
   }
 
   export interface KarminePlayer extends Player {
+    streamLink: string;
     isStreaming: boolean;
   }
 

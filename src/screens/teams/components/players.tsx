@@ -1,5 +1,12 @@
 import { Image } from 'expo-image';
-import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import {
+  Linking,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 import { useAnonymousKcPlayerImage } from '../hooks/use-anonymous-kc-player-image';
 
@@ -47,32 +54,37 @@ export const Players = ({ players }: PlayersProps) => {
 
 interface PlayerProps extends CoreData.KarminePlayer {}
 
-const Player = ({ name, imageUrl, isStreaming = false }: PlayerProps) => {
+const Player = ({ name, imageUrl, streamLink, isStreaming = false }: PlayerProps) => {
   const styles = useStyles(getStyles);
 
   const anonymousKcPlayerImage = useAnonymousKcPlayerImage();
 
   return (
-    <View style={styles.playerContainer}>
-      <View style={styles.playerTopContainer}>
-        {isStreaming && (
-          <View style={styles.livePillContainer}>
-            <LivePill />
+    <TouchableOpacity
+      onPress={() => {
+        Linking.openURL(streamLink);
+      }}>
+      <View style={styles.playerContainer}>
+        <View style={styles.playerTopContainer}>
+          {isStreaming && (
+            <View style={styles.livePillContainer}>
+              <LivePill />
+            </View>
+          )}
+          <View style={styles.pictureContainer}>
+            <Image
+              source={{
+                uri: imageUrl === '' || imageUrl === undefined ? anonymousKcPlayerImage : imageUrl,
+              }}
+              cachePolicy="memory-disk"
+              style={{ width: 160, height: 160 }}
+              contentFit="scale-down"
+            />
           </View>
-        )}
-        <View style={styles.pictureContainer}>
-          <Image
-            source={{
-              uri: imageUrl === '' || imageUrl === undefined ? anonymousKcPlayerImage : imageUrl,
-            }}
-            cachePolicy="memory-disk"
-            style={{ width: 160, height: 160 }}
-            contentFit="scale-down"
-          />
         </View>
+        <Typographies.Body>{name}</Typographies.Body>
       </View>
-      <Typographies.Body>{name}</Typographies.Body>
-    </View>
+    </TouchableOpacity>
   );
 };
 
