@@ -1,6 +1,6 @@
 import defu from 'defu';
 
-import { getLeaderboardForTeam } from './get-leaderboard/games/league-of-legends/get-leaderboard-fot-team';
+import { getLeaderboard as getLeagueOfLegendsLeaderboards } from './get-leaderboard/games/league-of-legends/get-leaderboard';
 import { getSchedule as getAllMatches } from './get-schedule/games/all/get-schedule';
 import { getSchedule as getLeagueOfLegendsMatches } from './get-schedule/games/league-of-legends/get-schedule';
 import { getSchedule as getRocketLeagueMatches } from './get-schedule/games/rocket-league/get-schedule';
@@ -92,19 +92,11 @@ export class DataFetcher {
   public async getLeaderboard({
     onResult = () => {},
   }: Partial<Omit<DataFetcher.GetLeaderboardParams, 'apis'>> = {}): Promise<CoreData.Leaderboards> {
-    return Promise.all([
-      getLeaderboardForTeam(
-        { apis: this.apis, onResult },
-        CoreData.CompetitionName.LeagueOfLegendsLEC
-      ),
-      getLeaderboardForTeam(
-        { apis: this.apis, onResult },
-        CoreData.CompetitionName.LeagueOfLegendsLFL
-      ),
-    ]).then(([LeagueOfLegendsLEC, LeagueOfLegendsLFL]) => ({
-      [CoreData.CompetitionName.LeagueOfLegendsLEC]: LeagueOfLegendsLEC,
-      [CoreData.CompetitionName.LeagueOfLegendsLFL]: LeagueOfLegendsLFL,
-    }));
+    const leaderboards = await Promise.all([
+      getLeagueOfLegendsLeaderboards({ onResult, apis: this.apis }),
+    ]);
+
+    return defu(...leaderboards);
   }
 
   public async getYoutubeVideos(): Promise<CoreData.YoutubeVideo[]> {
