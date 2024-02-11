@@ -77,6 +77,7 @@ const LeaderboardTeam = ({
           source={{ uri: logoUrl }}
           cachePolicy="memory-disk"
           style={{ width: 24, height: 24 }}
+          contentFit="contain"
         />
         <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
           {name}
