@@ -19,6 +19,9 @@ export const esTranslations: Translations['es'] = {
     screenName: 'Equipos',
     leaderboardTitle: 'Classificación',
     playersTitle: 'Miembros',
+    winAbbr: 'V',
+    lossAbbr: 'D',
+    pointsAbbr: 'pts',
   },
   settings: {
     screenName: 'Configuración',

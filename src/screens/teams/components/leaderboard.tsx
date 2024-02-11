@@ -64,6 +64,7 @@ const LeaderboardTeam = ({
   isKarmine = false,
 }: LeaderboardTeamProps) => {
   const styles = useStyles(getStyles);
+  const translate = useTranslate();
 
   return (
     <View
@@ -87,11 +88,13 @@ const LeaderboardTeam = ({
         </Typographies.Body>
         {wins !== undefined && looses !== undefined ?
           <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
-            {wins.toString()}V · {looses.toString()}D
+            {/* {wins.toString()}V · {looses.toString()}D */}
+            {wins.toString() + translate('teams.winAbbr')} ·{' '}
+            {looses.toString() + translate('teams.lossAbbr')}
           </Typographies.Body>
         : points !== undefined ?
           <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
-            {points.toString()} pts
+            {points.toString() + ' ' + translate('teams.pointsAbbr')}
           </Typographies.Body>
         : null}
       </View>
