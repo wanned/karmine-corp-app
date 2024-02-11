@@ -56,12 +56,12 @@ function updateLeaderboard(
   }
 
   if (resultOrRecord === 'win') {
-    leaderboard[team.id].wins++;
+    leaderboard[team.id].wins = (leaderboard[team.id].wins ?? 0) + 1;
   } else if (resultOrRecord === 'loss') {
-    leaderboard[team.id].looses++;
+    leaderboard[team.id].looses = (leaderboard[team.id].looses ?? 0) + 1;
   } else {
-    leaderboard[team.id].wins += resultOrRecord.wins;
-    leaderboard[team.id].looses += resultOrRecord.looses;
+    leaderboard[team.id].wins = (leaderboard[team.id].wins ?? 0) + resultOrRecord.wins;
+    leaderboard[team.id].looses = (leaderboard[team.id].looses ?? 0) + resultOrRecord.looses;
   }
 }
 
@@ -79,8 +79,8 @@ function mergeLeaderboards(...leaderboards: Leaderboard[]) {
         },
         leaderboard[teamId].position,
         {
-          wins: leaderboard[teamId].wins,
-          looses: leaderboard[teamId].looses,
+          wins: leaderboard[teamId].wins ?? 0,
+          looses: leaderboard[teamId].looses ?? 0,
         }
       );
     }

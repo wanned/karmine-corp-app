@@ -1,6 +1,7 @@
 import defu from 'defu';
 
 import { getLeaderboard as getLeagueOfLegendsLeaderboards } from './get-leaderboard/games/league-of-legends/get-leaderboard';
+import { getLeaderboard as getRocketLeagueLeaderboards } from './get-leaderboard/games/rocket-league/get-leaderboard';
 import { getSchedule as getAllMatches } from './get-schedule/games/all/get-schedule';
 import { getSchedule as getLeagueOfLegendsMatches } from './get-schedule/games/league-of-legends/get-schedule';
 import { getSchedule as getRocketLeagueMatches } from './get-schedule/games/rocket-league/get-schedule';
@@ -8,6 +9,7 @@ import { getPlayers } from './get-teams/get-players';
 import { CoreData, CoreData as _CoreData } from './types';
 import { KarmineApiClient } from '../external-apis/karmine/karmine-api-client';
 import { LolEsportApiClient } from '../external-apis/league-of-legends/lol-esport-api-client';
+import { LiquipediaApiClient } from '../external-apis/liquipedia/liquipedia-api-client';
 import { OctaneApiClient } from '../external-apis/octane/octane-api-client';
 import { StrafeApiClient } from '../external-apis/strafe/strafe-api-client';
 import { YoutubeApiClient } from '../external-apis/youtube/youtube-api-client';
@@ -19,6 +21,7 @@ export namespace DataFetcher {
     strafe: StrafeApiClient;
     octane: OctaneApiClient;
     youtube: YoutubeApiClient;
+    liquipedia: LiquipediaApiClient;
   }
 
   export interface GetScheduleParams {
@@ -53,6 +56,7 @@ export class DataFetcher {
       strafe: new StrafeApiClient({ fetch_ }),
       octane: new OctaneApiClient({ fetch_ }),
       youtube: new YoutubeApiClient({ fetch_ }),
+      liquipedia: new LiquipediaApiClient({ fetch_ }),
     };
   }
 
@@ -94,6 +98,7 @@ export class DataFetcher {
   }: Partial<Omit<DataFetcher.GetLeaderboardParams, 'apis'>> = {}): Promise<CoreData.Leaderboards> {
     const leaderboards = await Promise.all([
       getLeagueOfLegendsLeaderboards({ onResult, apis: this.apis }),
+      getRocketLeagueLeaderboards({ onResult, apis: this.apis }),
     ]);
 
     return defu(...leaderboards);

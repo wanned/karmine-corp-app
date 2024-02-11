@@ -60,6 +60,7 @@ const LeaderboardTeam = ({
   position,
   wins,
   looses,
+  points,
   isKarmine = false,
 }: LeaderboardTeamProps) => {
   const styles = useStyles(getStyles);
@@ -84,9 +85,15 @@ const LeaderboardTeam = ({
         <Typographies.Body color={styles.leaderboardTeamTop.color} verticalTrim>
           #{position.toString()}
         </Typographies.Body>
-        <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
-          {wins.toString()}V · {looses.toString()}D
-        </Typographies.Body>
+        {wins !== undefined && looses !== undefined ?
+          <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
+            {wins.toString()}V · {looses.toString()}D
+          </Typographies.Body>
+        : points !== undefined ?
+          <Typographies.Body color={styles.leaderboardTeamScore.color} verticalTrim>
+            {points.toString()} pts
+          </Typographies.Body>
+        : null}
       </View>
     </View>
   );

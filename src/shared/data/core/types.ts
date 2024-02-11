@@ -110,8 +110,9 @@ export namespace CoreData {
     teamId: string;
     logoUrl: string;
     position: number;
-    wins: number;
-    looses: number;
+    wins?: number;
+    looses?: number;
+    points?: number;
   }
 
   export type Leaderboards = Partial<Record<CompetitionName, LeaderboardItem[]>>;
