@@ -73,5 +73,6 @@ export const esTranslations: Translations['es'] = {
     cancelNotificationButtonText: 'Cancelar la notificación',
     watchStreamButtonText: 'Ver el stream',
     shareStreamButtonText: 'Compartir el stream',
+    noGameDetails: 'No hay detalles del partido',
   },
 };

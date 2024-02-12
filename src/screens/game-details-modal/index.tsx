@@ -12,6 +12,7 @@ import { useGameBackgroundImage } from '../home/hooks/use-game-background-image'
 
 import { Buttons } from '~/shared/components/buttons';
 import { Section } from '~/shared/components/section/section';
+import { Typographies } from '~/shared/components/typographies';
 import { CoreData } from '~/shared/data/core/types';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
@@ -31,9 +32,13 @@ export const GameDetailsModal = React.memo(
       params: { match },
     },
   }: GameDetailsModalProps) => {
+    const translate = useTranslate();
     const styles = useStyles(getStyles);
 
     const [isNotified, setIsNotified] = useState(false);
+
+    const gameDetails = GameDetails({ match });
+    const gamePlayers = GameDetailsPlayers({ match });
 
     return (
       <ModalLayout scrollViewStyle={{ marginTop: -130, zIndex: -1 }} opacifyOnScroll>
@@ -49,8 +54,15 @@ export const GameDetailsModal = React.memo(
             setIsNotified={setIsNotified}
           />
           <GameDetailsStreamButton match={match} />
-          <GameDetails match={match} />
-          <GameDetailsPlayers match={match} />
+          {gameDetails === null && gamePlayers === null ?
+            <View style={styles.noGameDetails}>
+              <Typographies.Body>{translate('gameDetails.noGameDetails')}</Typographies.Body>
+            </View>
+          : <>
+              {gameDetails}
+              {gamePlayers}
+            </>
+          }
         </View>
       </ModalLayout>
     );
@@ -264,5 +276,13 @@ const getStyles = createStylesheet((theme) => ({
   },
   playersTeamContainer: {
     gap: 16,
+  },
+  noGameDetails: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    opacity: theme.opacities.priority2,
+    position: 'relative',
+    top: -70,
   },
 }));

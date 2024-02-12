@@ -39,6 +39,7 @@ export const ModalLayout = ({
       <ModalHeaderBar opacifyOnScroll={opacifyOnScroll} setHandleScroll={setHandleScroll} />
       <ModalContentContainer
         style={StyleSheet.compose(styles.modalContentContainer, scrollViewStyle)}
+        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}>

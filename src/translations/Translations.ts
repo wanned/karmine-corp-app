@@ -65,6 +65,7 @@ export type Translations = Record<
       cancelNotificationButtonText: string;
       watchStreamButtonText: string;
       shareStreamButtonText: string;
+      noGameDetails: string;
     };
   }
 >;
