@@ -48,12 +48,14 @@ export const GameDetailsModal = React.memo(
           teamAway={match.teams[1]}
         />
         <View style={styles.gameDetailsContainer}>
-          <GameDetailsNotificationButton
-            match={match}
-            isNotified={isNotified}
-            setIsNotified={setIsNotified}
-          />
-          <GameDetailsStreamButton match={match} />
+          {match.status === 'upcoming' && (
+            <GameDetailsNotificationButton
+              match={match}
+              isNotified={isNotified}
+              setIsNotified={setIsNotified}
+            />
+          )}
+          {match.status === 'live' && <GameDetailsStreamButton match={match} />}
           {gameDetails === null && gamePlayers === null ?
             <View style={styles.noGameDetails}>
               <Typographies.Body>{translate('gameDetails.noGameDetails')}</Typographies.Body>
