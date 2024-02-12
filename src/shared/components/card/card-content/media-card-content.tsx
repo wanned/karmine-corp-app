@@ -51,7 +51,6 @@ export const MediaCardContent = ({ title, date, likes, views, onPress }: MediaCa
           </Typographies.Body>
         </View>
         <View style={{ flex: 1 }} />
-        {/* TODO: set trimmed property to true */}
         <Typographies.Body color={styles.plateform.color} verticalTrim>
           youtube.com
         </Typographies.Body>

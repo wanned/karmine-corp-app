@@ -76,5 +76,6 @@ export const enTranslations: Translations['en'] = {
     cancelNotificationButtonText: 'Cancel notification',
     watchStreamButtonText: 'Watch stream',
     shareStreamButtonText: 'Share stream',
+    noGameDetails: 'No game details available',
   },
 };

@@ -10,7 +10,7 @@ export const Label = ({ children, color, maxLines, verticalTrim = false }: Typog
         height: verticalTrim ? 9 : undefined,
         justifyContent: 'flex-end',
       }}>
-      <View style={{ position: 'relative', top: verticalTrim ? 3.5 : undefined }}>
+      <View style={{ position: 'relative', top: verticalTrim ? -0.5 : undefined }}>
         <BaseText
           color={color}
           fontSize={12}

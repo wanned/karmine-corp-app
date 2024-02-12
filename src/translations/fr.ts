@@ -76,5 +76,6 @@ export const frTranslations: Translations['fr'] = {
     cancelNotificationButtonText: 'Annuler la notification',
     watchStreamButtonText: 'Regarder le stream',
     shareStreamButtonText: 'Partager le stream',
+    noGameDetails: 'Aucun détail de match disponible',
   },
 };

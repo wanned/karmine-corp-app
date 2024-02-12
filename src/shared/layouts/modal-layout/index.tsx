@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -27,7 +27,8 @@ export const ModalLayout = ({
   useScrollView = true,
 }: ModalLayoutProps) => {
   const styles = useStyles(getStyles);
-  const handleScrollRef = useRef<(event: NativeSyntheticEvent<NativeScrollEvent>) => void>();
+  const [handleScroll, setHandleScroll] =
+    useState<(event: NativeSyntheticEvent<NativeScrollEvent>) => void>();
 
   StatusBar.setBarStyle('default');
 
@@ -35,11 +36,12 @@ export const ModalLayout = ({
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <ModalHeaderBar opacifyOnScroll={opacifyOnScroll} handleScrollRef={handleScrollRef} />
+      <ModalHeaderBar opacifyOnScroll={opacifyOnScroll} setHandleScroll={setHandleScroll} />
       <ModalContentContainer
         style={StyleSheet.compose(styles.modalContentContainer, scrollViewStyle)}
+        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
-        onScroll={handleScrollRef.current}
+        onScroll={handleScroll}
         scrollEventThrottle={16}>
         <View style={styles.childrenContainer}>{children}</View>
         <View style={styles.endSpacer} />

@@ -39,12 +39,7 @@ export const NextMatchesModal = React.memo(() => {
           showsVerticalScrollIndicator={false}
           renderItem={({ item: match }) =>
             match && (
-              <MatchScore
-                key={match.id}
-                date={match.date}
-                status="upcoming"
-                bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}
-                game={match.matchDetails.competitionName}>
+              <MatchScore key={match.id} match={match}>
                 {match.teams.map(
                   (team, index: number) =>
                     team && (

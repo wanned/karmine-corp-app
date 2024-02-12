@@ -35,13 +35,7 @@ export const MatchesList = React.memo(({ matches }: MatchesListProps) => {
       {matches.map(
         (match, matchIndex) =>
           match && (
-            <MatchScore
-              // key={match.id}
-              key={matchIndex} // FIXME: We may not use index as key. match.id seems to exist but it not typed.
-              date={match.date}
-              status="upcoming"
-              bo={'bo' in match.matchDetails ? match.matchDetails.bo : undefined}
-              game={match.matchDetails.competitionName}>
+            <MatchScore key={match.id} match={match}>
               {match.teams.map(
                 (team, index) =>
                   team && (
@@ -52,11 +46,10 @@ export const MatchesList = React.memo(({ matches }: MatchesListProps) => {
                       name={team.name}
                       isWinner={team.score?.isWinner}
                       score={
-                        team.score === undefined
-                          ? '-'
-                          : team.score.scoreType === 'top'
-                            ? `TOP ${team.score.score}`
-                            : team.score.score
+                        team.score === undefined ? '-'
+                        : team.score.scoreType === 'top' ?
+                          `TOP ${team.score.score}`
+                        : team.score.score
                       }
                     />
                   )
