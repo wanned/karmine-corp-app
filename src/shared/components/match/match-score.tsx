@@ -15,37 +15,40 @@ interface MatchScoreProps {
   match: CoreData.Match;
 }
 
-export const MatchScore = React.memo<MatchScoreProps>(({ match, children }: MatchScoreProps) => {
-  const { formatDate, formatTime } = useDate();
+export const MatchScore = React.memo<MatchScoreProps>(
+  ({ match, children }: MatchScoreProps) => {
+    const { formatDate, formatTime } = useDate();
 
-  const styles = getStyles(styleTokens);
+    const styles = getStyles(styleTokens);
 
-  const translate = useTranslate();
+    const translate = useTranslate();
 
-  const navigation = useNavigation();
+    const navigation = useNavigation();
 
-  return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => navigation.navigate('gameDetailsModal', { match })}>
-      <View style={styles.titleHeader}>
-        <Typographies.Label color={styles.titleDate.color} verticalTrim>
-          {formatDate(match.date)} · {formatTime(match.date)}{' '}
-        </Typographies.Label>
-        <Typographies.Label color={styles.titleGame.color} verticalTrim>
-          · {translate(`games.${match.matchDetails.competitionName}`)}
-          {match.matchDetails.bo !== undefined ? ` · BO${match.matchDetails.bo}` : ''}
-        </Typographies.Label>
-        {match.status === 'live' && (
-          <View style={styles.livePillWrapper}>
-            <LivePill />
-          </View>
-        )}
-      </View>
-      <View>{children}</View>
-    </TouchableOpacity>
-  );
-});
+    return (
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => navigation.navigate('gameDetailsModal', { match })}>
+        <View style={styles.titleHeader}>
+          <Typographies.Label color={styles.titleDate.color} verticalTrim>
+            {formatDate(match.date)} · {formatTime(match.date)}{' '}
+          </Typographies.Label>
+          <Typographies.Label color={styles.titleGame.color} verticalTrim>
+            · {translate(`games.${match.matchDetails.competitionName}`)}
+            {match.matchDetails.bo !== undefined ? ` · BO${match.matchDetails.bo}` : ''}
+          </Typographies.Label>
+          {match.status === 'live' && (
+            <View style={styles.livePillWrapper}>
+              <LivePill />
+            </View>
+          )}
+        </View>
+        <View>{children}</View>
+      </TouchableOpacity>
+    );
+  },
+  (prevProps, nextProps) => prevProps.match.id === nextProps.match.id
+);
 
 const getStyles = createStylesheet((theme) => ({
   container: {
