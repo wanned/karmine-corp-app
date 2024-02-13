@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
+import { Iconify } from 'react-native-iconify';
 
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
@@ -43,7 +44,10 @@ export const MatchScore = React.memo<MatchScoreProps>(
             </View>
           )}
         </View>
-        <View>{children}</View>
+        <View style={styles.childrenContainer}>
+          <View style={styles.children}>{children}</View>
+          <Iconify icon="solar:alt-arrow-right-outline" color={styles.icon.color} size={16} />
+        </View>
       </TouchableOpacity>
     );
   },
@@ -67,5 +71,16 @@ const getStyles = createStylesheet((theme) => ({
   },
   livePillWrapper: {
     marginLeft: 8,
+  },
+  children: {
+    flex: 1,
+  },
+  childrenContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  icon: {
+    color: theme.colors.subtleForeground,
   },
 }));
