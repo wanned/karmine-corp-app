@@ -1,6 +1,6 @@
 {
-  "name": "karmine-corp-app",
-  "version": "1.0.0",
+  "name": "karmine-plus",
+  "version": "0.1.0",
   "scripts": {
     "android": "expo start --android",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
