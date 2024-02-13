@@ -7,22 +7,25 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
 import { View } from 'react-native';
 
+import { useInitLeaderboards } from './shared/hooks/data/use-leaderboards';
+import { useInitLiveMatches } from './shared/hooks/data/use-live-match';
 import { useInitMatchesResults } from './shared/hooks/data/use-matches-results';
 import { useInitNextMatches } from './shared/hooks/data/use-next-matches';
 import { useTheme } from './shared/hooks/use-theme';
 import RootNavigator from './shared/navigation';
+import { useRegisterNotifications } from './shared/utils/register-notifications';
 
 import { SettingsProvider } from '~/shared/contexts/settings-context';
 import { ThemeContext } from '~/shared/contexts/theme-context';
 import { styleTokens } from '~/shared/styles/tokens';
-import { useInitLiveMatches } from './shared/hooks/data/use-live-match';
-import { useInitLeaderboards } from './shared/hooks/data/use-leaderboards';
 
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
 export default function App() {
+  useRegisterNotifications();
+
   const [fontsLoaded] = useFonts({
     // Cairo
     'Cairo-Black': require('../assets/fonts/Cairo/Cairo-Black.ttf'),

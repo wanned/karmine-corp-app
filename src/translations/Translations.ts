@@ -70,5 +70,12 @@ export type Translations = Record<
       shareStreamButtonText: string;
       noGameDetails: string;
     };
+    notifications: {
+      matchReminder: {
+        title: string;
+        bodyWithOpponent: string;
+        bodyWithoutOpponent: string;
+      };
+    };
   }
 >;

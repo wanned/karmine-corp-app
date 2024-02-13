@@ -1,9 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import defu from 'defu';
 import * as Localization from 'expo-localization';
 import { createContext, useState, useCallback, useEffect } from 'react';
 
 import { Settings } from '../types/Settings';
+import { getSavedSettings, saveSettings } from '../utils/settings';
 
 interface SettingsContextValue {
   settings: Settings;
@@ -61,23 +61,3 @@ export const SettingsProvider = ({
     </SettingsContext.Provider>
   );
 };
-
-const SETTINGS_ASYNC_STORAGE_KEY = 'settings';
-
-async function saveSettings(settings: Settings) {
-  try {
-    await AsyncStorage.setItem(SETTINGS_ASYNC_STORAGE_KEY, JSON.stringify(settings));
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function getSavedSettings(): Promise<Settings> {
-  try {
-    const savedSettingsString = await AsyncStorage.getItem(SETTINGS_ASYNC_STORAGE_KEY);
-    return JSON.parse(savedSettingsString || '{}');
-  } catch (error) {
-    console.error(error);
-  }
-  return {} as Settings;
-}

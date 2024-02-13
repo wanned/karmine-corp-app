@@ -78,4 +78,12 @@ export const enTranslations: Translations['en'] = {
     shareStreamButtonText: 'Share stream',
     noGameDetails: 'No game details available',
   },
+  notifications: {
+    matchReminder: {
+      title: 'Match reminder',
+      bodyWithOpponent:
+        'The match of the {teamName} team against {opponentName} is about to start!',
+      bodyWithoutOpponent: 'The match of the {teamName} team is about to start!',
+    },
+  },
 };

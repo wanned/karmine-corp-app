@@ -78,4 +78,12 @@ export const esTranslations: Translations['es'] = {
     shareStreamButtonText: 'Compartir el stream',
     noGameDetails: 'No hay detalles del partido',
   },
+  notifications: {
+    matchReminder: {
+      title: 'Recordatorio de partido',
+      bodyWithOpponent:
+        '¡El partido del equipo {teamName} contra {opponentName} está a punto de comenzar!',
+      bodyWithoutOpponent: '¡El partido del equipo {teamName} está a punto de comenzar!',
+    },
+  },
 };

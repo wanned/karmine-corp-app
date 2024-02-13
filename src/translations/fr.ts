@@ -78,4 +78,11 @@ export const frTranslations: Translations['fr'] = {
     shareStreamButtonText: 'Partager le stream',
     noGameDetails: 'Aucun détail de match disponible',
   },
+  notifications: {
+    matchReminder: {
+      title: 'Rappel de match',
+      bodyWithOpponent: "Le match de l'équipe {teamName} contre {opponentName} va commencer",
+      bodyWithoutOpponent: "Le match de l'équipe {teamName} va commencer",
+    },
+  },
 };
