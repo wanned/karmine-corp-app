@@ -13,25 +13,28 @@ export async function getRlMatches({
 
   let lastPaginationResult;
   do {
-    paginationResults.push(
-      await apis.octane.getMatches({
-        teamId: KARMINE_OCTANE_TEAM_ID,
-        ...((lastPaginationResult && { page: lastPaginationResult.page + 1 }) ?? {}),
-      })
-    );
+    const results = await apis.octane.getMatches({
+      teamId: KARMINE_OCTANE_TEAM_ID,
+      ...((lastPaginationResult && { page: lastPaginationResult.page + 1 }) ?? {}),
+    });
+
+    const filteredResults = await applyFilters(results.matches, filters);
+
+    if (filteredResults.length === 0) break;
+
+    paginationResults.push({ ...results, matches: filteredResults });
   } while (
     (lastPaginationResult = paginationResults.at(-1)) &&
     lastPaginationResult !== undefined &&
     lastPaginationResult.matches.length > 0 &&
-    lastPaginationResult.pageSize >= lastPaginationResult.perPage &&
-    (await checkFilters(lastPaginationResult.matches, filters)) !== undefined
+    lastPaginationResult.pageSize >= lastPaginationResult.perPage
   );
 
   return paginationResults.flatMap((r) => r.matches);
 }
 
-async function checkFilters(
-  results: Awaited<ReturnType<typeof getRlMatches>>,
+async function applyFilters(
+  results: Awaited<ReturnType<DataFetcher.Apis['octane']['getMatches']>>['matches'],
   filters: DataFetcher.GetScheduleParams['filters']
 ) {
   const from = filters.date?.from;
@@ -44,7 +47,6 @@ async function checkFilters(
     results = results.filter((match) => new Date(match.date) <= to);
   }
 
-  // filters.status
   const status = filters.status;
   if (status !== undefined) {
     results = await Promise.all(
@@ -53,8 +55,6 @@ async function checkFilters(
       })
     ).then((matches) => matches.filter(Boolean));
   }
-
-  if (results.length === 0) return undefined;
 
   return results;
 }

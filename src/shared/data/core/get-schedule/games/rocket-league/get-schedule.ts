@@ -56,7 +56,7 @@ export async function getSchedule({
     );
   }
 
-  const unlistedMatches = await getUnlistedRlMatches(results, { apis });
+  const unlistedMatches = await getUnlistedRlMatches(results, { apis, filters });
 
   for (const match of unlistedMatches) {
     onResult(match);

@@ -6,13 +6,15 @@ import { getSchedule as getAllMatches } from '../all/get-schedule';
 
 export async function getUnlistedRlMatches(
   rlMatches: CoreData.RocketLeagueMatch[],
-  { apis }: Pick<DataFetcher.GetScheduleParams, 'apis'>
+  { apis, filters }: Pick<DataFetcher.GetScheduleParams, 'apis' | 'filters'>
 ): Promise<CoreData.RocketLeagueMatch[]> {
   const allMatches = await getAllMatches({
     apis,
     onResult: () => {},
     filters: {
+      ...filters,
       games: [CoreData.CompetitionName.RocketLeague],
+      notGames: [],
     },
   });
 
