@@ -44,19 +44,39 @@ export namespace DataFetcher {
     onResult: (leaderboards: CoreData.Leaderboards) => void;
     apis: Apis;
   }
+
+  export type Fetch = (...params: Parameters<typeof fetch>) => Promise<{
+    text: string;
+    status: number;
+    statusText: string;
+    ok: boolean;
+    headers: Headers;
+  }>;
 }
+
+const defaultFetch: DataFetcher.Fetch = async (...params) => {
+  const response = await fetch(...params);
+
+  return {
+    text: await response.text(),
+    status: response.status,
+    statusText: response.statusText,
+    ok: response.ok,
+    headers: response.headers,
+  };
+};
 
 export class DataFetcher {
   private apis: DataFetcher.Apis;
 
-  constructor({ fetch_ = fetch }: { fetch_?: typeof fetch } = {}) {
+  constructor({ fetch = defaultFetch }: { fetch?: DataFetcher.Fetch } = {}) {
     this.apis = {
-      karmine: new KarmineApiClient({ fetch_ }),
-      lolEsport: new LolEsportApiClient({ fetch_ }),
-      strafe: new StrafeApiClient({ fetch_ }),
-      octane: new OctaneApiClient({ fetch_ }),
-      youtube: new YoutubeApiClient({ fetch_ }),
-      liquipedia: new LiquipediaApiClient({ fetch_ }),
+      karmine: new KarmineApiClient({ fetch }),
+      lolEsport: new LolEsportApiClient({ fetch }),
+      strafe: new StrafeApiClient({ fetch }),
+      octane: new OctaneApiClient({ fetch }),
+      youtube: new YoutubeApiClient({ fetch }),
+      liquipedia: new LiquipediaApiClient({ fetch }),
     };
   }
 

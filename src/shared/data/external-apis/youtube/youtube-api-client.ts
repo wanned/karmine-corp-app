@@ -2,19 +2,20 @@ import { XMLParser } from 'fast-xml-parser';
 import { z } from 'zod';
 
 import { youtubeApiSchemas } from './schemas/youtube-api-schemas';
+import { DataFetcher } from '../../core/data-fetcher';
 
 const KARMINE_CHANNEL_ID = 'UCW5Ma_xnAweFIXCGOAZECAA';
 
 export class YoutubeApiClient {
   private readonly YOUTUBE_API_URL = 'https://www.youtube.com';
 
-  private fetch_: typeof fetch;
+  private fetch: DataFetcher.Fetch;
 
-  constructor({ fetch_ = fetch }: { fetch_?: typeof fetch } = {}) {
-    this.fetch_ = fetch_;
+  constructor({ fetch }: { fetch: DataFetcher.Fetch }) {
+    this.fetch = fetch;
   }
 
-  private fetch = async <S extends z.Schema<any>>(
+  private fetchData = async <S extends z.Schema<any>>(
     url: string,
     params?: Record<string, string | undefined>,
     schema?: S
@@ -31,13 +32,13 @@ export class YoutubeApiClient {
 
     const urlWithParams = `${this.YOUTUBE_API_URL}${url}?${urlParams}`;
 
-    const response = await this.fetch_(urlWithParams);
+    const response = await this.fetch(urlWithParams);
 
     if (!response.ok) {
       throw new Error(`${response.status} ${response.statusText} (${url})`);
     }
 
-    const dataText = await response.text();
+    const dataText = response.text;
     const data =
       dataText === '' ? null
       : response.headers.get('content-type')?.includes('xml') ?
@@ -61,7 +62,7 @@ export class YoutubeApiClient {
   };
 
   public async getVideos() {
-    const videos = await this.fetch(
+    const videos = await this.fetchData(
       '/feeds/videos.xml',
       {
         channel_id: KARMINE_CHANNEL_ID,

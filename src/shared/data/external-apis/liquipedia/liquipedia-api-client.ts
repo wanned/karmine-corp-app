@@ -1,17 +1,19 @@
 import { z } from 'zod';
 
+import { DataFetcher } from '../../core/data-fetcher';
+
 export class LiquipediaApiClient {
   private readonly GAME_REPLACER = '<GAME>';
   private readonly LIQUIPEDIA_API_URL = `https://liquipedia.net/${this.GAME_REPLACER}/api.php`;
   private readonly PARSE_ACTION = 'parse';
 
-  private fetch_: typeof fetch;
+  private fetch: DataFetcher.Fetch;
 
-  constructor({ fetch_ = fetch }: { fetch_?: typeof fetch } = {}) {
-    this.fetch_ = fetch_;
+  constructor({ fetch }: { fetch: DataFetcher.Fetch }) {
+    this.fetch = fetch;
   }
 
-  private fetch = async (page: string, game: string) => {
+  private fetchData = async (page: string, game: string) => {
     const urlParams = new URLSearchParams({
       action: this.PARSE_ACTION,
       page,
@@ -23,13 +25,13 @@ export class LiquipediaApiClient {
       game
     )}?${urlParams}`;
 
-    const response = await this.fetch_(urlWithParams);
+    const response = await this.fetch(urlWithParams);
 
     if (!response.ok) {
       throw new Error(`${response.status} ${response.statusText} (${urlWithParams})`);
     }
 
-    const dataText = await response.text();
+    const dataText = response.text;
 
     if (dataText === '') {
       throw new Error(`Empty response (${urlWithParams})`);
@@ -64,6 +66,6 @@ export class LiquipediaApiClient {
   };
 
   public async parse(page: string, game: string) {
-    return this.fetch(page, game);
+    return this.fetchData(page, game);
   }
 }

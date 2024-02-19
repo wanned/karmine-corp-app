@@ -1,17 +1,18 @@
 import { z } from 'zod';
 
 import { octaneApiSchemas } from './schema/octane-api-schemas';
+import { DataFetcher } from '../../core/data-fetcher';
 
 export class OctaneApiClient {
   private OCTANE_API_URL = 'https://zsr.octane.gg';
 
-  private fetch_: typeof fetch;
+  private fetch: DataFetcher.Fetch;
 
-  constructor({ fetch_ = fetch }: { fetch_?: typeof fetch } = {}) {
-    this.fetch_ = fetch_;
+  constructor({ fetch }: { fetch: DataFetcher.Fetch }) {
+    this.fetch = fetch;
   }
 
-  private fetch = async <S extends z.Schema<any>>(
+  private fetchData = async <S extends z.Schema<any>>(
     url: string,
     params: Record<string, string | undefined> = {},
     schema?: S
@@ -26,13 +27,13 @@ export class OctaneApiClient {
 
     const urlWithParams = `${this.OCTANE_API_URL}${url}?${urlParams}`;
 
-    const response = await this.fetch_(urlWithParams);
+    const response = await this.fetch(urlWithParams);
 
     if (!response.ok) {
       throw new Error(`${response.status} ${response.statusText} (${urlWithParams})`);
     }
 
-    const dataText = await response.text();
+    const dataText = response.text;
     const data = dataText === '' ? null : JSON.parse(dataText); // TODO: Remove this hack. We may use Effect to catch the errors instead of modifying the data for all requests
 
     if (schema) {
@@ -57,7 +58,7 @@ export class OctaneApiClient {
     page?: number;
     perPage?: number;
   }) {
-    return this.fetch(
+    return this.fetchData(
       '/matches',
       {
         team: teamId,
@@ -69,6 +70,6 @@ export class OctaneApiClient {
   }
 
   public async getMatchGames({ matchId }: { matchId: string }) {
-    return this.fetch(`/matches/${matchId}/games`, {}, octaneApiSchemas.getMatchGames);
+    return this.fetchData(`/matches/${matchId}/games`, {}, octaneApiSchemas.getMatchGames);
   }
 }
