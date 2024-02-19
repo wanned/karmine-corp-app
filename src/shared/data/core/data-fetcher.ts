@@ -1,3 +1,4 @@
+import * as datefns from 'date-fns';
 import defu from 'defu';
 
 import { getLeaderboard as getLeagueOfLegendsLeaderboards } from './get-leaderboard/games/league-of-legends/get-leaderboard';
@@ -85,6 +86,29 @@ export class DataFetcher {
     filters = {},
     batches = [],
   }: Partial<Omit<DataFetcher.GetScheduleParams, 'apis'>> = {}): Promise<_CoreData.Match[]> {
+    if (
+      filters.status !== undefined &&
+      filters.status.includes('upcoming') &&
+      filters.status.length === 1 &&
+      filters.date === undefined
+    ) {
+      // Automatically add a date filter for upcoming matches
+      filters.date = { from: datefns.subHours(new Date(), 2) };
+    }
+
+    if (
+      filters.status !== undefined &&
+      filters.status.includes('live') &&
+      filters.status.length === 1 &&
+      filters.date === undefined
+    ) {
+      // Automatically add a date filter for live matches
+      filters.date = {
+        from: datefns.subHours(new Date(), 12),
+        to: datefns.addHours(new Date(), 12),
+      };
+    }
+
     const matches = await Promise.all([
       getAllMatches({
         onResult,
