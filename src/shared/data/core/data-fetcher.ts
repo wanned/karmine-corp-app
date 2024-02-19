@@ -148,6 +148,12 @@ export class DataFetcher {
     return defu(...leaderboards);
   }
 
+  public async getGames() {
+    const games = await this.apis.karmine.getGames();
+
+    return games;
+  }
+
   public async getYoutubeVideos(): Promise<CoreData.YoutubeVideo[]> {
     const {
       feed: { entry: videos },

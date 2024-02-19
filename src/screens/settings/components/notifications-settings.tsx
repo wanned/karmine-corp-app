@@ -4,7 +4,7 @@ import { View, FlatList, StyleSheet, Pressable } from 'react-native';
 import { useGameLogoImage } from '../hooks/use-game-logo-image';
 import { useGames } from '../hooks/use-games';
 
-import { KarmineApi } from '~/shared/apis/karmine/types/KarmineApi';
+import { CoreData } from '~/shared/data/core/types';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { Settings } from '~/shared/types/Settings';
@@ -38,9 +38,9 @@ export function NotificationSettings({
           <NotificationSetting
             label={label}
             value={
-              label.startsWith('empty-')
-                ? null
-                : notificationSettings[label as KarmineApi.CompetitionName]
+              label.startsWith('empty-') ? null : (
+                notificationSettings[label as CoreData.CompetitionName]
+              )
             }
             setValue={(value) =>
               setNotificationSettings({ ...notificationSettings, [label]: value })

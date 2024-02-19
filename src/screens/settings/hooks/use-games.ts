@@ -1,11 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { KarmineApiClient } from '~/shared/data/external-apis/karmine/karmine-api-client';
+import { useDataFetcher } from '~/shared/hooks/data/use-data-fetcher';
 
 export const useGames = () => {
+  const dataFetcher = useDataFetcher();
+
   const { data: games } = useQuery({
     queryKey: ['karmineGames'],
-    queryFn: new KarmineApiClient().getGames,
+    queryFn: dataFetcher.getGames,
   });
 
   return games?.map((game) => game.game_name) ?? [];

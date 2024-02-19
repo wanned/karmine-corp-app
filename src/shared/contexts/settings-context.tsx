@@ -19,6 +19,7 @@ const defaultSettings: Settings = {
   hideSpoilers: false,
   language: 'en',
   notifications: {
+    LeagueOfLegendsLEC: true,
     LeagueOfLegendsLFL: true,
     RocketLeague: true,
     SuperSmashBrosUltimate: true,
@@ -75,7 +76,7 @@ async function saveSettings(settings: Settings) {
 async function getSavedSettings(): Promise<Settings> {
   try {
     const savedSettingsString = await AsyncStorage.getItem(SETTINGS_ASYNC_STORAGE_KEY);
-    return JSON.parse(savedSettingsString || '{}');
+    return JSON.parse(savedSettingsString || '{}') as Settings;
   } catch (error) {
     console.error(error);
   }
