@@ -1,12 +1,17 @@
 import 'react-native-gesture-handler';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import { QueryClient } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { registerRootComponent } from 'expo';
+import * as FileSystem from 'expo-file-system';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
 import { View } from 'react-native';
 
+import { useInitLeaderboards } from './shared/hooks/data/use-leaderboards';
+import { useInitLiveMatches } from './shared/hooks/data/use-live-match';
 import { useInitMatchesResults } from './shared/hooks/data/use-matches-results';
 import { useInitNextMatches } from './shared/hooks/data/use-next-matches';
 import { useTheme } from './shared/hooks/use-theme';
@@ -15,12 +20,33 @@ import RootNavigator from './shared/navigation';
 import { SettingsProvider } from '~/shared/contexts/settings-context';
 import { ThemeContext } from '~/shared/contexts/theme-context';
 import { styleTokens } from '~/shared/styles/tokens';
-import { useInitLiveMatches } from './shared/hooks/data/use-live-match';
-import { useInitLeaderboards } from './shared/hooks/data/use-leaderboards';
 
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: Infinity,
+    },
+  },
+});
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: {
+    getItem: async (key: string) => {
+      try {
+        return await FileSystem.readAsStringAsync(FileSystem.documentDirectory + key);
+      } catch {
+        return null;
+      }
+    },
+    setItem: async (key: string, value: string) => {
+      await FileSystem.writeAsStringAsync(FileSystem.documentDirectory + key, value);
+    },
+    removeItem: async (key: string) => {
+      await FileSystem.deleteAsync(FileSystem.documentDirectory + key);
+    },
+  },
+});
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -52,7 +78,9 @@ export default function App() {
 
   // TODO: Correctly implement and type SettingsContext
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister: asyncStoragePersister, maxAge: Infinity }}>
       <SettingsProvider value={{} as any}>
         <ThemeContext.Provider
           value={{
@@ -61,7 +89,7 @@ export default function App() {
           <_App onLayoutRootView={onLayoutRootView} />
         </ThemeContext.Provider>
       </SettingsProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
 

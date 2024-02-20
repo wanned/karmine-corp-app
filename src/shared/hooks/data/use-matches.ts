@@ -1,13 +1,16 @@
-import { atom, useAtom, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useCallback } from 'react';
 import { InteractionManager } from 'react-native';
 
 import { CoreData } from '~/shared/data/core/types';
 import { IsoDate } from '~/shared/types/IsoDate';
+import { atomWithAsyncStorage } from '~/shared/utils/atom-with-async-storage';
 
-export const groupedMatchesAtom = atom<{
+type GroupedMatches = {
   [date: IsoDate]: CoreData.Match[];
-}>({});
+};
+
+export const groupedMatchesAtom = atomWithAsyncStorage<GroupedMatches>('grouped-matches', {});
 
 export const useGroupedMatches = () => {
   const [groupedMatches] = useAtom(groupedMatchesAtom);
@@ -24,7 +27,7 @@ export const useAddMatches = () => {
           const newGroupedMatches = { ...prevGroupedMatches };
 
           matches.forEach((match) => {
-            const matchDate = match.date;
+            const matchDate = new Date(match.date);
             const matchDay = new Date(
               matchDate.getFullYear(),
               matchDate.getMonth(),

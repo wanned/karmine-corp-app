@@ -46,7 +46,10 @@ export namespace DataFetcher {
     apis: Apis;
   }
 
-  export type Fetch = (...params: Parameters<typeof fetch>) => Promise<{
+  export type Fetch = (
+    url: string,
+    options: Parameters<typeof fetch>[1]
+  ) => Promise<{
     text: string;
     status: number;
     statusText: string;
