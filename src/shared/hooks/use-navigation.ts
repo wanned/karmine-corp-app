@@ -2,9 +2,10 @@ import { NavigationContainerRef, useNavigation as _useNavigation } from '@react-
 
 import { ModalsParamList, PagesParamList } from '../navigation';
 
+export type RootParamList = Omit<PagesParamList & ModalsParamList, 'root'>;
+
 export const useNavigation = () => {
-  const navigation =
-    _useNavigation<NavigationContainerRef<Omit<PagesParamList & ModalsParamList, 'root'>>>();
+  const navigation = _useNavigation<NavigationContainerRef<RootParamList>>();
 
   return navigation;
 };

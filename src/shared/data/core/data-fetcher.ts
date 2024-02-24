@@ -1,3 +1,4 @@
+import * as datefns from 'date-fns';
 import defu from 'defu';
 
 import { getLeaderboard as getLeagueOfLegendsLeaderboards } from './get-leaderboard/games/league-of-legends/get-leaderboard';
@@ -44,19 +45,42 @@ export namespace DataFetcher {
     onResult: (leaderboards: CoreData.Leaderboards) => void;
     apis: Apis;
   }
+
+  export type Fetch = (
+    url: string,
+    options: Parameters<typeof fetch>[1]
+  ) => Promise<{
+    text: string;
+    status: number;
+    statusText: string;
+    ok: boolean;
+    headers: Headers;
+  }>;
 }
+
+const defaultFetch: DataFetcher.Fetch = async (...params) => {
+  const response = await fetch(...params);
+
+  return {
+    text: await response.text(),
+    status: response.status,
+    statusText: response.statusText,
+    ok: response.ok,
+    headers: response.headers,
+  };
+};
 
 export class DataFetcher {
   private apis: DataFetcher.Apis;
 
-  constructor({ fetch_ = fetch }: { fetch_?: typeof fetch } = {}) {
+  constructor({ fetch = defaultFetch }: { fetch?: DataFetcher.Fetch } = {}) {
     this.apis = {
-      karmine: new KarmineApiClient({ fetch_ }),
-      lolEsport: new LolEsportApiClient({ fetch_ }),
-      strafe: new StrafeApiClient({ fetch_ }),
-      octane: new OctaneApiClient({ fetch_ }),
-      youtube: new YoutubeApiClient({ fetch_ }),
-      liquipedia: new LiquipediaApiClient({ fetch_ }),
+      karmine: new KarmineApiClient({ fetch }),
+      lolEsport: new LolEsportApiClient({ fetch }),
+      strafe: new StrafeApiClient({ fetch }),
+      octane: new OctaneApiClient({ fetch }),
+      youtube: new YoutubeApiClient({ fetch }),
+      liquipedia: new LiquipediaApiClient({ fetch }),
     };
   }
 
@@ -65,6 +89,29 @@ export class DataFetcher {
     filters = {},
     batches = [],
   }: Partial<Omit<DataFetcher.GetScheduleParams, 'apis'>> = {}): Promise<_CoreData.Match[]> {
+    if (
+      filters.status !== undefined &&
+      filters.status.includes('upcoming') &&
+      filters.status.length === 1 &&
+      filters.date === undefined
+    ) {
+      // Automatically add a date filter for upcoming matches
+      filters.date = { from: datefns.subHours(new Date(), 2) };
+    }
+
+    if (
+      filters.status !== undefined &&
+      filters.status.includes('live') &&
+      filters.status.length === 1 &&
+      filters.date === undefined
+    ) {
+      // Automatically add a date filter for live matches
+      filters.date = {
+        from: datefns.subHours(new Date(), 12),
+        to: datefns.addHours(new Date(), 12),
+      };
+    }
+
     const matches = await Promise.all([
       getAllMatches({
         onResult,
@@ -102,6 +149,12 @@ export class DataFetcher {
     ]);
 
     return defu(...leaderboards);
+  }
+
+  public async getGames() {
+    const games = await this.apis.karmine.getGames();
+
+    return games;
   }
 
   public async getYoutubeVideos(): Promise<CoreData.YoutubeVideo[]> {

@@ -1,3 +1,5 @@
+import { IsoDate } from '~/shared/types/IsoDate';
+
 export namespace CoreData {
   export interface Team {
     name: string;
@@ -37,7 +39,7 @@ export namespace CoreData {
   export interface BaseMatch<MD extends BaseMatchDetails = BaseMatchDetails> {
     id: string;
     teams: [Team & { score?: Score }, (Team & { score?: Score }) | null];
-    date: Date;
+    date: Date | IsoDate;
     streamLink: string | null;
     status: 'upcoming' | 'live' | 'finished';
     matchDetails: MD;
@@ -91,7 +93,7 @@ export namespace CoreData {
     id: string;
     title: string;
     url: string;
-    publishedAt: Date;
+    publishedAt: Date | IsoDate;
     views: number;
     likes: number;
     thumbnailUrl: string;
