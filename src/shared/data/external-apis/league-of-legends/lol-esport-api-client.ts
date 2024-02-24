@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { lolEsportApiSchemas } from './schemas/lol-esport-api-schemas';
+import { DataFetcher } from '../../core/data-fetcher';
 
 export class LolEsportApiClient {
   private LOL_API_KEY = '0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z';
@@ -8,13 +9,13 @@ export class LolEsportApiClient {
   private LOL_FEED_API_URL = 'https://feed.lolesports.com/livestats/v1';
   private LOL_DATA_DRAGON_API_URL = 'https://ddragon.leagueoflegends.com';
 
-  private fetch_: typeof fetch;
+  private fetch: DataFetcher.Fetch;
 
-  constructor({ fetch_ = fetch }: { fetch_?: typeof fetch } = {}) {
-    this.fetch_ = fetch_;
+  constructor({ fetch }: { fetch: DataFetcher.Fetch }) {
+    this.fetch = fetch;
   }
 
-  private fetch = async <S extends z.Schema<any>>(
+  private fetchData = async <S extends z.Schema<any>>(
     url: string,
     params?: Record<string, string | undefined>,
     schema?: S
@@ -31,7 +32,7 @@ export class LolEsportApiClient {
 
     const urlWithParams = `${url}?${urlParams}`;
 
-    const response = await this.fetch_(urlWithParams, {
+    const response = await this.fetch(urlWithParams, {
       headers: { 'x-api-key': this.LOL_API_KEY },
     });
 
@@ -39,7 +40,7 @@ export class LolEsportApiClient {
       throw new Error(`${response.status} ${response.statusText} (${urlWithParams})`);
     }
 
-    const dataText = await response.text();
+    const dataText = response.text;
     const data = dataText === '' ? null : JSON.parse(dataText); // TODO: Remove this hack. We may use Effect to catch the errors instead of modifying the data for all requests
 
     if (schema) {
@@ -56,7 +57,7 @@ export class LolEsportApiClient {
   };
 
   public async getMatchById(matchId: string) {
-    const { data } = await this.fetch(
+    const { data } = await this.fetchData(
       `${this.LOL_ESPORT_API_URL}/getEventDetails`,
       { id: matchId },
       lolEsportApiSchemas.getMatchById
@@ -66,7 +67,7 @@ export class LolEsportApiClient {
   }
 
   public async getAllTeams() {
-    const { data } = await this.fetch(
+    const { data } = await this.fetchData(
       `${this.LOL_ESPORT_API_URL}/getTeams`,
       {},
       lolEsportApiSchemas.getAllTeams
@@ -79,7 +80,7 @@ export class LolEsportApiClient {
     leagueIds: string[],
     { pageToken }: { pageToken?: string } = {}
   ) {
-    const { data } = await this.fetch(
+    const { data } = await this.fetchData(
       `${this.LOL_ESPORT_API_URL}/getSchedule`,
       { leagueId: leagueIds.join(','), pageToken },
       lolEsportApiSchemas.getScheduleByLeagueIds
@@ -89,7 +90,7 @@ export class LolEsportApiClient {
   }
 
   public async getGameWindow({ gameId, startingTime }: { gameId: string; startingTime?: Date }) {
-    const data = await this.fetch(
+    const data = await this.fetchData(
       `${this.LOL_FEED_API_URL}/window/${gameId}`,
       { startingTime: startingTime?.toISOString() },
       lolEsportApiSchemas.getGameWindow
@@ -99,7 +100,7 @@ export class LolEsportApiClient {
   }
 
   public async getAllVersions() {
-    const versions = await this.fetch(
+    const versions = await this.fetchData(
       `${this.LOL_DATA_DRAGON_API_URL}/api/versions.json`,
       {},
       lolEsportApiSchemas.getAllVersions
@@ -109,7 +110,7 @@ export class LolEsportApiClient {
   }
 
   public async getTournamentsForLeague(...leagueIds: string[]) {
-    const { data } = await this.fetch(
+    const { data } = await this.fetchData(
       `${this.LOL_ESPORT_API_URL}/getTournamentsForLeague`,
       { leagueId: leagueIds.join(',') },
       lolEsportApiSchemas.getTournamentsForLeague
@@ -119,7 +120,7 @@ export class LolEsportApiClient {
   }
 
   public async getStandingsByTournamentId(tournamentId: string) {
-    const { data } = await this.fetch(
+    const { data } = await this.fetchData(
       `${this.LOL_ESPORT_API_URL}/getStandingsV3`,
       { tournamentId },
       lolEsportApiSchemas.getStandingsByTournamentId

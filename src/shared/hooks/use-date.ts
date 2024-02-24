@@ -3,6 +3,7 @@ import { fr, enUS, es } from 'date-fns/locale';
 import { useCallback } from 'react';
 
 import { useSettings } from './use-settings';
+import { IsoDate } from '../types/IsoDate';
 
 import { Language } from '~/translations/Translations';
 
@@ -10,7 +11,7 @@ export const useDate = () => {
   const language = useSettings().language;
 
   const formatDate = useCallback(
-    (date: Date, formatString: string = 'dd MMM yyyy') => {
+    (date: Date | IsoDate, formatString: string = 'dd MMM yyyy') => {
       return format(date, formatString, {
         locale: getDateFormatLanguage(language),
       });
@@ -19,7 +20,7 @@ export const useDate = () => {
   );
 
   const formatTime = useCallback(
-    (date: Date, formatString: string = "HH'H'") => {
+    (date: Date | IsoDate, formatString: string = "HH'H'") => {
       return format(date, formatString, {
         locale: getDateFormatLanguage(language),
       });

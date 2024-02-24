@@ -27,7 +27,9 @@ const useLastYoutubeVideo = () => {
 
   return useMemo(() => {
     if (videos === undefined) return undefined;
-    return videos.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime())[0];
+    return videos.sort(
+      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    )[0];
   }, [videos]);
 };
 
@@ -41,7 +43,7 @@ const useLastYoutubeVideoCardData = (): CardsData => {
         content: (
           <MediaCardContent
             title={lastVideo.title}
-            date={lastVideo.publishedAt.toLocaleDateString()}
+            date={new Date(lastVideo.publishedAt).toLocaleDateString()}
             likes={lastVideo.likes}
             views={lastVideo.views}
             onPress={() => Linking.openURL(lastVideo.url)}

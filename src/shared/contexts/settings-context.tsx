@@ -19,6 +19,7 @@ const defaultSettings: Settings = {
   hideSpoilers: false,
   language: 'en',
   notifications: {
+    LeagueOfLegendsLEC: true,
     LeagueOfLegendsLFL: true,
     RocketLeague: true,
     SuperSmashBrosUltimate: true,

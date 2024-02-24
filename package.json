@@ -1,10 +1,10 @@
 {
-  "name": "karmine-corp-app",
-  "version": "1.0.0",
+  "name": "karmine-plus",
+  "version": "0.1.0",
   "scripts": {
-    "android": "expo start --android",
+    "android": "expo run:android",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
-    "ios": "expo start --ios",
+    "ios": "expo run:ios",
     "start": "expo start",
     "web": "expo start --web"
   },
@@ -14,7 +14,9 @@
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.17",
     "@react-navigation/stack": "^6.3.17",
+    "@tanstack/query-async-storage-persister": "^5.22.2",
     "@tanstack/react-query": "^5.17.9",
+    "@tanstack/react-query-persist-client": "^5.22.2",
     "date-fns": "^3.1.0",
     "defu": "^6.1.4",
     "expo": "~49.0.11",
@@ -45,7 +47,8 @@
     "react-native-svg": "13.9.0",
     "yocto-queue": "^1.0.0",
     "zod": "^3.22.4",
-    "zustand": "^4.4.7"
+    "zustand": "^4.4.7",
+    "react-native-webview": "13.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

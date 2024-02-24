@@ -1,9 +1,9 @@
-import { KarmineApi } from '../apis/karmine/types/KarmineApi';
+import { CoreData } from '../data/core/types';
 
 import { Language } from '~/translations/Translations';
 
 export interface Settings {
   language: Language;
-  notifications: Record<KarmineApi.CompetitionName, boolean>;
+  notifications: Record<CoreData.CompetitionName, boolean>;
   hideSpoilers: boolean;
 }

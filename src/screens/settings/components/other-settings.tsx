@@ -1,10 +1,9 @@
-import { NavigationContainerRef, useNavigation } from '@react-navigation/native';
 import { Linking, View } from 'react-native';
 
 import { Buttons } from '~/shared/components/buttons';
+import { useNavigation } from '~/shared/hooks/use-navigation';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
-import { RootStackParamList } from '~/shared/navigation';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 interface ButtonProps {
@@ -15,7 +14,7 @@ interface ButtonProps {
 export const OtherSettings = () => {
   const styles = useStyles(getStyles);
 
-  const navigation = useNavigation<NavigationContainerRef<RootStackParamList>>();
+  const navigation = useNavigation();
 
   const translate = useTranslate();
 
@@ -45,7 +44,7 @@ export const OtherSettings = () => {
     if (isUrl) {
       Linking.openURL(redirectTo);
     } else {
-      navigation.navigate(redirectTo as keyof RootStackParamList);
+      navigation.navigate(redirectTo as never);
     }
   };
 
