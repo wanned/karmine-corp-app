@@ -1,36 +1,35 @@
 {
   "expo": {
-    "name": "karmine-corp-app",
-    "slug": "karmine-corp-app",
-    "version": "1.0.0",
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
+    "name": "Karmine Plus",
+    "slug": "karmine-plus",
+    "version": "0.1.0",
     "experiments": {
       "tsconfigPaths": true
     },
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icons/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/icons/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#101E35"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "foregroundImage": "./assets/icons/adaptive-icon.png",
+        "backgroundColor": "#101E35",
+        "monochromeImage": "./assets/icons/adaptive-icon.png"
+      },
+      "package": "plus.karmine.karmineplus"
     },
     "plugins": [
       "expo-localization"
-    ]
+    ],
+    "ios": {
+      "bundleIdentifier": "plus.karmine.karmineplus"
+    }
   }
 }
