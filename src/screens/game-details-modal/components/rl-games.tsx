@@ -77,14 +77,19 @@ const RlGame = ({ number, teams }: RlGameProps) => {
           label={translate('gameDetails.totalText')}
         />
       </View>
-      <Buttons.Text text={translate('gameDetails.watchReplayText')} onPress={() => {}} />
+      <Buttons.Text
+        text={translate('gameDetails.watchReplayText')}
+        onPress={() => {
+          // TODO: Implement replay video
+          console.log(teams);
+        }}
+      />
     </View>
   );
 };
 
 export const RlGames = ({ matchDetails }: RlGamesProps) => {
   const styles = useStyles(getStyles);
-
   return (
     <View style={styles.gamesContainer}>
       {matchDetails.games.length > 0 &&

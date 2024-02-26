@@ -1,5 +1,7 @@
+import * as datefns from 'date-fns';
 import { Image } from 'expo-image';
-import { StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Linking, StyleSheet, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
 import { Buttons } from '~/shared/components/buttons';
@@ -9,14 +11,26 @@ import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
+import { search } from '~/shared/utils/youtube-search';
 
 interface LolGamesProps extends CoreData.LeagueOfLegendsMatch {}
 
 interface LolGameProps extends CoreData.LeagueOfLegendsGame {
   number: number;
+  opponentName: string | undefined;
+  date: Date;
+  gameNumbers: number;
 }
 
-const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
+const LolGame = ({
+  number,
+  draft,
+  duration,
+  score,
+  opponentName,
+  gameNumbers,
+  date,
+}: LolGameProps) => {
   const styles = useStyles(getStyles);
 
   const theme = useTheme();
@@ -32,6 +46,35 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
 
     return `${paddedMinutes}:${paddedSeconds}`;
   }
+
+  const [replayVideo, setReplayVideo] = useState<
+    Awaited<ReturnType<typeof search>>[number] | undefined
+  >();
+
+  useEffect(() => {
+    const dateAfter = datefns.addDays(date, -1);
+    const dateBefore = datefns.addDays(date, 1);
+    const searchQuery = String.prototype.concat(
+      `("karmine corp" OR kc OR kcb)`,
+      ' vs ',
+      opponentName !== undefined ? `${opponentName} ` : '',
+      gameNumbers > 1 ? `"[Game ${gameNumbers}]" ` : '',
+      'league of legends ',
+      'karminecorp replay, ',
+      `after:${datefns.format(dateAfter, 'yyyy-MM-dd')} `,
+      `before:${datefns.format(dateBefore, 'yyyy-MM-dd')}`
+    );
+
+    search(searchQuery).then((videos) => {
+      setReplayVideo(videos[0]);
+    });
+  }, [date, gameNumbers, opponentName]);
+
+  const openReplayVideo = useCallback(() => {
+    if (replayVideo !== undefined) {
+      Linking.openURL(replayVideo.url);
+    }
+  }, [replayVideo]);
 
   const crown = (
     <Iconify icon="solar:crown-bold" size={16} color={styles.crown.color} style={styles.crown} />
@@ -77,19 +120,30 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
           {score.away > score.home ? crown : null}
         </View>
       </View>
-      <Buttons.Text text={translate('gameDetails.watchReplayText')} onPress={() => {}} />
+      {replayVideo !== undefined && (
+        <Buttons.Text text={translate('gameDetails.watchReplayText')} onPress={openReplayVideo} />
+      )}
     </View>
   );
 };
 
-export const LolGames = ({ matchDetails }: LolGamesProps) => {
+export const LolGames = ({ matchDetails, date, teams }: LolGamesProps) => {
   const styles = useStyles(getStyles);
-
   return (
     <View style={styles.gamesContainer}>
       {matchDetails.games.length > 0 &&
         matchDetails.games.map((game, index) => (
-          <LolGame number={index + 1} key={index} {...game} />
+          <LolGame
+            number={index + 1}
+            key={index}
+            {...game}
+            opponentName={
+              teams.find((team) => team !== null && !team.name.toLowerCase().includes('karmine'))
+                ?.name
+            }
+            date={new Date(date)}
+            gameNumbers={matchDetails.games.length}
+          />
         ))}
     </View>
   );
