@@ -18,6 +18,11 @@ interface MatchScoreProps {
 export const MatchScore = React.memo<MatchScoreProps>(
   ({ match, children }: MatchScoreProps) => {
     const { formatDate, formatTime } = useDate();
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
 
     const styles = getStyles(styleTokens);
 
@@ -25,13 +30,48 @@ export const MatchScore = React.memo<MatchScoreProps>(
 
     const navigation = useNavigation();
 
+    const todayDay = today.getDate();
+    const todayYear = today.getFullYear();
+    const todayMonthAbbreviation = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(
+      today
+    );
+
+    const tomorrowDay = tomorrow.getDate();
+    const tomorrowYear = tomorrow.getFullYear();
+    const tomorrowMonthAbbreviation = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(
+      tomorrow
+    );
+
+    const yesterdayDay = yesterday.getDate();
+    const yesterdayYear = yesterday.getFullYear();
+    const yesterdayMonthAbbreviation = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(
+      yesterday
+    );
+
+    const tomorrowString = `${tomorrowDay} ${tomorrowMonthAbbreviation} ${tomorrowYear}`;
+    const todayString = `${todayDay} ${todayMonthAbbreviation} ${todayYear}`;
+    const yesterdayString = `${yesterdayDay} ${yesterdayMonthAbbreviation} ${yesterdayYear}`;
+
+    const formattedDate = formatDate(match.date);
+    const formattedTime = formatTime(match.date);
+
+    let dateLabel = formattedDate;
+
+    if (formattedDate === todayString) {
+      dateLabel = translate('home.today');
+    } else if (formattedDate === tomorrowString) {
+      dateLabel = translate('home.tomorrow');
+    } else if (formattedDate === yesterdayString) {
+      dateLabel = translate('home.yesterday');
+    }
+
     return (
       <TouchableOpacity
         style={styles.container}
         onPress={() => navigation.navigate('gameDetailsModal', { match })}>
         <View style={styles.titleHeader}>
           <Typographies.Label color={styles.titleDate.color} verticalTrim>
-            {formatDate(match.date)} · {formatTime(match.date)}{' '}
+            {dateLabel} · {formattedTime}
           </Typographies.Label>
           <Typographies.Label color={styles.titleGame.color} verticalTrim>
             · {translate(`games.${match.matchDetails.competitionName}`)}

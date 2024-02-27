@@ -10,6 +10,9 @@ export const frTranslations: Translations['fr'] = {
     views: 'vues',
     likes: 'likes',
     noMatches: 'Aucun matchs',
+    tomorrow: 'Demain',
+    today: "Aujourd'hui",
+    yesterday: 'Hier',
   },
   calendar: {
     screenName: 'Calendrier',
