@@ -20,7 +20,10 @@ export const useReplay = () => {
 
   const searchReplay = useCallback(({ date, teams, gameNumber, game }: SearchReplayProps) => {
     const opponentName = teams.find(
-      (team) => team !== null && !team.name.toLowerCase().includes('karmine')
+      (team) =>
+        team !== null &&
+        !team.name.toLowerCase().includes('karmine') &&
+        !team.name.toLowerCase().includes('kc')
     )?.name;
 
     const dateAfter = datefns.addDays(date, -1);

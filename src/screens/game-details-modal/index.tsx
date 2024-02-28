@@ -197,8 +197,6 @@ function GameDetailsReplayButton({ match }: { match: CoreData.Match }) {
     });
   }, [replayVideo, openReplayVideo, searchReplay]);
 
-  console.log(replayVideo);
-
   if (
     match.matchDetails.competitionName === CoreData.CompetitionName.LeagueOfLegendsLFL ||
     match.matchDetails.competitionName === CoreData.CompetitionName.LeagueOfLegendsLEC

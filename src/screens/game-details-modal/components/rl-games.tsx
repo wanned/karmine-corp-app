@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
-import { Buttons } from '~/shared/components/buttons';
 import { Typographies } from '~/shared/components/typographies';
 import { CoreData } from '~/shared/data/core/types';
 import { useStyles } from '~/shared/hooks/use-styles';
@@ -77,13 +76,6 @@ const RlGame = ({ number, teams }: RlGameProps) => {
           label={translate('gameDetails.totalText')}
         />
       </View>
-      <Buttons.Text
-        text={translate('gameDetails.watchReplayText')}
-        onPress={() => {
-          // TODO: Implement replay video
-          console.log(teams);
-        }}
-      />
     </View>
   );
 };
