@@ -1,25 +1,25 @@
-import * as datefns from 'date-fns';
 import { Image } from 'expo-image';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Linking, StyleSheet, View } from 'react-native';
+import { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
 import { Buttons } from '~/shared/components/buttons';
 import { Typographies } from '~/shared/components/typographies';
 import { CoreData } from '~/shared/data/core/types';
+import { useReplay } from '~/shared/hooks/use-replay';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
-import { search } from '~/shared/utils/youtube-search';
 
 interface LolGamesProps extends CoreData.LeagueOfLegendsMatch {}
 
 interface LolGameProps extends CoreData.LeagueOfLegendsGame {
   number: number;
-  opponentName: string | undefined;
+  teams: CoreData.Match['teams'];
   date: Date;
   gameNumbers: number;
+  competitionName: CoreData.CompetitionName;
 }
 
 const LolGame = ({
@@ -27,8 +27,9 @@ const LolGame = ({
   draft,
   duration,
   score,
-  opponentName,
+  teams,
   gameNumbers,
+  competitionName,
   date,
 }: LolGameProps) => {
   const styles = useStyles(getStyles);
@@ -47,34 +48,15 @@ const LolGame = ({
     return `${paddedMinutes}:${paddedSeconds}`;
   }
 
-  const [replayVideo, setReplayVideo] = useState<
-    Awaited<ReturnType<typeof search>>[number] | undefined
-  >();
-
+  const { replayVideo, openReplayVideo, searchReplay } = useReplay();
   useEffect(() => {
-    const dateAfter = datefns.addDays(date, -1);
-    const dateBefore = datefns.addDays(date, 1);
-    const searchQuery = String.prototype.concat(
-      `("karmine corp" OR kc OR kcb)`,
-      ' vs ',
-      opponentName !== undefined ? `${opponentName} ` : '',
-      gameNumbers > 1 ? `"[Game ${gameNumbers}]" ` : '',
-      'league of legends ',
-      'karminecorp replay, ',
-      `after:${datefns.format(dateAfter, 'yyyy-MM-dd')} `,
-      `before:${datefns.format(dateBefore, 'yyyy-MM-dd')}`
-    );
-
-    search(searchQuery).then((videos) => {
-      setReplayVideo(videos[0]);
+    searchReplay({
+      date,
+      teams,
+      game: competitionName,
+      ...(gameNumbers > 1 ? { gameNumber: number } : {}),
     });
-  }, [date, gameNumbers, opponentName]);
-
-  const openReplayVideo = useCallback(() => {
-    if (replayVideo !== undefined) {
-      Linking.openURL(replayVideo.url);
-    }
-  }, [replayVideo]);
+  }, [replayVideo, openReplayVideo, searchReplay]);
 
   const crown = (
     <Iconify icon="solar:crown-bold" size={16} color={styles.crown.color} style={styles.crown} />
@@ -137,10 +119,8 @@ export const LolGames = ({ matchDetails, date, teams }: LolGamesProps) => {
             number={index + 1}
             key={index}
             {...game}
-            opponentName={
-              teams.find((team) => team !== null && !team.name.toLowerCase().includes('karmine'))
-                ?.name
-            }
+            teams={teams}
+            competitionName={matchDetails.competitionName}
             date={new Date(date)}
             gameNumbers={matchDetails.games.length}
           />
