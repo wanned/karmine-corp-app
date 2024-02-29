@@ -29,9 +29,9 @@ export const useReplay = () => {
     const dateAfter = datefns.addDays(date, -1);
     const dateBefore = datefns.addDays(date, 1);
     const searchQuery = String.prototype.concat(
-      `("karmine corp" OR kc OR kcb) `,
+      `('karmine corp' OR kc OR kcb) `,
       opponentName !== undefined ? `vs ${opponentName} ` : '',
-      gameNumber !== undefined ? `"[Game ${gameNumber}]" ` : '',
+      gameNumber !== undefined ? `'[Game ${gameNumber}]' ` : '',
       `${changeCase.noCase(game)} `,
       'karminecorp replay, ',
       `after:${datefns.format(dateAfter, 'yyyy-MM-dd')} `,
@@ -39,7 +39,7 @@ export const useReplay = () => {
     );
 
     searchYoutube(searchQuery).then((videos) => {
-      setReplayVideo(videos[0]);
+      setReplayVideo(videos.filter(Boolean)[0]);
     });
   }, []);
 
