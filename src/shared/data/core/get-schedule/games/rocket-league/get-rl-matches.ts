@@ -2,6 +2,7 @@ import '@total-typescript/ts-reset';
 
 import { getStatusFromMatch } from './get-status-from-match';
 import { DataFetcher } from '../../../data-fetcher';
+import { RLMatch } from './types';
 
 const KARMINE_OCTANE_TEAM_ID = '60fbc5b887f814e9fbffdcbd';
 
@@ -26,7 +27,6 @@ export async function getRlMatches({
     lastPaginationResult.pageSize >= lastPaginationResult.perPage &&
     (await checkFilters(lastPaginationResult.matches, filters)) !== undefined
   );
-
   return paginationResults.flatMap((r) => r.matches);
 }
 
@@ -36,7 +36,15 @@ async function checkFilters(
 ) {
   const from = filters.date?.from;
   if (from !== undefined) {
-    results = results.filter((match) => new Date(match.date) >= from);
+    results = results.filter((match) => {
+      const matchDate = new Date(match.date);
+
+      if (matchDate >= from) {
+        return true;
+      } else {
+        return setScoresToUndefined(match);
+      }
+    });
   }
 
   const to = filters.date?.to;
@@ -55,6 +63,11 @@ async function checkFilters(
   }
 
   if (results.length === 0) return undefined;
-
   return results;
+}
+
+function setScoresToUndefined(match: RLMatch) {
+  match.blue.score = undefined;
+  match.orange.score = undefined;
+  return match;
 }
