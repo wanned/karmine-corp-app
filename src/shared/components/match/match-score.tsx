@@ -9,6 +9,8 @@ import { useNavigation } from '~/shared/hooks/use-navigation';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { styleTokens } from '~/shared/styles/tokens';
+import { isSameDay } from 'date-fns';
+import { dayUtils } from '~/shared/utils/days';
 
 interface MatchScoreProps {
   children: React.ReactNode;
@@ -18,11 +20,9 @@ interface MatchScoreProps {
 export const MatchScore = React.memo<MatchScoreProps>(
   ({ match, children }: MatchScoreProps) => {
     const { formatDate, formatTime } = useDate();
-    const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
+    const today = dayUtils.today;
+    const yesterday = dayUtils.yesterday;
+    const tomorrow = dayUtils.tomorrow;
 
     const styles = getStyles(styleTokens);
 
@@ -30,38 +30,20 @@ export const MatchScore = React.memo<MatchScoreProps>(
 
     const navigation = useNavigation();
 
-    const todayDay = today.getDate();
-    const todayYear = today.getFullYear();
-    const todayMonthAbbreviation = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(
-      today
-    );
-
-    const tomorrowDay = tomorrow.getDate();
-    const tomorrowYear = tomorrow.getFullYear();
-    const tomorrowMonthAbbreviation = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(
-      tomorrow
-    );
-
-    const yesterdayDay = yesterday.getDate();
-    const yesterdayYear = yesterday.getFullYear();
-    const yesterdayMonthAbbreviation = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(
-      yesterday
-    );
-
-    const tomorrowString = `${tomorrowDay} ${tomorrowMonthAbbreviation} ${tomorrowYear}`;
-    const todayString = `${todayDay} ${todayMonthAbbreviation} ${todayYear}`;
-    const yesterdayString = `${yesterdayDay} ${yesterdayMonthAbbreviation} ${yesterdayYear}`;
-
     const formattedDate = formatDate(match.date);
     const formattedTime = formatTime(match.date);
 
     let dateLabel = formattedDate;
 
-    if (formattedDate === todayString) {
+    const isToday = isSameDay(match.date, today);
+    const isTomorrow = isSameDay(match.date, tomorrow);
+    const isYesterday = isSameDay(match.date, yesterday);
+
+    if (isToday) {
       dateLabel = translate('home.today');
-    } else if (formattedDate === tomorrowString) {
+    } else if (isTomorrow) {
       dateLabel = translate('home.tomorrow');
-    } else if (formattedDate === yesterdayString) {
+    } else if (isYesterday) {
       dateLabel = translate('home.yesterday');
     }
 
