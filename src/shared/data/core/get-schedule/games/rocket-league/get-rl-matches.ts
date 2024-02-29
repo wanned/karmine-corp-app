@@ -36,15 +36,7 @@ async function checkFilters(
 ) {
   const from = filters.date?.from;
   if (from !== undefined) {
-    results = results.filter((match) => {
-      const matchDate = new Date(match.date);
-
-      if (matchDate >= from) {
-        return true;
-      } else {
-        return setScoresToUndefined(match);
-      }
-    });
+    results = results.filter((match) => new Date(match.date) >= from);
   }
 
   const to = filters.date?.to;
@@ -62,12 +54,17 @@ async function checkFilters(
     ).then((matches) => matches.filter(Boolean));
   }
 
+  results.map(setScoresToUndefinedIfNotStarted);
+
   if (results.length === 0) return undefined;
   return results;
 }
 
-function setScoresToUndefined(match: RLMatch) {
-  match.blue.score = undefined;
-  match.orange.score = undefined;
+function setScoresToUndefinedIfNotStarted(match: RLMatch): RLMatch {
+  const currentDate = new Date();
+  if (match.date > currentDate) {
+    match.blue.score = undefined;
+    match.orange.score = undefined;
+  }
   return match;
 }
