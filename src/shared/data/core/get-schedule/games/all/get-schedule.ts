@@ -93,9 +93,10 @@ async function karmineEventToCoreMatch(
   status: CoreData.Match['status']
 ): Promise<CoreData.Match> {
   const teams = await getTeamsFromEvent(event);
+  const id = calculateId(event);
 
   return {
-    id: `all:${event.id}`,
+    id: `all:${id}`,
     teams,
     date: event.start,
     streamLink: event.streamLink ?? null,
@@ -104,6 +105,15 @@ async function karmineEventToCoreMatch(
       competitionName: event.competition_name as CoreData.CompetitionName,
     },
   } satisfies CoreData.Match;
+}
+
+function calculateId(event: BaseKarmineEvent): string {
+  let id = '';
+  for (const character of event.title + event.start.toISOString()) {
+    id += character.charCodeAt(0).toString(16);
+  }
+
+  return id;
 }
 
 async function getTeamsFromEvent(event: BaseKarmineEvent): Promise<CoreData.BaseMatch['teams']> {
