@@ -9,6 +9,8 @@ import { useNavigation } from '~/shared/hooks/use-navigation';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { styleTokens } from '~/shared/styles/tokens';
+import { isSameDay } from 'date-fns';
+import { dayUtils } from '~/shared/utils/days';
 
 interface MatchScoreProps {
   children: React.ReactNode;
@@ -18,6 +20,9 @@ interface MatchScoreProps {
 export const MatchScore = React.memo<MatchScoreProps>(
   ({ match, children }: MatchScoreProps) => {
     const { formatDate, formatTime } = useDate();
+    const today = dayUtils.today;
+    const yesterday = dayUtils.yesterday;
+    const tomorrow = dayUtils.tomorrow;
 
     const styles = getStyles(styleTokens);
 
@@ -25,13 +30,30 @@ export const MatchScore = React.memo<MatchScoreProps>(
 
     const navigation = useNavigation();
 
+    const formattedDate = formatDate(match.date);
+    const formattedTime = formatTime(match.date);
+
+    let dateLabel = formattedDate;
+
+    const isToday = isSameDay(match.date, today);
+    const isTomorrow = isSameDay(match.date, tomorrow);
+    const isYesterday = isSameDay(match.date, yesterday);
+
+    if (isToday) {
+      dateLabel = translate('home.today');
+    } else if (isTomorrow) {
+      dateLabel = translate('home.tomorrow');
+    } else if (isYesterday) {
+      dateLabel = translate('home.yesterday');
+    }
+
     return (
       <TouchableOpacity
         style={styles.container}
         onPress={() => navigation.navigate('gameDetailsModal', { match })}>
         <View style={styles.titleHeader}>
           <Typographies.Label color={styles.titleDate.color} verticalTrim>
-            {formatDate(match.date)} · {formatTime(match.date)}{' '}
+            {dateLabel} · {formattedTime}
           </Typographies.Label>
           <Typographies.Label color={styles.titleGame.color} verticalTrim>
             · {translate(`games.${match.matchDetails.competitionName}`)}

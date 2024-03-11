@@ -14,6 +14,9 @@ export type Translations = Record<
       views: string;
       likes: string;
       noMatches: string;
+      tomorrow: string;
+      today: string;
+      yesterday: string;
     };
     calendar: {
       screenName: string;

@@ -10,6 +10,9 @@ export const esTranslations: Translations['es'] = {
     views: 'vistas',
     likes: 'likes',
     noMatches: 'No hay partidos',
+    tomorrow: 'Mañana',
+    today: 'Hoy',
+    yesterday: 'Ayer',
   },
   calendar: {
     screenName: 'Calendario',
