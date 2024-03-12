@@ -11,6 +11,7 @@ import { TeamScore } from './components/team-score';
 import { useGameBackgroundImage } from '../home/hooks/use-game-background-image';
 
 import { Buttons } from '~/shared/components/buttons';
+import { MatchDate } from '~/shared/components/match/match-date';
 import { Section } from '~/shared/components/section/section';
 import { Typographies } from '~/shared/components/typographies';
 import { CoreData } from '~/shared/data/core/types';
@@ -48,6 +49,7 @@ export const GameDetailsModal = React.memo(
           teamAway={match.teams[1]}
         />
         <View style={styles.gameDetailsContainer}>
+          <MatchDate date={match.date} />
           {match.status === 'upcoming' && (
             <GameDetailsNotificationButton
               match={match}
@@ -286,5 +288,8 @@ const getStyles = createStylesheet((theme) => ({
     opacity: theme.opacities.priority2,
     position: 'relative',
     top: -70,
+  },
+  titleDate: {
+    color: theme.colors.accent,
   },
 }));
