@@ -12,6 +12,7 @@ import { useGameBackgroundImage } from '../home/hooks/use-game-background-image'
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { Buttons } from '~/shared/components/buttons';
+import { MatchDate } from '~/shared/components/match/match-date';
 import { Section } from '~/shared/components/section/section';
 import { Typographies } from '~/shared/components/typographies';
 import { useReplay } from '~/shared/hooks/use-replay';
@@ -49,6 +50,7 @@ export const GameDetailsModal = React.memo(
           teamAway={match.teams[1]}
         />
         <View style={styles.gameDetailsContainer}>
+          <MatchDate date={match.date} />
           {match.status === 'upcoming' && (
             <GameDetailsNotificationButton
               match={match}
@@ -323,5 +325,8 @@ const getStyles = createStylesheet((theme) => ({
     opacity: theme.opacities.priority2,
     position: 'relative',
     top: -70,
+  },
+  titleDate: {
+    color: theme.colors.accent,
   },
 }));
