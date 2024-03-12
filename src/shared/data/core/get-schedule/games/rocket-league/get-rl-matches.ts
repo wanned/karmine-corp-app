@@ -54,22 +54,20 @@ async function checkFilters(
     ).then((matches) => matches.filter(Boolean));
   }
 
-  results.map(setScoresToUndefinedIfNotStarted);
-
   if (results.length === 0) return undefined;
-  return results;
+  return results.map(setScoresToUndefinedIfNotStarted);
 }
 
 function setScoresToUndefinedIfNotStarted(match: RLMatch): RLMatch {
   const currentDate = new Date();
-  if (match.date > currentDate) {
-    const modifiedMatch: RLMatch = {
-      ...match,
-      blue: { ...match.blue, score: undefined },
-      orange: { ...match.orange, score: undefined },
-    };
-    return modifiedMatch;
-  }
+  // if (match.date > currentDate) {
+  const modifiedMatch: RLMatch = {
+    ...match,
+    blue: { ...match.blue, score: undefined },
+    orange: { ...match.orange, score: undefined },
+  };
+  return modifiedMatch;
+  // }
 
   return match;
 }
