@@ -69,6 +69,7 @@ const fetchStrafe = <S extends z.ZodType = z.ZodAny>({ url, schema }: { url: str
               );
             }),
           headers,
+          retryHeader: 'Retry-After',
         })
       )
     )

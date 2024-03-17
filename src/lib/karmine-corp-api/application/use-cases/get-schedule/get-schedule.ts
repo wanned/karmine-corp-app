@@ -7,6 +7,9 @@ import { CoreData } from '../../types/core-data';
 
 export const getSchedule = () =>
   Effect.Do.pipe(
-    () => Effect.all([getOtherSchedule(), getLeagueOfLegendsSchedule(), getRocketLeagueSchedule()]),
+    () =>
+      Effect.all([getOtherSchedule(), getLeagueOfLegendsSchedule(), getRocketLeagueSchedule()], {
+        concurrency: 'unbounded',
+      }),
     Effect.map((schedules) => schedules.flat())
   ) satisfies Effect.Effect<CoreData.Match[], any, any>;

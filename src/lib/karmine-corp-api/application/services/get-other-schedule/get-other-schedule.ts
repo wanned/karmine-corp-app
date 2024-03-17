@@ -9,7 +9,9 @@ export const getOtherSchedule = () =>
   Effect.Do.pipe(
     Effect.bind('karmineApiService', () => KarmineApiService),
     Effect.flatMap(({ karmineApiService }) =>
-      Effect.all([karmineApiService.getEvents(), karmineApiService.getEventsResults()])
+      Effect.all([karmineApiService.getEvents(), karmineApiService.getEventsResults()], {
+        concurrency: 'unbounded',
+      })
     ),
     Effect.map(([events, eventsResults]) => [
       ...events.map((event) => ({ ...event, state: 'upcoming' as const })),

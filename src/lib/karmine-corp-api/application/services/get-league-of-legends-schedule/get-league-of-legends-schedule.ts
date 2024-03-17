@@ -28,7 +28,10 @@ const LOL_LEAGUES = [
   { id: '98767975604431411', slug: 'worlds', team: CoreData.CompetitionName.LeagueOfLegendsLEC },
 ] as const;
 
-const getLolMatches = () => Effect.forEach(LOL_LEAGUES, ({ id }) => getLolMatchesInLeague(id));
+const getLolMatches = () =>
+  Effect.forEach(LOL_LEAGUES, ({ id }) => getLolMatchesInLeague(id), {
+    concurrency: 3,
+  });
 
 const getLolMatchesInLeague = (leagueId: string) =>
   Effect.Do.pipe(
@@ -48,7 +51,11 @@ const getLolMatchesInLeague = (leagueId: string) =>
       })
     ),
     Effect.map((matches) => matches.flatMap((match) => match.events.filter(isKarmineMatch))),
-    Effect.flatMap((matches) => Effect.forEach(matches, getCoreMatch))
+    Effect.flatMap((matches) =>
+      Effect.forEach(matches, getCoreMatch, {
+        concurrency: 10,
+      })
+    )
   );
 
 const isKarmineMatch = (
@@ -170,7 +177,10 @@ const getMatchDetailsFromEvent = (
                 Option.some(Effect.succeed(undefined))
               : Option.none()
             )
-          )
+          ),
+        {
+          concurrency: 'unbounded',
+        }
       ).pipe(Effect.map((games) => games.filter(Boolean)))
     );
 
@@ -329,7 +339,10 @@ const getTeamPicks = ({
               },
               player: participant.summonerName,
             };
-          })
+          }),
+        {
+          concurrency: 'unbounded',
+        }
       )
     )
   );
@@ -388,17 +401,22 @@ const getLastGameWindow = (gameId: string, eventStartDate: Date) =>
 const getTeamsFromEvent = (
   leagueOfLegendsMatch: LeagueOfLegendsApi.GetSchedule['data']['schedule']['events'][number]
 ) =>
-  Effect.forEach(leagueOfLegendsMatch.match.teams, (team) =>
-    Effect.succeed({
-      name: team.name,
-      logoUrl: team.image.replace('http:', 'https:'),
-      score:
-        team.result !== null && team.result.outcome !== null ?
-          {
-            score: team.result.gameWins,
-            scoreType: 'gameWins',
-            isWinner: team.result.outcome === 'win',
-          }
-        : undefined,
-    })
+  Effect.forEach(
+    leagueOfLegendsMatch.match.teams,
+    (team) =>
+      Effect.succeed({
+        name: team.name,
+        logoUrl: team.image.replace('http:', 'https:'),
+        score:
+          team.result !== null && team.result.outcome !== null ?
+            {
+              score: team.result.gameWins,
+              scoreType: 'gameWins',
+              isWinner: team.result.outcome === 'win',
+            }
+          : undefined,
+      }),
+    {
+      concurrency: 'unbounded',
+    }
   ) as Effect.Effect<CoreData.LeagueOfLegendsMatch['teams']>;

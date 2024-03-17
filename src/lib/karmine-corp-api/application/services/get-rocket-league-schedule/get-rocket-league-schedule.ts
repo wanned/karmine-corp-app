@@ -29,7 +29,11 @@ export const getRocketLeagueSchedule = () =>
       )
     ),
     Effect.map((responses) => responses.flatMap((response) => response.matches)),
-    Effect.flatMap((matches) => Effect.forEach(matches, getCoreMatch)),
+    Effect.flatMap((matches) =>
+      Effect.forEach(matches, getCoreMatch, {
+        concurrency: 10,
+      })
+    ),
     Effect.let('listedMatches', (listedMatches) => listedMatches),
     Effect.bind('unlistedMatches', ({ listedMatches }) => getUnlistedRlMatches(listedMatches)),
     Effect.map(({ listedMatches, unlistedMatches }) => [...unlistedMatches, ...listedMatches])
