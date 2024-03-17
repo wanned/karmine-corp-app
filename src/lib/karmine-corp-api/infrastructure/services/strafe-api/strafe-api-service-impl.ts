@@ -1,3 +1,4 @@
+import destr from 'destr';
 import { Effect, Layer } from 'effect';
 import { z } from 'zod';
 
@@ -49,7 +50,24 @@ const fetchStrafe = <S extends z.ZodType = z.ZodAny>({ url, schema }: { url: str
         fetchService.fetch<z.output<S>>(url, {
           parseResponse:
             schema &&
-            ((responseText) => Effect.runSync(parseZod(schema, JSON.parse(responseText)))),
+            ((responseText) => {
+              let isError = false;
+              try {
+                const response = JSON.parse(responseText);
+                if (typeof response === 'object' && response?.hasOwnProperty('error')) {
+                  isError = true;
+                }
+              } catch {}
+
+              if (isError) {
+                // destr is the default function that is used by ofetch to parse responses
+                return destr(responseText);
+              }
+
+              return Effect.runSync(
+                parseZod(schema, JSON.parse(responseText), JSON.stringify({ url }))
+              );
+            }),
           headers,
         })
       )

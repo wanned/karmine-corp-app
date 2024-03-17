@@ -108,7 +108,10 @@ const fetchLol = <S extends z.ZodType = z.ZodAny>({
           },
           parseResponse:
             schema &&
-            ((responseText) => Effect.runSync(parseZod(schema, JSON.parse(responseText)))),
+            ((responseText) =>
+              Effect.runSync(
+                parseZod(schema, JSON.parse(responseText), JSON.stringify({ url, type, query }))
+              )),
           headers,
         })
       )
