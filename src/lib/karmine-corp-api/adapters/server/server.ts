@@ -1,4 +1,4 @@
-import { Effect, Layer, Match } from 'effect';
+import { Chunk, Effect, Layer, Match, Stream } from 'effect';
 import { createServer } from 'node:http';
 
 import { getSchedule } from '../../application/use-cases/get-schedule/get-schedule';
@@ -58,7 +58,9 @@ class HttpError extends Error {
 
 const endpointGetSchedule = Match.when({ method: 'GET', url: '/schedule' }, () =>
   Effect.provide(
-    getSchedule(),
+    Stream.runCollect(getSchedule()).pipe(
+      Effect.map((scheduleChunk) => Chunk.toArray(scheduleChunk))
+    ),
     Layer.mergeAll(
       LeagueOfLegendsApiServiceImpl,
       OctaneApiServiceImpl,

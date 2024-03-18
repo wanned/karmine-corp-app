@@ -1,4 +1,4 @@
-import { Effect } from 'effect';
+import { Chunk, Effect, Option, Stream } from 'effect';
 
 import { CoreData } from '../../types/core-data';
 import { getOtherSchedule } from '../get-other-schedule/get-other-schedule';
@@ -9,35 +9,62 @@ import { isSameDay } from '~/shared/utils/is-same-day';
 
 const KARMINE_CORP_OCTANE_TEAM_ID = '60fbc5b887f814e9fbffdcbd';
 
-export const getRocketLeagueSchedule = () =>
-  Effect.Do.pipe(
-    Effect.bind('octaneApiService', () => OctaneApiService),
-    Effect.flatMap(({ octaneApiService }) =>
-      Effect.iterate(
-        [] as Effect.Effect.Success<ReturnType<typeof octaneApiService.getMatches>>[],
-        {
-          while: (responses) =>
-            responses.length === 0 || responses.at(-1)!.pageSize >= responses.at(-1)!.perPage,
-          body: (responses) =>
-            octaneApiService
-              .getMatches({
-                teamId: KARMINE_CORP_OCTANE_TEAM_ID,
-                ...((responses.at(-1) && { page: responses.at(-1)!.page + 1 }) ?? {}),
-              })
-              .pipe(Effect.map((newResponse) => [...responses, newResponse])),
-        }
+export const getRocketLeagueSchedule = () => {
+  const matchesStream = Stream.unfoldEffect(
+    undefined as OctaneApi.GetMatches | undefined,
+    (lastResponse) =>
+      OctaneApiService.pipe(
+        Effect.flatMap((_) =>
+          _.getMatches({
+            teamId: KARMINE_CORP_OCTANE_TEAM_ID,
+            page: lastResponse ? lastResponse.page + 1 : undefined,
+          })
+        ),
+        Effect.map((newResponse) =>
+          newResponse.pageSize < newResponse.perPage ?
+            Option.none()
+          : Option.some([newResponse.matches, newResponse])
+        )
       )
-    ),
-    Effect.map((responses) => responses.flatMap((response) => response.matches)),
-    Effect.flatMap((matches) =>
-      Effect.forEach(matches, getCoreMatch, {
-        concurrency: 10,
-      })
-    ),
-    Effect.let('listedMatches', (listedMatches) => listedMatches),
-    Effect.bind('unlistedMatches', ({ listedMatches }) => getUnlistedRlMatches(listedMatches)),
-    Effect.map(({ listedMatches, unlistedMatches }) => [...unlistedMatches, ...listedMatches])
+  ).pipe(
+    Stream.flatMap((matches) => Stream.fromIterable(matches)),
+    Stream.flatMap((match) => Stream.fromEffect(getCoreMatch(match)), {
+      concurrency: 10,
+    })
   );
+
+  return Stream.merge(
+    // listed matches
+    matchesStream,
+    // unlisted matches
+    matchesStream.pipe(
+      Stream.runCollect,
+      Stream.flatMap((listedMatches) =>
+        getOtherSchedule().pipe(
+          Stream.filter(
+            (unlistedMatch) =>
+              !Chunk.some(listedMatches, (listedMatch) =>
+                isSameDay(new Date(listedMatch.date), new Date(unlistedMatch.date))
+              )
+          ),
+          Stream.map((unlistedMatch) => ({
+            ...unlistedMatch,
+            id: `rl:${unlistedMatch.id}`,
+            matchDetails: {
+              ...unlistedMatch.matchDetails,
+              competitionName: CoreData.CompetitionName.RocketLeague,
+              games: [],
+              players: {
+                home: [],
+                away: [],
+              },
+            },
+          }))
+        )
+      )
+    )
+  );
+};
 
 type OctaneApiMatch = OctaneApi.GetMatches['matches'][number];
 
@@ -128,31 +155,3 @@ const getTeamDetailsFromMatch = (team: OctaneApiMatch['blue'] | OctaneApiMatch['
       },
     }))
   ) satisfies Effect.Effect<CoreData.RocketLeagueMatch['teams'][0], any, any>;
-
-const getUnlistedRlMatches = (listedMatches: CoreData.RocketLeagueMatch[]) =>
-  Effect.Do.pipe(
-    Effect.bind('otherMatches', () => getOtherSchedule()),
-    Effect.map(({ otherMatches }) =>
-      otherMatches.filter(
-        (otherMatch) =>
-          !listedMatches.some((listedMatch) =>
-            isSameDay(new Date(listedMatch.date), new Date(otherMatch.date))
-          )
-      )
-    ),
-    Effect.map((unlistedMatches) =>
-      unlistedMatches.map((match) => ({
-        ...match,
-        id: `rl:${match.id}`,
-        matchDetails: {
-          ...match.matchDetails,
-          competitionName: CoreData.CompetitionName.RocketLeague,
-          games: [],
-          players: {
-            home: [],
-            away: [],
-          },
-        },
-      }))
-    )
-  ) satisfies Effect.Effect<CoreData.RocketLeagueMatch[], any, any>;

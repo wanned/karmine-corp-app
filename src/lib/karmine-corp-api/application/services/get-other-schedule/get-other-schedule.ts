@@ -1,25 +1,22 @@
-import { Effect } from 'effect';
+import { Effect, Stream } from 'effect';
 
 import { CoreData } from '../../types/core-data';
 
 import { KarmineApi } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api';
 import { KarmineApiService } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api-service';
 
-export const getOtherSchedule = () =>
-  Effect.Do.pipe(
-    Effect.bind('karmineApiService', () => KarmineApiService),
-    Effect.flatMap(({ karmineApiService }) =>
-      Effect.all([karmineApiService.getEvents(), karmineApiService.getEventsResults()], {
-        concurrency: 'unbounded',
-      })
-    ),
-    Effect.map(([events, eventsResults]) => [
-      ...events.map((event) => ({ ...event, state: 'upcoming' as const })),
-      ...eventsResults.map((event) => ({ ...event, state: 'finished' as const })),
-    ]),
-    Effect.flatMap((events) =>
-      Effect.forEach(events, (event) => karmineEventToCoreMatch(event, 'events'))
-    )
+export const getOtherSchedule = () => Stream.concat(getUpcomingEvents(), getFinishedEvents());
+
+const getUpcomingEvents = () =>
+  Stream.fromIterableEffect(KarmineApiService.pipe(Effect.flatMap((_) => _.getEvents()))).pipe(
+    Stream.flatMap((event) => Stream.fromEffect(karmineEventToCoreMatch(event, 'events')))
+  );
+
+const getFinishedEvents = () =>
+  Stream.fromIterableEffect(
+    KarmineApiService.pipe(Effect.flatMap((_) => _.getEventsResults()))
+  ).pipe(
+    Stream.flatMap((event) => Stream.fromEffect(karmineEventToCoreMatch(event, 'eventsResults')))
   );
 
 const karmineEventToCoreMatch = (

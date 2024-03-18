@@ -1,16 +1,10 @@
-import { Data, Effect, Match, Option } from 'effect';
+import { Data, Effect, Match, Option, Stream } from 'effect';
 
 import { LeagueOfLegendsApi } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api';
 import { LeagueOfLegendsApiService } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api-service';
 import { StrafeApi } from '~/lib/karmine-corp-api/infrastructure/services/strafe-api/strafe-api';
 import { StrafeApiService } from '~/lib/karmine-corp-api/infrastructure/services/strafe-api/strafe-api-service';
 import { CoreData } from '~/shared/data/core/types';
-
-export const getLeagueOfLegendsSchedule = () =>
-  Effect.Do.pipe(
-    Effect.flatMap(() => getLolMatches()),
-    Effect.map((matches) => matches.flat())
-  );
 
 // The leagues come from the League of Legends API
 // https://esports-api.lolesports.com/persisted/gw/getLeagues?hl=en-US
@@ -28,34 +22,35 @@ const LOL_LEAGUES = [
   { id: '98767975604431411', slug: 'worlds', team: CoreData.CompetitionName.LeagueOfLegendsLEC },
 ] as const;
 
-const getLolMatches = () =>
-  Effect.forEach(LOL_LEAGUES, ({ id }) => getLolMatchesInLeague(id), {
-    concurrency: 3,
-  });
+export const getLeagueOfLegendsSchedule = () =>
+  Stream.mergeAll(
+    LOL_LEAGUES.map((league) => getLolMatchesInLeague(league.id)),
+    {
+      concurrency: 3,
+    }
+  );
 
 const getLolMatchesInLeague = (leagueId: string) =>
-  Effect.Do.pipe(
-    Effect.bind('leagueOfLegendsApiService', () => LeagueOfLegendsApiService),
-    Effect.flatMap(({ leagueOfLegendsApiService }) =>
-      Effect.iterate([] as LeagueOfLegendsApi.GetSchedule['data']['schedule'][], {
-        while: (matches) =>
-          matches.length === 0 ||
-          (matches.at(-1)!.pages.older !== null && matches.at(-1)!.pages.older !== undefined),
-        body: (matches) =>
-          leagueOfLegendsApiService
-            .getSchedule({
-              leagueIds: [leagueId],
-              pageToken: matches.at(-1)?.pages.older ?? undefined,
-            })
-            .pipe(Effect.map((newMatches) => [...matches, newMatches.data.schedule])),
-      })
-    ),
-    Effect.map((matches) => matches.flatMap((match) => match.events.filter(isKarmineMatch))),
-    Effect.flatMap((matches) =>
-      Effect.forEach(matches, getCoreMatch, {
-        concurrency: 10,
-      })
+  Stream.unfoldEffect(undefined as LeagueOfLegendsApi.GetSchedule | undefined, (lastResponse) =>
+    LeagueOfLegendsApiService.pipe(
+      Effect.flatMap((_) =>
+        _.getSchedule({
+          leagueIds: [leagueId],
+          pageToken: lastResponse?.data.schedule.pages.older ?? undefined,
+        })
+      ),
+      Effect.map((newResponse) =>
+        (newResponse.data.schedule.pages.older ?? null) === null ?
+          Option.none()
+        : Option.some([newResponse.data.schedule.events, newResponse])
+      )
     )
+  ).pipe(
+    Stream.flatMap((matches) => Stream.fromIterable(matches)),
+    Stream.filter(isKarmineMatch),
+    Stream.flatMap((match) => Stream.fromEffect(getCoreMatch(match)), {
+      concurrency: 10,
+    })
   );
 
 const isKarmineMatch = (
