@@ -18,6 +18,8 @@
     "@tanstack/query-async-storage-persister": "^5.22.2",
     "@tanstack/react-query": "^5.17.9",
     "@tanstack/react-query-persist-client": "^5.22.2",
+    "@types/better-sqlite3": "^7.6.9",
+    "better-sqlite3": "^9.4.3",
     "date-fns": "^3.1.0",
     "defu": "^6.1.4",
     "effect": "^2.4.1",
