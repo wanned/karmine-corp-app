@@ -2,7 +2,7 @@ import { Effect, Layer, Match, Stream, Chunk } from 'effect';
 import { createServer } from 'node:http';
 
 import { getSchedule } from '../../application/use-cases/get-schedule/get-schedule';
-import { BetterSqlite3Impl } from '../../infrastructure/services/database/better-sqlite3-impl';
+import { createBetterSqlite3Impl } from '../../infrastructure/services/database/better-sqlite3-impl';
 import { EnvService } from '../../infrastructure/services/env/env-service';
 import { FetchServiceImpl } from '../../infrastructure/services/fetch/fetch-service-impl';
 import { KarmineApiServiceImpl } from '../../infrastructure/services/karmine-api/karmine-api-service-impl';
@@ -68,7 +68,7 @@ const endpointGetSchedule = Match.when({ method: 'GET', url: '/schedule' }, () =
       KarmineApiServiceImpl,
       StrafeApiServiceImpl,
       FetchServiceImpl,
-      BetterSqlite3Impl,
+      createBetterSqlite3Impl(),
       Layer.succeed(
         EnvService,
         EnvService.of({
