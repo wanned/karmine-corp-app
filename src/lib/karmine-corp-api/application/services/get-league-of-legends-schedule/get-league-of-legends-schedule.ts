@@ -1,10 +1,10 @@
 import { Data, Effect, Match, Option, Stream } from 'effect';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { LeagueOfLegendsApi } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api';
 import { LeagueOfLegendsApiService } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api-service';
 import { StrafeApi } from '~/lib/karmine-corp-api/infrastructure/services/strafe-api/strafe-api';
 import { StrafeApiService } from '~/lib/karmine-corp-api/infrastructure/services/strafe-api/strafe-api-service';
-import { CoreData } from '~/shared/data/core/types';
 
 // The leagues come from the League of Legends API
 // https://esports-api.lolesports.com/persisted/gw/getLeagues?hl=en-US
@@ -176,7 +176,11 @@ const getMatchDetailsFromEvent = (
         {
           concurrency: 'unbounded',
         }
-      ).pipe(Effect.map((games) => games.filter(Boolean)))
+      ).pipe(
+        Effect.map((games) =>
+          games.filter((game): game is Exclude<typeof game, undefined> => game !== undefined)
+        )
+      )
     );
 
     const players: CoreData.LeagueOfLegendsMatch['matchDetails']['players'] = {

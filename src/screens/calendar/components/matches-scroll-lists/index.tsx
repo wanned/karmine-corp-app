@@ -15,7 +15,7 @@ import {
 } from '../../hooks/use-calendar';
 import { getComparableDay } from '../../utils/get-comparable-day';
 
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export const MatchesScrollLists = React.memo(() => {
   const flatListRef = useRef<FlatList<(typeof data)[number]>>(null);

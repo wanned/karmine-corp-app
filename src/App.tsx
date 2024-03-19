@@ -12,9 +12,6 @@ import { useCallback } from 'react';
 import { View } from 'react-native';
 
 import { useInitLeaderboards } from './shared/hooks/data/use-leaderboards';
-import { useInitLiveMatches } from './shared/hooks/data/use-live-match';
-import { useInitMatchesResults } from './shared/hooks/data/use-matches-results';
-import { useInitNextMatches } from './shared/hooks/data/use-next-matches';
 import { useTheme } from './shared/hooks/use-theme';
 import RootNavigator from './shared/navigation';
 
@@ -97,9 +94,6 @@ export default function App() {
 const _App = ({ onLayoutRootView }: { onLayoutRootView: () => void }) => {
   const theme = useTheme();
 
-  useInitNextMatches();
-  useInitMatchesResults();
-  useInitLiveMatches();
   useInitLeaderboards();
 
   return (

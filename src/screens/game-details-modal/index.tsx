@@ -13,7 +13,7 @@ import { useGameBackgroundImage } from '../home/hooks/use-game-background-image'
 import { Buttons } from '~/shared/components/buttons';
 import { Section } from '~/shared/components/section/section';
 import { Typographies } from '~/shared/components/typographies';
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';

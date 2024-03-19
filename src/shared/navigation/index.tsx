@@ -3,8 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { TabBar } from './tab-bar';
-import { CoreData } from '../data/core/types';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import CalendarScreen from '~/screens/calendar';
 import { GameDetailsModal } from '~/screens/game-details-modal';
 import HomeScreen from '~/screens/home';

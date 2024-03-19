@@ -1,5 +1,4 @@
-import { CoreData } from '../data/core/types';
-
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { Language } from '~/translations/Translations';
 
 export interface Settings {

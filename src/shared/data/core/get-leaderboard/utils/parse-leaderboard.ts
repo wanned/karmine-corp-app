@@ -1,4 +1,4 @@
-import { CoreData } from '../../types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 interface BracketMatch {
   id: string;

@@ -13,23 +13,54 @@ import { LeagueOfLegendsApiServiceImpl } from '../../infrastructure/services/lea
 import { OctaneApiServiceImpl } from '../../infrastructure/services/octane-api/octane-api-service-impl';
 import { StrafeApiServiceImpl } from '../../infrastructure/services/strafe-api/strafe-api-service-impl';
 
-const matchesAtom = atom<CoreData.Match[]>([]);
-const matchesLoadingAtom = atom(false);
+import { IsoDate } from '~/shared/types/IsoDate';
+
+type GroupedMatches = {
+  [date: IsoDate]: CoreData.Match[];
+};
+
+export const matchesAtom = atom<GroupedMatches>({});
+const matchesFetchingStatusAtom = atom<'idle' | 'loading' | 'initialized'>('idle');
 
 export const useMatches = () => {
   const [matches, setMatches] = useAtom(matchesAtom);
-  const [matchesLoading, setMatchesLoading] = useAtom(matchesLoadingAtom);
+  const [matchesFetchingStatus, setMatchesFetchingStatus] = useAtom(matchesFetchingStatusAtom);
 
   const addMatches = useCallback((matches: CoreData.Match[]) => {
-    setMatchesLoading(true);
-    setMatches((prev) =>
-      [...prev, ...matches].filter(
-        (match, index, self) => self.findLastIndex((m) => m.id === match.id) === index
-      )
-    );
+    setMatchesFetchingStatus('initialized');
+    setMatches((prev) => {
+      const next = { ...prev };
+
+      matches.forEach((match) => {
+        const matchDate = new Date(match.date);
+        const matchDay = new Date(
+          matchDate.getFullYear(),
+          matchDate.getMonth(),
+          matchDate.getDate()
+        );
+        const matchDayIso = matchDay.toISOString() as IsoDate;
+
+        if (!next[matchDayIso]) {
+          next[matchDayIso] = [];
+        }
+
+        const matchIndex = next[matchDayIso].findIndex((m) => m.id === match.id);
+        if (matchIndex === -1) {
+          next[matchDayIso].push(match);
+        } else {
+          next[matchDayIso][matchIndex] = match;
+        }
+      });
+
+      return next;
+    });
   }, []);
 
   useEffect(() => {
+    if (matchesFetchingStatus !== 'idle') {
+      return;
+    }
+    setMatchesFetchingStatus('loading');
     Effect.runSync(
       Effect.provide(
         Effect.Do.pipe(
@@ -52,11 +83,11 @@ export const useMatches = () => {
         getMainLayer()
       )
     );
-  }, []);
+  }, [addMatches, matchesFetchingStatus, setMatchesFetchingStatus]);
 
   return {
     matches,
-    matchesLoading,
+    matchesFetchingStatus,
   };
 };
 

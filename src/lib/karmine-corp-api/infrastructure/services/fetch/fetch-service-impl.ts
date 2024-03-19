@@ -1,5 +1,5 @@
 import { Layer } from 'effect';
-import { type FetchRequest, ofetch, FetchError } from 'ofetch';
+import { type FetchRequest, ofetch, FetchError } from 'ofetch/dist/index';
 
 import { FetchService } from './fetch-service';
 import { FetchOptions } from './types/fetch-options';
