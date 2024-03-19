@@ -43,6 +43,7 @@ export const getRocketLeagueSchedule = () => {
         getOtherSchedule().pipe(
           Stream.filter(
             (unlistedMatch) =>
+              unlistedMatch.matchDetails.competitionName === CoreData.CompetitionName.RocketLeague &&
               !Chunk.some(listedMatches, (listedMatch) =>
                 isSameDay(new Date(listedMatch.date), new Date(unlistedMatch.date))
               )
