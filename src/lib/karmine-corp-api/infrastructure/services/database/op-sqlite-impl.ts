@@ -1,4 +1,4 @@
-import Database from '@op-engineering/op-sqlite';
+import * as Database from '@op-engineering/op-sqlite';
 import { Effect, Layer } from 'effect';
 
 import { DatabaseService } from './database-service';
@@ -16,10 +16,13 @@ export const createOpSqliteImpl = (databasePath: string) => {
             .execute()
         ),
       executeQuery: (query: string, params: string[] = []) => {
-        return Effect.promise(() => database.executeAsync(query, params) as Promise<any>);
+        return Effect.promise(() => database.executeAsync(query, params));
       },
       executeReturningQuery: (query: string, params: string[] = []) => {
-        return Effect.promise(() => database.executeAsync(query, params) as Promise<any>);
+        return Effect.promise(async () => {
+          const { rows } = await database.executeAsync(query, params);
+          return rows?._array ?? [];
+        });
       },
     })
   );

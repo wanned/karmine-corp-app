@@ -20,7 +20,7 @@ type GroupedMatches = {
 };
 
 export const matchesAtom = atom<GroupedMatches>({});
-const matchesFetchingStatusAtom = atom<'idle' | 'loading' | 'initialized'>('idle');
+const matchesFetchingStatusAtom = atom<'idle' | 'loading' | 'initialized' | 'error'>('idle');
 
 export const useMatches = () => {
   const [matches, setMatches] = useAtom(matchesAtom);
@@ -61,7 +61,7 @@ export const useMatches = () => {
       return;
     }
     setMatchesFetchingStatus('loading');
-    Effect.runSync(
+    Effect.runPromise(
       Effect.provide(
         Effect.Do.pipe(
           Effect.flatMap(() => DatabaseService.pipe(Effect.flatMap((_) => _.initializeTables()))),
@@ -82,7 +82,10 @@ export const useMatches = () => {
         ),
         getMainLayer()
       )
-    );
+    ).catch((error) => {
+      console.error(error);
+      setMatchesFetchingStatus('error');
+    });
   }, [addMatches, matchesFetchingStatus, setMatchesFetchingStatus]);
 
   return {
