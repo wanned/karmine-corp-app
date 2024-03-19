@@ -1,3 +1,4 @@
+import './global';
 import 'react-native-gesture-handler';
 
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
