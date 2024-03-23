@@ -13,7 +13,7 @@ export default function CalendarScreen() {
   const styles = useStyles(getStyles);
 
   const groupedMatches = useMatches();
-  useInitCalendar(groupedMatches);
+  useInitCalendar(groupedMatches.matches);
 
   return (
     <DefaultLayout>
