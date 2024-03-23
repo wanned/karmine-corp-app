@@ -6,10 +6,17 @@ import { getRocketLeagueSchedule } from '../../services/get-rocket-league-schedu
 import { getScheduleFromDatabase } from '../../services/get-schedule-from-database/get-schedule-from-database';
 
 import { MatchesRepository } from '~/lib/karmine-corp-api/infrastructure/repositories/matches/matches-repository';
+import { CoreData } from '../../types/core-data';
 
 export const getSchedule = () => {
   const remoteScheduleStream = Stream.merge(
-    getOtherSchedule(),
+    getOtherSchedule().pipe(
+      Stream.filter((match) =>
+        match.matchDetails.competitionName !== CoreData.CompetitionName.LeagueOfLegendsLEC &&
+        match.matchDetails.competitionName !== CoreData.CompetitionName.LeagueOfLegendsLFL &&
+        match.matchDetails.competitionName !== CoreData.CompetitionName.RocketLeague
+      ),
+    ),
     Stream.merge(getRocketLeagueSchedule(), getLeagueOfLegendsSchedule())
   );
 
