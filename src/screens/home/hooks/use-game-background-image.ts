@@ -1,6 +1,6 @@
 import { useAssets } from 'expo-asset';
 
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export const useGameBackgroundImage = () => {
   const [gameImageAssets] = useAssets([

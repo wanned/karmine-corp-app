@@ -1,7 +1,8 @@
 import { getCurrentSeason } from './get-current-season';
 import { getLeaderboardForSeason } from './get-leaderboard-for-season';
 import { DataFetcher } from '../../../data-fetcher';
-import { CoreData } from '../../../types';
+
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export async function getLeaderboard({
   apis,

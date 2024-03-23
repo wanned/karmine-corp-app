@@ -1,4 +1,4 @@
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export type Language = 'en' | 'es' | 'fr';
 

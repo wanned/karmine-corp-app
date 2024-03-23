@@ -4,7 +4,7 @@ import { Iconify } from 'react-native-iconify';
 
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useDate } from '~/shared/hooks/use-date';
 import { useNavigation } from '~/shared/hooks/use-navigation';
 import { useTranslate } from '~/shared/hooks/use-translate';
