@@ -48,11 +48,13 @@ export const CardWrapper = ({ cardsData, height }: CardWrapperProps) => {
           </View>
         ))}
       </PagerView>
-      <View style={styles.dots}>
-        {definedCardsData?.map((_, index) => (
-          <View style={[styles.dot, activePageIndex === index && styles.activeDot]} key={index} />
-        ))}
-      </View>
+      {definedCardsData.length > 1 && (
+        <View style={styles.dots}>
+          {definedCardsData.map((_, index) => (
+            <View style={[styles.dot, activePageIndex === index && styles.activeDot]} key={index} />
+          ))}
+        </View>
+      )}
     </View>
   );
 };
