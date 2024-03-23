@@ -6,7 +6,7 @@ import { MatchDate } from './match-date';
 
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useNavigation } from '~/shared/hooks/use-navigation';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';

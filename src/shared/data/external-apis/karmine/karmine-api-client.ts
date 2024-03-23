@@ -38,21 +38,6 @@ export class KarmineApiClient {
     return data;
   };
 
-  public async getEvents() {
-    const events = await this.fetchData('/events', karmineApiSchemas.getEvents);
-
-    return events;
-  }
-
-  public async getEventsResults() {
-    const eventsResults = await this.fetchData(
-      '/events_results',
-      karmineApiSchemas.getEventsResults
-    );
-
-    return eventsResults;
-  }
-
   public async getPlayers() {
     const players = await this.fetchData('/players', karmineApiSchemas.getPlayers);
 

@@ -12,7 +12,7 @@ import { useAnonymousKcPlayerImage } from '../hooks/use-anonymous-kc-player-imag
 
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';

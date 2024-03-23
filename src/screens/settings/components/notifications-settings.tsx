@@ -4,7 +4,7 @@ import { View, FlatList, StyleSheet, Pressable } from 'react-native';
 import { useGameLogoImage } from '../hooks/use-game-logo-image';
 import { useGames } from '../hooks/use-games';
 
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { Settings } from '~/shared/types/Settings';

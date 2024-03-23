@@ -4,7 +4,7 @@ import { useEffect, useMemo } from 'react';
 
 import { getComparableDay } from '../utils/get-comparable-day';
 
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { IsoDate } from '~/shared/types/IsoDate';
 
 export const daysAtom = atom<string[]>([]);

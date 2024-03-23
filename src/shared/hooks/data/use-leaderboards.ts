@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react';
 
 import { useDataFetcher } from './use-data-fetcher';
 
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { durationUtils } from '~/shared/utils/duration';
 
 const leaderboardsAtom = atom<CoreData.Leaderboards>({});

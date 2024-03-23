@@ -1,25 +1,26 @@
 import { atom, useAtomValue } from 'jotai';
 import { selectAtom } from 'jotai/utils';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
-import { useDataFetcher } from './use-data-fetcher';
-import { groupedMatchesAtom, useAddMatches } from './use-matches';
-
-import { CoreData } from '~/shared/data/core/types';
-import { durationUtils } from '~/shared/utils/duration';
+import {
+  matchesAtom,
+  useMatches,
+} from '~/lib/karmine-corp-api/adapters/react-native-hook/use-matches';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 const liveMatchesAtom = atom((get) => {
-  const groupedMatches = get(groupedMatchesAtom);
+  const matches = get(matchesAtom);
 
-  const liveMatches = Object.values(groupedMatches)
-    .map((matches) => matches.filter((match) => match.status === 'live'))
-    .flat()
+  const liveMatches = Object.values(matches)
+    .flatMap((matches) => matches.filter((match) => match.status === 'live'))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return liveMatches;
 });
 
 export const useLiveMatches = () => {
+  useMatches(); // Ensure the matches are being fetched.
+
   return useAtomValue(
     selectAtom(
       liveMatchesAtom,
@@ -32,38 +33,4 @@ export const useLiveMatches = () => {
       }, [])
     )
   );
-};
-
-export const useFetchLiveMatches = () => {
-  const dataFetcher = useDataFetcher({
-    baseQueryKey: 'live-matches',
-    cacheTime: durationUtils.toMs.fromMinutes(1),
-    // The live matches are very likely to change, so this query will be refetched every minute.
-  });
-
-  const addMatches = useAddMatches();
-
-  const fetchLiveMatches = useCallback(
-    async ({ interval }: { interval?: number } = {}) => {
-      await dataFetcher.getSchedule({
-        filters: { status: ['live'] },
-        onResult: addMatches,
-      });
-
-      if (interval !== undefined) {
-        setTimeout(() => fetchLiveMatches({ interval }), interval);
-      }
-    },
-    [dataFetcher, addMatches]
-  );
-
-  return fetchLiveMatches;
-};
-
-export const useInitLiveMatches = () => {
-  const fetchLiveMatches = useFetchLiveMatches();
-
-  useEffect(() => {
-    fetchLiveMatches({ interval: durationUtils.toMs.fromMinutes(1) });
-  }, [fetchLiveMatches]);
 };

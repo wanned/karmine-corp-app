@@ -56,16 +56,6 @@ export class LolEsportApiClient {
     return data;
   };
 
-  public async getMatchById(matchId: string) {
-    const { data } = await this.fetchData(
-      `${this.LOL_ESPORT_API_URL}/getEventDetails`,
-      { id: matchId },
-      lolEsportApiSchemas.getMatchById
-    );
-
-    return data.event.match;
-  }
-
   public async getAllTeams() {
     const { data } = await this.fetchData(
       `${this.LOL_ESPORT_API_URL}/getTeams`,
@@ -74,39 +64,6 @@ export class LolEsportApiClient {
     );
 
     return data.teams;
-  }
-
-  public async getScheduleByLeagueIds(
-    leagueIds: string[],
-    { pageToken }: { pageToken?: string } = {}
-  ) {
-    const { data } = await this.fetchData(
-      `${this.LOL_ESPORT_API_URL}/getSchedule`,
-      { leagueId: leagueIds.join(','), pageToken },
-      lolEsportApiSchemas.getScheduleByLeagueIds
-    );
-
-    return data.schedule;
-  }
-
-  public async getGameWindow({ gameId, startingTime }: { gameId: string; startingTime?: Date }) {
-    const data = await this.fetchData(
-      `${this.LOL_FEED_API_URL}/window/${gameId}`,
-      { startingTime: startingTime?.toISOString() },
-      lolEsportApiSchemas.getGameWindow
-    );
-
-    return data;
-  }
-
-  public async getAllVersions() {
-    const versions = await this.fetchData(
-      `${this.LOL_DATA_DRAGON_API_URL}/api/versions.json`,
-      {},
-      lolEsportApiSchemas.getAllVersions
-    );
-
-    return versions;
   }
 
   public async getTournamentsForLeague(...leagueIds: string[]) {

@@ -5,7 +5,7 @@ import { FlatList, StyleSheet, useWindowDimensions } from 'react-native';
 import { DayButton, dayButtonConstants } from './day-button';
 import { daysAtom, selectedIndexWithNoMatchAtom } from '../hooks/use-calendar';
 
-import { useGroupedMatches } from '~/shared/hooks/data/use-matches';
+import { useMatches } from '~/shared/hooks/data/use-matches';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
@@ -16,7 +16,7 @@ export const DayList = React.memo(() => {
 
   const styles = useStyles(getStyles);
 
-  const groupedMatches = useGroupedMatches();
+  const groupedMatches = useMatches();
 
   const selectedIndex = useAtomValue(selectedIndexWithNoMatchAtom);
   const days = useAtomValue(daysAtom);

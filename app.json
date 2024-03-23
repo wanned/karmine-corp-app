@@ -26,7 +26,8 @@
       "package": "plus.karmine.karmineplus"
     },
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      "expo-font"
     ],
     "ios": {
       "bundleIdentifier": "plus.karmine.karmineplus"

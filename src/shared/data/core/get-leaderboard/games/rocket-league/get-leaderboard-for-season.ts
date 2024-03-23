@@ -1,7 +1,8 @@
 import parseHtml from 'node-html-parser';
 
 import { DataFetcher } from '../../../data-fetcher';
-import { CoreData } from '../../../types';
+
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export async function getLeaderboardForSeason(
   { apis, onResult }: DataFetcher.GetLeaderboardParams,
