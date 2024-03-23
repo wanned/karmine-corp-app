@@ -20,14 +20,13 @@ type GroupedMatches = {
 };
 
 export const matchesAtom = atom<GroupedMatches>({});
-const matchesFetchingStatusAtom = atom<'idle' | 'loading' | 'initialized' | 'error'>('idle');
+let matchesFetchingStatus: 'idle' | 'loading' | 'initialized' | 'error' = 'idle';
 
 export const useMatches = () => {
   const [matches, setMatches] = useAtom(matchesAtom);
-  const [matchesFetchingStatus, setMatchesFetchingStatus] = useAtom(matchesFetchingStatusAtom);
 
   const addMatches = useCallback((matches: CoreData.Match[]) => {
-    setMatchesFetchingStatus('initialized');
+    matchesFetchingStatus = 'initialized';
     setMatches((prev) => {
       const next = { ...prev };
 
@@ -60,7 +59,8 @@ export const useMatches = () => {
     if (matchesFetchingStatus !== 'idle') {
       return;
     }
-    setMatchesFetchingStatus('loading');
+    matchesFetchingStatus = 'loading';
+
     Effect.runPromise(
       Effect.provide(
         Effect.Do.pipe(
@@ -84,9 +84,9 @@ export const useMatches = () => {
       )
     ).catch((error) => {
       console.error(error);
-      setMatchesFetchingStatus('error');
+      matchesFetchingStatus = 'error';
     });
-  }, [addMatches, matchesFetchingStatus, setMatchesFetchingStatus]);
+  }, [addMatches, matchesFetchingStatus, matchesFetchingStatus]);
 
   return {
     matches,

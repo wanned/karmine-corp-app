@@ -48,9 +48,7 @@ const getLolMatchesInLeague = (leagueId: string) =>
   ).pipe(
     Stream.flatMap((matches) => Stream.fromIterable(matches)),
     Stream.filter(isKarmineMatch),
-    Stream.flatMap((match) => Stream.fromEffect(getCoreMatch(match)), {
-      concurrency: 10,
-    })
+    Stream.flatMap((match) => Stream.fromEffect(getCoreMatch(match)))
   );
 
 const isKarmineMatch = (
@@ -357,12 +355,16 @@ const getChampionImageUrl = (championId: string) =>
     )
   );
 
+let cachedAllPlayers: LeagueOfLegendsApi.GetTeams['data']['teams'][number]['players'] | undefined;
 const getAllPlayers = () =>
-  Effect.Do.pipe(
-    Effect.flatMap(() => LeagueOfLegendsApiService),
-    Effect.flatMap((leagueOfLegendsApiService) => leagueOfLegendsApiService.getTeams()),
-    Effect.map((teams) => teams.data.teams.flatMap((team) => team.players))
-  );
+  cachedAllPlayers !== undefined ?
+    Effect.succeed(cachedAllPlayers) :
+    Effect.Do.pipe(
+      Effect.flatMap(() => LeagueOfLegendsApiService),
+      Effect.flatMap((leagueOfLegendsApiService) => leagueOfLegendsApiService.getTeams()),
+      Effect.map((teams) => teams.data.teams.flatMap((team) => team.players)),
+      Effect.tap((players) => cachedAllPlayers = players),
+    );
 
 const getLastGameWindow = (gameId: string, eventStartDate: Date) =>
   Effect.Do.pipe(

@@ -1,4 +1,4 @@
-import { Chunk, Effect, Option, Stream } from 'effect';
+import { Chunk, Effect, Option, Schedule, Stream } from 'effect';
 
 import { CoreData } from '../../types/core-data';
 import { getOtherSchedule } from '../get-other-schedule/get-other-schedule';
@@ -41,6 +41,7 @@ export const getRocketLeagueSchedule = () => {
       Stream.runCollect,
       Stream.flatMap((listedMatches) =>
         getOtherSchedule().pipe(
+          Stream.schedule(Schedule.spaced(1)), // NOTE: This is required to slow down the JS thread and prevent it to drop to 0 FPS
           Stream.filter(
             (unlistedMatch) =>
               unlistedMatch.matchDetails.competitionName === CoreData.CompetitionName.RocketLeague &&
