@@ -3,10 +3,10 @@ import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { Buttons } from '~/shared/components/buttons';
 import { Typographies } from '~/shared/components/typographies';
 import { useReplay } from '~/shared/hooks/use-replay';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';
@@ -56,7 +56,7 @@ const LolGame = ({
       game: competitionName,
       ...(gameNumbers > 1 ? { gameNumber: number } : {}),
     });
-  }, [replayVideo, openReplayVideo, searchReplay]);
+  }, [date, teams, competitionName, gameNumbers, searchReplay]);
 
   const crown = (
     <Iconify icon="solar:crown-bold" size={16} color={styles.crown.color} style={styles.crown} />

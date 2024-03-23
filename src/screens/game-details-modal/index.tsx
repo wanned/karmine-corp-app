@@ -10,11 +10,11 @@ import { RlGames } from './components/rl-games';
 import { TeamScore } from './components/team-score';
 import { useGameBackgroundImage } from '../home/hooks/use-game-background-image';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { Buttons } from '~/shared/components/buttons';
 import { Section } from '~/shared/components/section/section';
 import { Typographies } from '~/shared/components/typographies';
 import { useReplay } from '~/shared/hooks/use-replay';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';
@@ -195,7 +195,7 @@ function GameDetailsReplayButton({ match }: { match: CoreData.Match }) {
       teams: match.teams,
       game: match.matchDetails.competitionName,
     });
-  }, [replayVideo, openReplayVideo, searchReplay]);
+  }, [match, searchReplay]);
 
   if (
     match.matchDetails.competitionName === CoreData.CompetitionName.LeagueOfLegendsLFL ||
