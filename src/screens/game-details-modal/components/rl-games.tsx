@@ -1,7 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
-import { Buttons } from '~/shared/components/buttons';
 import { Typographies } from '~/shared/components/typographies';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useStyles } from '~/shared/hooks/use-styles';
@@ -77,14 +76,12 @@ const RlGame = ({ number, teams }: RlGameProps) => {
           label={translate('gameDetails.totalText')}
         />
       </View>
-      <Buttons.Text text={translate('gameDetails.watchReplayText')} onPress={() => {}} />
     </View>
   );
 };
 
 export const RlGames = ({ matchDetails }: RlGamesProps) => {
   const styles = useStyles(getStyles);
-
   return (
     <View style={styles.gamesContainer}>
       {matchDetails.games.length > 0 &&

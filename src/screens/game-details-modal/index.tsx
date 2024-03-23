@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { LogBox, View } from 'react-native';
 
 import { LolGames } from './components/lol-games';
@@ -10,10 +10,11 @@ import { RlGames } from './components/rl-games';
 import { TeamScore } from './components/team-score';
 import { useGameBackgroundImage } from '../home/hooks/use-game-background-image';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { Buttons } from '~/shared/components/buttons';
 import { Section } from '~/shared/components/section/section';
 import { Typographies } from '~/shared/components/typographies';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
+import { useReplay } from '~/shared/hooks/use-replay';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';
@@ -56,6 +57,7 @@ export const GameDetailsModal = React.memo(
             />
           )}
           {match.status === 'live' && <GameDetailsStreamButton match={match} />}
+          <GameDetailsReplayButton match={match} />
           {gameDetails === null && gamePlayers === null ?
             <View style={styles.noGameDetails}>
               <Typographies.Body>{translate('gameDetails.noGameDetails')}</Typographies.Body>
@@ -178,6 +180,41 @@ function GameDetailsStreamButton({ match }: { match: CoreData.Match }) {
     <View style={styles.buttonsContainer}>
       <Buttons.Primary text={translate('gameDetails.watchStreamButtonText')} onPress={() => {}} />
       <Buttons.Secondary text={translate('gameDetails.shareStreamButtonText')} onPress={() => {}} />
+    </View>
+  );
+}
+
+function GameDetailsReplayButton({ match }: { match: CoreData.Match }) {
+  const styles = useStyles(getStyles);
+  const translate = useTranslate();
+
+  const { replayVideo, openReplayVideo, searchReplay } = useReplay();
+  useEffect(() => {
+    searchReplay({
+      date: new Date(match.date),
+      teams: match.teams,
+      game: match.matchDetails.competitionName,
+    });
+  }, [match, searchReplay]);
+
+  if (
+    match.matchDetails.competitionName === CoreData.CompetitionName.LeagueOfLegendsLFL ||
+    match.matchDetails.competitionName === CoreData.CompetitionName.LeagueOfLegendsLEC
+  ) {
+    return null;
+  }
+
+  if (match.status !== 'finished') {
+    return null;
+  }
+
+  if (replayVideo === undefined) {
+    return null;
+  }
+
+  return (
+    <View style={styles.buttonsContainer}>
+      <Buttons.Primary text={translate('gameDetails.watchReplayText')} onPress={openReplayVideo} />
     </View>
   );
 }

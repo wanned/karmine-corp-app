@@ -1,10 +1,12 @@
 import { Image } from 'expo-image';
+import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { Buttons } from '~/shared/components/buttons';
 import { Typographies } from '~/shared/components/typographies';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
+import { useReplay } from '~/shared/hooks/use-replay';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';
@@ -14,9 +16,22 @@ interface LolGamesProps extends CoreData.LeagueOfLegendsMatch {}
 
 interface LolGameProps extends CoreData.LeagueOfLegendsGame {
   number: number;
+  teams: CoreData.Match['teams'];
+  date: Date;
+  gameNumbers: number;
+  competitionName: CoreData.CompetitionName;
 }
 
-const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
+const LolGame = ({
+  number,
+  draft,
+  duration,
+  score,
+  teams,
+  gameNumbers,
+  competitionName,
+  date,
+}: LolGameProps) => {
   const styles = useStyles(getStyles);
 
   const theme = useTheme();
@@ -32,6 +47,16 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
 
     return `${paddedMinutes}:${paddedSeconds}`;
   }
+
+  const { replayVideo, openReplayVideo, searchReplay } = useReplay();
+  useEffect(() => {
+    searchReplay({
+      date,
+      teams,
+      game: competitionName,
+      ...(gameNumbers > 1 ? { gameNumber: number } : {}),
+    });
+  }, [date, teams, competitionName, gameNumbers, searchReplay]);
 
   const crown = (
     <Iconify icon="solar:crown-bold" size={16} color={styles.crown.color} style={styles.crown} />
@@ -77,19 +102,28 @@ const LolGame = ({ number, draft, duration, score }: LolGameProps) => {
           {score.away > score.home ? crown : null}
         </View>
       </View>
-      <Buttons.Text text={translate('gameDetails.watchReplayText')} onPress={() => {}} />
+      {replayVideo !== undefined && (
+        <Buttons.Text text={translate('gameDetails.watchReplayText')} onPress={openReplayVideo} />
+      )}
     </View>
   );
 };
 
-export const LolGames = ({ matchDetails }: LolGamesProps) => {
+export const LolGames = ({ matchDetails, date, teams }: LolGamesProps) => {
   const styles = useStyles(getStyles);
-
   return (
     <View style={styles.gamesContainer}>
       {matchDetails.games.length > 0 &&
         matchDetails.games.map((game, index) => (
-          <LolGame number={index + 1} key={index} {...game} />
+          <LolGame
+            number={index + 1}
+            key={index}
+            {...game}
+            teams={teams}
+            competitionName={matchDetails.competitionName}
+            date={new Date(date)}
+            gameNumbers={matchDetails.games.length}
+          />
         ))}
     </View>
   );
