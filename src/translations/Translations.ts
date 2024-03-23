@@ -1,4 +1,4 @@
-import { CoreData } from '~/shared/data/core/types';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export type Language = 'en' | 'es' | 'fr';
 
@@ -14,6 +14,9 @@ export type Translations = Record<
       views: string;
       likes: string;
       noMatches: string;
+      tomorrow: string;
+      today: string;
+      yesterday: string;
     };
     calendar: {
       screenName: string;

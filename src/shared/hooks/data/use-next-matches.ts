@@ -1,25 +1,26 @@
-import { useQueryClient } from '@tanstack/react-query';
-import * as datefns from 'date-fns';
 import { atom, useAtomValue } from 'jotai';
 import { selectAtom } from 'jotai/utils';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
-import { useDataFetcher } from './use-data-fetcher';
-import { groupedMatchesAtom, useAddMatches } from './use-matches';
-
-import { CoreData } from '~/shared/data/core/types';
+import {
+  matchesAtom,
+  useMatches,
+} from '~/lib/karmine-corp-api/adapters/react-native-hook/use-matches';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 const nextMatchesAtom = atom((get) => {
-  const groupedMatches = get(groupedMatchesAtom);
+  const matches = get(matchesAtom);
 
-  const nextMatches = Object.values(groupedMatches)
-    .map((matches) => matches.filter((match) => match.status === 'upcoming'))
-    .flat()
-    .sort((a, b) => a.date.getTime() - b.date.getTime());
+  const nextMatches = Object.values(matches)
+    .flatMap((matches) => matches.filter((match) => match.status === 'upcoming'))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return nextMatches;
 });
+
 export const useNextMatches = (n?: number) => {
+  useMatches(); // Ensure the matches are being fetched.
+
   return useAtomValue(
     selectAtom(
       nextMatchesAtom,
@@ -37,35 +38,4 @@ export const useNextMatches = (n?: number) => {
       )
     )
   );
-};
-
-export const useInitNextMatches = () => {
-  const dataFetcher = useDataFetcher();
-  const queryClient = useQueryClient();
-
-  const addMatches = useAddMatches();
-
-  useEffect(() => {
-    dataFetcher.getSchedule({
-      filters: { status: ['upcoming'] },
-      batches: [
-        // Priority 1: next 24h
-        {
-          from: datefns.startOfDay(new Date()),
-          to: datefns.endOfDay(datefns.addDays(new Date(), 7)),
-        },
-        // Priority 2: next 3 days
-        {
-          from: datefns.startOfDay(datefns.addDays(new Date(), 1)),
-          to: datefns.endOfDay(datefns.addDays(new Date(), 7)),
-        },
-        // Priority 3: next 7 days
-        {
-          from: datefns.startOfDay(datefns.addDays(new Date(), 4)),
-          to: datefns.endOfDay(datefns.addDays(new Date(), 7)),
-        },
-      ],
-      onResult: addMatches,
-    });
-  }, [queryClient, dataFetcher]);
 };

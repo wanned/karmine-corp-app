@@ -1,25 +1,26 @@
-import { useQueryClient } from '@tanstack/react-query';
-import * as datefns from 'date-fns';
 import { atom, useAtomValue } from 'jotai';
 import { selectAtom } from 'jotai/utils';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
-import { useDataFetcher } from './use-data-fetcher';
-import { groupedMatchesAtom, useAddMatches } from './use-matches';
-
-import { CoreData } from '~/shared/data/core/types';
+import {
+  matchesAtom,
+  useMatches,
+} from '~/lib/karmine-corp-api/adapters/react-native-hook/use-matches';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 const matchesResultsAtom = atom((get) => {
-  const groupedMatches = get(groupedMatchesAtom);
+  const matches = get(matchesAtom);
 
-  const matchesResults = Object.values(groupedMatches)
-    .map((matches) => matches.filter((match) => match.status === 'finished'))
-    .flat()
-    .sort((a, b) => b.date.getTime() - a.date.getTime());
+  const matchesResults = Object.values(matches)
+    .flatMap((matches) => matches.filter((match) => match.status === 'finished'))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return matchesResults;
 });
+
 export const useMatchesResults = (n?: number) => {
+  useMatches(); // Ensure the matches are being fetched.
+
   return useAtomValue(
     selectAtom(
       matchesResultsAtom,
@@ -40,40 +41,4 @@ export const useMatchesResults = (n?: number) => {
       )
     )
   );
-};
-
-export const useInitMatchesResults = () => {
-  const dataFetcher = useDataFetcher();
-  const queryClient = useQueryClient();
-
-  const addMatches = useAddMatches();
-
-  useEffect(() => {
-    dataFetcher.getSchedule({
-      filters: { status: ['finished'] },
-      batches: [
-        // Priority 1: last 24h
-        {
-          from: datefns.startOfDay(datefns.subDays(new Date(), 1)),
-          to: datefns.endOfDay(new Date()),
-        },
-        // Priority 2: last 3 days
-        {
-          from: datefns.startOfDay(datefns.subDays(new Date(), 4)),
-          to: datefns.endOfDay(datefns.subDays(new Date(), 1)),
-        },
-        // Priority 3: last 7 days
-        {
-          from: datefns.startOfDay(datefns.subDays(new Date(), 7)),
-          to: datefns.endOfDay(datefns.subDays(new Date(), 4)),
-        },
-        // Priority 4: last 1 month
-        {
-          from: datefns.startOfDay(datefns.subMonths(new Date(), 1)),
-          to: datefns.endOfDay(datefns.subDays(new Date(), 7)),
-        },
-      ],
-      onResult: addMatches,
-    });
-  }, [queryClient, dataFetcher]);
 };

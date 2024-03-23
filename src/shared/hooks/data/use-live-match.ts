@@ -1,25 +1,26 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { atom, useAtomValue } from 'jotai';
 import { selectAtom } from 'jotai/utils';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
-import { useDataFetcher } from './use-data-fetcher';
-import { groupedMatchesAtom, useAddMatches } from './use-matches';
-
-import { CoreData } from '~/shared/data/core/types';
+import {
+  matchesAtom,
+  useMatches,
+} from '~/lib/karmine-corp-api/adapters/react-native-hook/use-matches';
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 const liveMatchesAtom = atom((get) => {
-  const groupedMatches = get(groupedMatchesAtom);
+  const matches = get(matchesAtom);
 
-  const liveMatches = Object.values(groupedMatches)
-    .map((matches) => matches.filter((match) => match.status === 'live'))
-    .flat()
-    .sort((a, b) => a.date.getTime() - b.date.getTime());
+  const liveMatches = Object.values(matches)
+    .flatMap((matches) => matches.filter((match) => match.status === 'live'))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return liveMatches;
 });
 
 export const useLiveMatches = () => {
+  useMatches(); // Ensure the matches are being fetched.
+
   return useAtomValue(
     selectAtom(
       liveMatchesAtom,
@@ -32,18 +33,4 @@ export const useLiveMatches = () => {
       }, [])
     )
   );
-};
-
-export const useInitLiveMatches = () => {
-  const dataFetcher = useDataFetcher();
-  const queryClient = useQueryClient();
-
-  const addMatches = useAddMatches();
-
-  useEffect(() => {
-    dataFetcher.getSchedule({
-      filters: { status: ['live'] },
-      onResult: addMatches,
-    });
-  }, [queryClient, dataFetcher]);
 };
