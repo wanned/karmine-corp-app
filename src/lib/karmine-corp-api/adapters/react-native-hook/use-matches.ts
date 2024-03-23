@@ -101,7 +101,7 @@ const getMainLayer = () =>
     KarmineApiServiceImpl,
     StrafeApiServiceImpl,
     FetchServiceImpl,
-    createOpSqliteImpl('karmine-corp-api.db'),
+    createOpSqliteImpl('karmine-corp-api'),
     Layer.succeed(
       EnvService,
       EnvService.of({
