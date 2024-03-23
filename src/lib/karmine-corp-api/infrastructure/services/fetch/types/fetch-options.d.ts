@@ -1,8 +1,8 @@
-import type { FetchOptions as _FetchOptions } from 'ofetch';
 import { ResponseType } from './response-type';
 
-export interface FetchOptions<T, R extends ResponseType = 'json'>
-  extends Omit<_FetchOptions<R>, 'signal'> {
+export interface FetchOptions<T> {
+  headers?: Record<string, string>;
+  query?: Record<string, string>;
   parseResponse?: (responseText: string) => T;
   retryHeader?: string;
 }
