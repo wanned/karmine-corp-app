@@ -26,15 +26,13 @@ export const StrafeApiServiceImpl = Layer.succeed(
 
 const getStrafeUrl = ({ url }: { url: string }) =>
   Effect.Do.pipe(
-    () => EnvService,
-    Effect.flatMap((envService) => envService.getEnv()),
+    Effect.flatMap(() => Effect.serviceFunctionEffect(EnvService, (_) => _.getEnv)()),
     Effect.map((env) => `${env.STRAFE_API_URL}/${url}`)
   );
 
 const getStrafeHeaders = () =>
   Effect.Do.pipe(
-    () => EnvService,
-    Effect.flatMap((envService) => envService.getEnv()),
+    Effect.flatMap(() => Effect.serviceFunctionEffect(EnvService, (_) => _.getEnv)()),
     Effect.map((env) => ({
       Authorization: `Bearer ${env.STRAFE_API_KEY}`,
     }))
@@ -42,35 +40,33 @@ const getStrafeHeaders = () =>
 
 const fetchStrafe = <S extends z.ZodType = z.ZodAny>({ url, schema }: { url: string; schema: S }) =>
   Effect.Do.pipe(
-    Effect.bind('fetchService', () => FetchService),
     Effect.bind('url', () => getStrafeUrl({ url })),
     Effect.bind('headers', () => getStrafeHeaders()),
-    Effect.flatMap(({ fetchService, url, headers }) =>
-      Effect.promise(
-        fetchService.fetch<z.output<S>>(url, {
-          parseResponse:
-            schema &&
-            ((responseText) => {
-              let isError = false;
-              try {
-                const response = JSON.parse(responseText);
-                if (typeof response === 'object' && response?.hasOwnProperty('error')) {
-                  isError = true;
-                }
-              } catch {}
-
-              if (isError) {
-                // destr is the default function that is used by ofetch to parse responses
-                return destr(responseText);
+    Effect.flatMap(({ url, headers }) =>
+      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+        parseResponse:
+          schema &&
+          ((responseText) => {
+            let isError = false;
+            try {
+              const response = JSON.parse(responseText);
+              if (typeof response === 'object' && response?.hasOwnProperty('error')) {
+                isError = true;
               }
+            } catch {}
 
-              return Effect.runSync(
-                parseZod(schema, JSON.parse(responseText), JSON.stringify({ url }))
-              );
-            }),
-          headers,
-          retryHeader: 'Retry-After',
-        })
-      )
-    )
+            if (isError) {
+              // destr is the default function that is used by ofetch to parse responses
+              return destr(responseText);
+            }
+
+            return Effect.runSync(
+              parseZod(schema, JSON.parse(responseText), JSON.stringify({ url }))
+            );
+          }),
+        headers,
+        retryHeader: 'Retry-After',
+      })
+    ),
+    Effect.flatMap(Effect.promise)
   );

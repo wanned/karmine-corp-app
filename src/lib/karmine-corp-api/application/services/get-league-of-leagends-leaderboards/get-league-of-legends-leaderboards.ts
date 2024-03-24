@@ -45,9 +45,10 @@ const getLeaderboardForTeam = (
       })
     ),
     Effect.flatMap((currentTournamentId) =>
-      Effect.flatMap(LeagueOfLegendsApiService, (_) =>
-        _.getStandings({ tournamentId: currentTournamentId })
-      )
+      Effect.serviceFunctionEffect(
+        LeagueOfLegendsApiService,
+        (_) => _.getStandings
+      )({ tournamentId: currentTournamentId })
     ),
     Effect.map(({ data }) => data.standings),
     Effect.map(parseLeaderboard),
@@ -60,7 +61,9 @@ const getCoreLeaderboard = ({
   leaderboard: ReturnType<typeof parseLeaderboard>;
 }) =>
   Effect.Do.pipe(
-    Effect.flatMap(() => Effect.flatMap(LeagueOfLegendsApiService, (_) => _.getTeams())),
+    Effect.flatMap(() =>
+      Effect.serviceFunctionEffect(LeagueOfLegendsApiService, (_) => _.getTeams)()
+    ),
     Effect.map(({ data: { teams } }) =>
       Object.values(leaderboard).map((leaderboardItem) => {
         const team = teams.find(({ id }) => id === leaderboardItem.teamId);
@@ -83,7 +86,10 @@ class NoTournamentFound extends Error {
 const getCurrentTournamentId = ({ leagueIds }: { leagueIds: string[] }) =>
   Effect.Do.pipe(
     Effect.flatMap(() =>
-      Effect.flatMap(LeagueOfLegendsApiService, (_) => _.getTournaments({ leagueIds }))
+      Effect.serviceFunctionEffect(
+        LeagueOfLegendsApiService,
+        (_) => _.getTournaments
+      )({ leagueIds })
     ),
     Effect.map(({ data }) => data.leagues.flatMap(({ tournaments }) => tournaments)),
     Effect.map(Chunk.fromIterable),

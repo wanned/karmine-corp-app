@@ -25,12 +25,13 @@ export const getRocketLeagueLeaderboard = () =>
 const getCurrentSeason = () =>
   Effect.Do.pipe(
     Effect.flatMap(() =>
-      Effect.flatMap(LiquipediaApiService, (_) =>
-        _.parse({
-          page: 'Rocket_League_Championship_Series',
-          game: 'rocketleague',
-        })
-      )
+      Effect.serviceFunctionEffect(
+        LiquipediaApiService,
+        (_) => _.parse
+      )({
+        page: 'Rocket_League_Championship_Series',
+        game: 'rocketleague',
+      })
     ),
     Effect.map((data) =>
       Chunk.fromIterable(data.parse.links).pipe(
@@ -58,12 +59,13 @@ const getCurrentSeason = () =>
 const getLeaderboardForSeason = (season: number) =>
   Effect.Do.pipe(
     Effect.flatMap(() =>
-      Effect.flatMap(LiquipediaApiService, (_) =>
-        _.parse({
-          page: `Rocket_League_Championship_Series/${season}/Rankings`,
-          game: 'rocketleague',
-        })
-      )
+      Effect.serviceFunctionEffect(
+        LiquipediaApiService,
+        (_) => _.parse
+      )({
+        page: `Rocket_League_Championship_Series/${season}/Rankings`,
+        game: 'rocketleague',
+      })
     ),
     Effect.map((data) => {
       const html = parseHtml(data.parse.text['*']);

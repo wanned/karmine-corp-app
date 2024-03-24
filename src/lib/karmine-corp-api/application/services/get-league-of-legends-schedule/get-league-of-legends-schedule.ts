@@ -32,9 +32,12 @@ export const getLeagueOfLegendsSchedule = () =>
 
 const getLolMatchesInLeague = (leagueId: string) =>
   Stream.unfoldEffect(undefined as LeagueOfLegendsApi.GetSchedule | undefined, (lastResponse) =>
-    LeagueOfLegendsApiService.pipe(
-      Effect.flatMap((_) =>
-        _.getSchedule({
+    Effect.Do.pipe(
+      Effect.flatMap(() =>
+        Effect.serviceFunctionEffect(
+          LeagueOfLegendsApiService,
+          (_) => _.getSchedule
+        )({
           leagueIds: [leagueId],
           pageToken: lastResponse?.data.schedule.pages.older ?? undefined,
         })
@@ -346,8 +349,9 @@ const getTeamPicks = ({
 
 const getChampionImageUrl = (championId: string) =>
   Effect.Do.pipe(
-    Effect.flatMap(() => LeagueOfLegendsApiService),
-    Effect.flatMap((leagueOfLegendsApiService) => leagueOfLegendsApiService.getVersions()),
+    Effect.flatMap(() =>
+      Effect.serviceFunctionEffect(LeagueOfLegendsApiService, (_) => _.getVersions)()
+    ),
     Effect.map((versions) => versions[0]),
     Effect.map(
       (lastGameVersion) =>
@@ -360,8 +364,9 @@ const getAllPlayers = () =>
   cachedAllPlayers !== undefined ?
     Effect.succeed(cachedAllPlayers)
   : Effect.Do.pipe(
-      Effect.flatMap(() => LeagueOfLegendsApiService),
-      Effect.flatMap((leagueOfLegendsApiService) => leagueOfLegendsApiService.getTeams()),
+      Effect.flatMap(() =>
+        Effect.serviceFunctionEffect(LeagueOfLegendsApiService, (_) => _.getTeams)()
+      ),
       Effect.map((teams) => teams.data.teams.flatMap((team) => team.players)),
       Effect.tap((players) => (cachedAllPlayers = players))
     );
@@ -393,9 +398,11 @@ const getLastGameWindow = (gameId: string, eventStartDate: Date) =>
       gameId,
       startingTime: lastWindowDate,
     })),
-    Effect.bind('leagueOfLegendsApiService', () => LeagueOfLegendsApiService),
-    Effect.flatMap(({ gameId, startingTime, leagueOfLegendsApiService }) =>
-      leagueOfLegendsApiService.getGameWindow({ gameId, startingTime })
+    Effect.flatMap(({ gameId, startingTime }) =>
+      Effect.serviceFunctionEffect(
+        LeagueOfLegendsApiService,
+        (_) => _.getGameWindow
+      )({ gameId, startingTime })
     )
   );
 

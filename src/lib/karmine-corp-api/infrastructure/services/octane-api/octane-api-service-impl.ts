@@ -1,4 +1,4 @@
-import { Effect, Layer, pipe } from 'effect';
+import { Effect, Layer } from 'effect';
 import { z } from 'zod';
 
 import { OctaneApiService } from './octane-api-service';
@@ -25,9 +25,8 @@ export const OctaneApiServiceImpl = Layer.succeed(
 );
 
 const getOctaneUrl = ({ url }: { url: string }) =>
-  pipe(
-    EnvService,
-    Effect.flatMap((envService) => envService.getEnv()),
+  Effect.Do.pipe(
+    Effect.flatMap(() => Effect.serviceFunctionEffect(EnvService, (_) => _.getEnv)()),
     Effect.map((env) => `${env.OCTANE_API_URL}/${url}`)
   );
 
@@ -41,19 +40,17 @@ const fetchOctane = <S extends z.ZodType = z.ZodAny>({
   schema?: S;
 }) =>
   Effect.Do.pipe(
-    Effect.bind('fetchService', () => FetchService),
-    Effect.bind('url', () => getOctaneUrl({ url })),
-    Effect.flatMap(({ fetchService, url }) =>
-      Effect.promise(
-        fetchService.fetch<z.output<S>>(url, {
-          query,
-          parseResponse:
-            schema &&
-            ((responseText) =>
-              Effect.runSync(
-                parseZod(schema, JSON.parse(responseText), JSON.stringify({ url, query }))
-              )),
-        })
-      )
-    )
+    Effect.flatMap(() => getOctaneUrl({ url })),
+    Effect.flatMap((url) =>
+      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+        query,
+        parseResponse:
+          schema &&
+          ((responseText) =>
+            Effect.runSync(
+              parseZod(schema, JSON.parse(responseText), JSON.stringify({ url, query }))
+            )),
+      })
+    ),
+    Effect.flatMap(Effect.promise)
   );

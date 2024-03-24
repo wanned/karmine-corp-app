@@ -67,7 +67,9 @@ export const useMatches = () => {
     Effect.runPromise(
       Effect.provide(
         Effect.Do.pipe(
-          Effect.flatMap(() => DatabaseService.pipe(Effect.flatMap((_) => _.initializeTables()))),
+          Effect.flatMap(() =>
+            Effect.serviceFunctionEffect(DatabaseService, (_) => _.initializeTables)()
+          ),
           Effect.flatMap(() =>
             getSchedule().pipe(
               Stream.groupedWithin(Infinity, 1_000),

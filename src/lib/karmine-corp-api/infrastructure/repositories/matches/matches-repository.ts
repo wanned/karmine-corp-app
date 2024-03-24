@@ -7,18 +7,15 @@ import { Exact } from '~/lib/karmine-corp-api/types/exact';
 
 export const MatchesRepository = {
   getAllMatches: () =>
-    DatabaseService.pipe(
-      Effect.flatMap((_) => _.executeReturningQuery<DatabaseSchema.Match>('SELECT * FROM matches'))
-    ),
+    Effect.serviceFunctionEffect(
+      DatabaseService,
+      (_) => _.executeReturningQuery<DatabaseSchema.Match>
+    )('SELECT * FROM matches'),
   upsertMatches: <T>(matches: Exact<T, DatabaseSchema.Match>[]) =>
-    DatabaseService.pipe(
-      Effect.flatMap((_) =>
-        _.executeQuery(
-          `INSERT OR REPLACE INTO matches (id, data)
-           VALUES ${Array(matches.length).fill('(?, ?)').join(', ')}
-          `,
-          matches.flatMap((match) => [match.id, match.data])
-        )
-      )
+    Effect.serviceFunctionEffect(DatabaseService, (_) => _.executeQuery)(
+      `INSERT OR REPLACE INTO matches (id, data)
+       VALUES ${Array(matches.length).fill('(?, ?)').join(', ')}
+      `,
+      matches.flatMap((match) => [match.id, match.data])
     ),
 };

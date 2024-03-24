@@ -23,8 +23,7 @@ export const YoutubeApiServiceImpl = Layer.succeed(
 
 const getYoutubeUrl = ({ url }: { url: string }) =>
   Effect.Do.pipe(
-    () => EnvService,
-    Effect.flatMap((envService) => envService.getEnv()),
+    Effect.flatMap(() => Effect.serviceFunctionEffect(EnvService, (_) => _.getEnv)()),
     Effect.map((env) => `${env.YOUTUBE_API_URL}/${url}`)
   );
 
@@ -38,19 +37,17 @@ const fetchYoutube = <S extends z.ZodType = z.ZodAny>({
   schema: S;
 }) =>
   Effect.Do.pipe(
-    Effect.bind('fetchService', () => FetchService),
-    Effect.bind('url', () => getYoutubeUrl({ url })),
-    Effect.flatMap(({ fetchService, url }) =>
-      Effect.promise(
-        fetchService.fetch<z.output<S>>(url, {
-          query,
-          parseResponse:
-            schema &&
-            ((responseText) =>
-              Effect.runSync(
-                parseZod(schema, JSON.parse(responseText), JSON.stringify({ url, query }))
-              )),
-        })
-      )
-    )
+    Effect.flatMap(() => getYoutubeUrl({ url })),
+    Effect.flatMap((url) =>
+      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+        query,
+        parseResponse:
+          schema &&
+          ((responseText) =>
+            Effect.runSync(
+              parseZod(schema, JSON.parse(responseText), JSON.stringify({ url, query }))
+            )),
+      })
+    ),
+    Effect.flatMap(Effect.promise)
   );

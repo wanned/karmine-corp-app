@@ -6,8 +6,12 @@ import { KarmineApiService } from '~/lib/karmine-corp-api/infrastructure/service
 
 export const getTeams = () =>
   Effect.Do.pipe(
-    Effect.bind('players', () => Effect.flatMap(KarmineApiService, (_) => _.getPlayers())),
-    Effect.bind('streamers', () => Effect.flatMap(KarmineApiService, (_) => _.getTwitch())),
+    Effect.bind('players', () =>
+      Effect.serviceFunctionEffect(KarmineApiService, (_) => _.getPlayers)()
+    ),
+    Effect.bind('streamers', () =>
+      Effect.serviceFunctionEffect(KarmineApiService, (_) => _.getTwitch)()
+    ),
     Effect.map(({ players, streamers }) =>
       players.reduce<CoreData.KarminePlayers>((groupedPlayers, player) => {
         const game = player.category_game as CoreData.CompetitionName;

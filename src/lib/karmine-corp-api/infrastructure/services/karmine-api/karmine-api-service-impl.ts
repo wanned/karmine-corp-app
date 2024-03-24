@@ -40,8 +40,7 @@ export const KarmineApiServiceImpl = Layer.succeed(
 
 const getKarmineUrl = ({ url }: { url: string }) =>
   Effect.Do.pipe(
-    () => EnvService,
-    Effect.flatMap((envService) => envService.getEnv()),
+    Effect.flatMap(() => Effect.serviceFunctionEffect(EnvService, (_) => _.getEnv)()),
     Effect.map((env) => `${env.KARMINE_API_URL}/${url}`)
   );
 
@@ -53,16 +52,14 @@ const fetchKarmine = <S extends z.ZodType = z.ZodAny>({
   schema: S;
 }) =>
   Effect.Do.pipe(
-    Effect.bind('fetchService', () => FetchService),
-    Effect.bind('url', () => getKarmineUrl({ url })),
-    Effect.flatMap(({ fetchService, url }) =>
-      Effect.promise(
-        fetchService.fetch<z.output<S>>(url, {
-          parseResponse:
-            schema &&
-            ((responseText) =>
-              Effect.runSync(parseZod(schema, JSON.parse(responseText), JSON.stringify({ url })))),
-        })
-      )
-    )
+    Effect.flatMap(() => getKarmineUrl({ url })),
+    Effect.flatMap((url) =>
+      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+        parseResponse:
+          schema &&
+          ((responseText) =>
+            Effect.runSync(parseZod(schema, JSON.parse(responseText), JSON.stringify({ url })))),
+      })
+    ),
+    Effect.flatMap((_) => Effect.promise(_))
   );

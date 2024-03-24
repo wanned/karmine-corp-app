@@ -13,9 +13,12 @@ export const getRocketLeagueSchedule = () => {
   const matchesStream = Stream.unfoldEffect(
     undefined as OctaneApi.GetMatches | undefined,
     (lastResponse) =>
-      OctaneApiService.pipe(
-        Effect.flatMap((_) =>
-          _.getMatches({
+      Effect.Do.pipe(
+        Effect.flatMap(() =>
+          Effect.serviceFunctionEffect(
+            OctaneApiService,
+            (_) => _.getMatches
+          )({
             teamId: KARMINE_CORP_OCTANE_TEAM_ID,
             page: lastResponse ? lastResponse.page + 1 : undefined,
           })
@@ -96,9 +99,8 @@ const getCoreMatch = (rlApiMatch: OctaneApiMatch) =>
 
 const getGamesFromMatch = (match: OctaneApiMatch) =>
   Effect.Do.pipe(
-    Effect.bind('octaneApiService', () => OctaneApiService),
-    Effect.flatMap(({ octaneApiService }) =>
-      octaneApiService.getMatchGames({ matchId: match._id })
+    Effect.flatMap(() =>
+      Effect.serviceFunctionEffect(OctaneApiService, (_) => _.getMatchGames)({ matchId: match._id })
     ),
     Effect.map((response) =>
       response.games.map((game) =>
