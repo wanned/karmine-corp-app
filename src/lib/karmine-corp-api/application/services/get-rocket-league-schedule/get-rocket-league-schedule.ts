@@ -44,7 +44,8 @@ export const getRocketLeagueSchedule = () => {
           Stream.schedule(Schedule.spaced(1)), // NOTE: This is required to slow down the JS thread and prevent it to drop to 0 FPS
           Stream.filter(
             (unlistedMatch) =>
-              unlistedMatch.matchDetails.competitionName === CoreData.CompetitionName.RocketLeague &&
+              unlistedMatch.matchDetails.competitionName ===
+                CoreData.CompetitionName.RocketLeague &&
               !Chunk.some(listedMatches, (listedMatch) =>
                 isSameDay(new Date(listedMatch.date), new Date(unlistedMatch.date))
               )

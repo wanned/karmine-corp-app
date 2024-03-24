@@ -1,3 +1,4 @@
+import destr from 'destr';
 import { Effect, Layer } from 'effect';
 import { z } from 'zod';
 
@@ -6,7 +7,6 @@ import { leagueOfLegendsApiSchemas } from './schemas/league-of-legends-api-schem
 import { parseZod } from '../../utils/parse-zod/parse-zod';
 import { EnvService } from '../env/env-service';
 import { FetchService } from '../fetch/fetch-service';
-import destr from 'destr';
 
 export const LeagueOfLegendsApiServiceImpl = Layer.succeed(
   LeagueOfLegendsApiService,
@@ -111,7 +111,11 @@ const fetchLol = <S extends z.ZodType = z.ZodAny>({
             schema &&
             ((responseText) =>
               Effect.runSync(
-                parseZod(schema, destr(responseText) || undefined, JSON.stringify({ url, type, query }))
+                parseZod(
+                  schema,
+                  destr(responseText) || undefined,
+                  JSON.stringify({ url, type, query })
+                )
               )),
           headers,
         })

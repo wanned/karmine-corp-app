@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { Leaderboard } from './leaderboard';
 import { Players } from './players';
 
-import { Typographies } from '~/shared/components/typographies';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
+import { Typographies } from '~/shared/components/typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';

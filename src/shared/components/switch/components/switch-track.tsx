@@ -17,9 +17,9 @@ export const SwitchTrack = ({
   const trackAnimatedStyle = useAnimatedStyle(() => ({
     opacity: thumbAnimatedValue.value === 0 ? 0.5 : 1,
     backgroundColor:
-      thumbAnimatedValue.value === 0
-        ? theme.colors.subtleForeground
-        : theme.colors.subtleBackground,
+      thumbAnimatedValue.value === 0 ?
+        theme.colors.subtleForeground
+      : theme.colors.subtleBackground,
   }));
 
   return <Animated.View style={[styles.track, trackAnimatedStyle]} />;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
 import { Typographies } from '~/shared/components/typographies';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';

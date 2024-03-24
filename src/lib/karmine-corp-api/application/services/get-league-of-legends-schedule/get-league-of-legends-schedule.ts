@@ -358,12 +358,12 @@ const getChampionImageUrl = (championId: string) =>
 let cachedAllPlayers: LeagueOfLegendsApi.GetTeams['data']['teams'][number]['players'] | undefined;
 const getAllPlayers = () =>
   cachedAllPlayers !== undefined ?
-    Effect.succeed(cachedAllPlayers) :
-    Effect.Do.pipe(
+    Effect.succeed(cachedAllPlayers)
+  : Effect.Do.pipe(
       Effect.flatMap(() => LeagueOfLegendsApiService),
       Effect.flatMap((leagueOfLegendsApiService) => leagueOfLegendsApiService.getTeams()),
       Effect.map((teams) => teams.data.teams.flatMap((team) => team.players)),
-      Effect.tap((players) => cachedAllPlayers = players),
+      Effect.tap((players) => (cachedAllPlayers = players))
     );
 
 const getLastGameWindow = (gameId: string, eventStartDate: Date) =>

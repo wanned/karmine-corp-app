@@ -1,13 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MutableRefObject, useCallback, useEffect, useState } from 'react';
-import {
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  ScrollView,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { NativeScrollEvent, NativeSyntheticEvent, TouchableOpacity, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

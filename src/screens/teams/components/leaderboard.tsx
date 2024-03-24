@@ -2,8 +2,8 @@ import { Image } from 'expo-image';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Typographies } from '~/shared/components/typographies';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
+import { Typographies } from '~/shared/components/typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
