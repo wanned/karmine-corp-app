@@ -24,10 +24,7 @@ const getLiquipediaParseUrl = ({ game }: { game: string }) =>
     () => EnvService,
     Effect.flatMap((envService) => envService.getEnv()),
     Effect.map((env) =>
-      `${env.LIQUIPEDIA_PARSE_API_URL}/api.php`.replace(
-        env.LIQUIPEDIA_PARSE_URL_GAME_REPLACER,
-        game
-      )
+      env.LIQUIPEDIA_PARSE_API_URL.replace(env.LIQUIPEDIA_PARSE_URL_GAME_REPLACER, game)
     )
   );
 
