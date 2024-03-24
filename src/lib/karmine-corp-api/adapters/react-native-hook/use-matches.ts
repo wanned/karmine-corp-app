@@ -1,5 +1,5 @@
 import { Chunk, Effect, Layer, Stream } from 'effect';
-import { atom, useAtom } from 'jotai';
+import { atom, useAtom, useStore } from 'jotai';
 import { useCallback, useEffect } from 'react';
 
 import { CoreData } from '../../application/types/core-data';
@@ -20,13 +20,16 @@ type GroupedMatches = {
 };
 
 export const matchesAtom = atom<GroupedMatches>({});
-let matchesFetchingStatus: 'idle' | 'loading' | 'initialized' | 'error' = 'idle';
+const matchesFetchingStatusAtom = atom<'idle' | 'loading' | 'initialized' | 'error'>('idle');
 
 export const useMatches = () => {
   const [matches, setMatches] = useAtom(matchesAtom);
+  const [matchesFetchingStatus] = useAtom(matchesFetchingStatusAtom);
+
+  const store = useStore();
 
   const addMatches = useCallback((matches: CoreData.Match[]) => {
-    matchesFetchingStatus = 'initialized';
+    store.set(matchesFetchingStatusAtom, 'initialized');
     setMatches((prev) => {
       const next = { ...prev };
 
@@ -56,10 +59,10 @@ export const useMatches = () => {
   }, []);
 
   useEffect(() => {
-    if (matchesFetchingStatus !== 'idle') {
+    if (store.get(matchesFetchingStatusAtom) !== 'idle') {
       return;
     }
-    matchesFetchingStatus = 'loading';
+    store.set(matchesFetchingStatusAtom, 'loading');
 
     Effect.runPromise(
       Effect.provide(
@@ -84,9 +87,9 @@ export const useMatches = () => {
       )
     ).catch((error) => {
       console.error(error);
-      matchesFetchingStatus = 'error';
+      store.set(matchesFetchingStatusAtom, 'error');
     });
-  }, [addMatches, matchesFetchingStatus, matchesFetchingStatus]);
+  }, [addMatches, store]);
 
   return {
     matches,
