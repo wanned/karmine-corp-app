@@ -4,8 +4,9 @@ import { Effect, Layer } from 'effect';
 import { createServer } from 'node:http';
 
 import { GetScheduleRoute } from './routes/get-schedule';
+import { GetTeamsRoute } from './routes/get-teams';
 
-const app = HttpServer.router.empty.pipe(GetScheduleRoute());
+const app = HttpServer.router.empty.pipe(GetScheduleRoute(), GetTeamsRoute());
 
 const HttpServerLive = NodeHttpServer.server.layer(createServer, {
   port: 3000,
