@@ -1,11 +1,4 @@
-import defu from 'defu';
-
-import { getLeaderboard as getLeagueOfLegendsLeaderboards } from './get-leaderboard/games/league-of-legends/get-leaderboard';
-import { getLeaderboard as getRocketLeagueLeaderboards } from './get-leaderboard/games/rocket-league/get-leaderboard';
-import { getPlayers } from './get-teams/get-players';
 import { KarmineApiClient } from '../external-apis/karmine/karmine-api-client';
-import { LolEsportApiClient } from '../external-apis/league-of-legends/lol-esport-api-client';
-import { LiquipediaApiClient } from '../external-apis/liquipedia/liquipedia-api-client';
 import { YoutubeApiClient } from '../external-apis/youtube/youtube-api-client';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
@@ -13,17 +6,10 @@ import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 export namespace DataFetcher {
   export interface Apis {
     karmine: KarmineApiClient;
-    lolEsport: LolEsportApiClient;
-    liquipedia: LiquipediaApiClient;
     youtube: YoutubeApiClient;
   }
 
   export interface GetPlayersParams {
-    apis: Apis;
-  }
-
-  export interface GetLeaderboardParams {
-    onResult: (leaderboards: CoreData.Leaderboards) => void;
     apis: Apis;
   }
 
@@ -57,27 +43,8 @@ export class DataFetcher {
   constructor({ fetch = defaultFetch }: { fetch?: DataFetcher.Fetch } = {}) {
     this.apis = {
       karmine: new KarmineApiClient({ fetch }),
-      lolEsport: new LolEsportApiClient({ fetch }),
       youtube: new YoutubeApiClient({ fetch }),
-      liquipedia: new LiquipediaApiClient({ fetch }),
     };
-  }
-
-  public async getPlayers(): Promise<CoreData.KarminePlayers> {
-    const players = await getPlayers({ apis: this.apis });
-
-    return defu(players);
-  }
-
-  public async getLeaderboard({
-    onResult = () => {},
-  }: Partial<Omit<DataFetcher.GetLeaderboardParams, 'apis'>> = {}): Promise<CoreData.Leaderboards> {
-    const leaderboards = await Promise.all([
-      getLeagueOfLegendsLeaderboards({ onResult, apis: this.apis }),
-      getRocketLeagueLeaderboards({ onResult, apis: this.apis }),
-    ]);
-
-    return defu(...leaderboards);
   }
 
   public async getGames() {
