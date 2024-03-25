@@ -1,5 +1,3 @@
-import { ResponseType } from './response-type';
-
 export interface FetchOptions<T> {
   headers?: Record<string, string>;
   query?: Record<string, string>;

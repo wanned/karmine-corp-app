@@ -1,10 +1,10 @@
 import React from 'react';
-import { ScrollView, View, VirtualizedList } from 'react-native';
+import { View, VirtualizedList } from 'react-native';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { MatchScore } from '~/shared/components/match/match-score';
 import { MatchTeam } from '~/shared/components/match/match-team';
 import { Typographies } from '~/shared/components/typographies';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useMatchesResults } from '~/shared/hooks/data/use-matches-results';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';

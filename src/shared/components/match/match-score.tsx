@@ -1,16 +1,16 @@
+import { isSameDay } from 'date-fns';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useDate } from '~/shared/hooks/use-date';
 import { useNavigation } from '~/shared/hooks/use-navigation';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { styleTokens } from '~/shared/styles/tokens';
-import { isSameDay } from 'date-fns';
 import { dayUtils } from '~/shared/utils/days';
 
 interface MatchScoreProps {

@@ -13,9 +13,12 @@ export const getRocketLeagueSchedule = () => {
   const matchesStream = Stream.unfoldEffect(
     undefined as OctaneApi.GetMatches | undefined,
     (lastResponse) =>
-      OctaneApiService.pipe(
-        Effect.flatMap((_) =>
-          _.getMatches({
+      Effect.Do.pipe(
+        Effect.flatMap(() =>
+          Effect.serviceFunctionEffect(
+            OctaneApiService,
+            (_) => _.getMatches
+          )({
             teamId: KARMINE_CORP_OCTANE_TEAM_ID,
             page: lastResponse ? lastResponse.page + 1 : undefined,
           })
@@ -44,7 +47,8 @@ export const getRocketLeagueSchedule = () => {
           Stream.schedule(Schedule.spaced(1)), // NOTE: This is required to slow down the JS thread and prevent it to drop to 0 FPS
           Stream.filter(
             (unlistedMatch) =>
-              unlistedMatch.matchDetails.competitionName === CoreData.CompetitionName.RocketLeague &&
+              unlistedMatch.matchDetails.competitionName ===
+                CoreData.CompetitionName.RocketLeague &&
               !Chunk.some(listedMatches, (listedMatch) =>
                 isSameDay(new Date(listedMatch.date), new Date(unlistedMatch.date))
               )
@@ -95,9 +99,8 @@ const getCoreMatch = (rlApiMatch: OctaneApiMatch) =>
 
 const getGamesFromMatch = (match: OctaneApiMatch) =>
   Effect.Do.pipe(
-    Effect.bind('octaneApiService', () => OctaneApiService),
-    Effect.flatMap(({ octaneApiService }) =>
-      octaneApiService.getMatchGames({ matchId: match._id })
+    Effect.flatMap(() =>
+      Effect.serviceFunctionEffect(OctaneApiService, (_) => _.getMatchGames)({ matchId: match._id })
     ),
     Effect.map((response) =>
       response.games.map((game) =>
@@ -149,7 +152,7 @@ const getTeamDetailsFromMatch = (team: OctaneApiMatch['blue'] | OctaneApiMatch['
     Effect.map(() => ({
       name: team.team.team.name,
       logoUrl:
-        team.team.team.image ?? 'https:///medias.kametotv.fr/karmine/teams_logo/NO_TEAM_RL.png',
+        team.team.team.image ?? 'https://medias.kametotv.fr/karmine/teams_logo/NO_TEAM_RL.png',
       score: {
         score: team.score,
         isWinner: team.winner,

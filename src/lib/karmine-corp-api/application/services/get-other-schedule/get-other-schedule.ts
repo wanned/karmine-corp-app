@@ -8,13 +8,13 @@ import { KarmineApiService } from '~/lib/karmine-corp-api/infrastructure/service
 export const getOtherSchedule = () => Stream.concat(getUpcomingEvents(), getFinishedEvents());
 
 const getUpcomingEvents = () =>
-  Stream.fromIterableEffect(KarmineApiService.pipe(Effect.flatMap((_) => _.getEvents()))).pipe(
-    Stream.flatMap((event) => Stream.fromEffect(karmineEventToCoreMatch(event, 'events')))
-  );
+  Stream.fromIterableEffect(
+    Effect.serviceFunctionEffect(KarmineApiService, (_) => _.getEvents)()
+  ).pipe(Stream.flatMap((event) => Stream.fromEffect(karmineEventToCoreMatch(event, 'events'))));
 
 const getFinishedEvents = () =>
   Stream.fromIterableEffect(
-    KarmineApiService.pipe(Effect.flatMap((_) => _.getEventsResults()))
+    Effect.serviceFunctionEffect(KarmineApiService, (_) => _.getEventsResults)()
   ).pipe(
     Stream.flatMap((event) => Stream.fromEffect(karmineEventToCoreMatch(event, 'eventsResults')))
   );

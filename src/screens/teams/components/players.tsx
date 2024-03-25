@@ -10,9 +10,9 @@ import {
 
 import { useAnonymousKcPlayerImage } from '../hooks/use-anonymous-kc-player-image';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { LivePill } from '~/shared/components/live-pill/live-pill';
 import { Typographies } from '~/shared/components/typographies';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
@@ -62,7 +62,7 @@ const Player = ({ name, imageUrl, streamLink, isStreaming = false }: PlayerProps
   return (
     <TouchableOpacity
       onPress={() => {
-        Linking.openURL(streamLink);
+        if (streamLink !== undefined) Linking.openURL(streamLink);
       }}>
       <View style={styles.playerContainer}>
         <View style={styles.playerTopContainer}>

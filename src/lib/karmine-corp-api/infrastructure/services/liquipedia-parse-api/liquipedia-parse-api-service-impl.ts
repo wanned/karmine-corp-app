@@ -21,13 +21,9 @@ export const LiquipediaParseApiServiceImpl = Layer.succeed(
 
 const getLiquipediaParseUrl = ({ game }: { game: string }) =>
   Effect.Do.pipe(
-    () => EnvService,
-    Effect.flatMap((envService) => envService.getEnv()),
+    Effect.flatMap(() => Effect.serviceFunctionEffect(EnvService, (_) => _.getEnv)()),
     Effect.map((env) =>
-      `${env.LIQUIPEDIA_PARSE_API_URL}/api.php`.replace(
-        env.LIQUIPEDIA_PARSE_URL_GAME_REPLACER,
-        game
-      )
+      env.LIQUIPEDIA_PARSE_API_URL.replace(env.LIQUIPEDIA_PARSE_URL_GAME_REPLACER, game)
     )
   );
 
@@ -41,21 +37,19 @@ const fetchLiquipediaParse = <S extends z.ZodType = z.ZodAny>({
   schema: S;
 }) =>
   Effect.Do.pipe(
-    Effect.bind('fetchService', () => FetchService),
-    Effect.bind('url', () => getLiquipediaParseUrl({ game })),
-    Effect.flatMap(({ fetchService, url }) =>
-      Effect.promise(
-        fetchService.fetch<z.output<S>>(url, {
-          query: {
-            action: 'parse',
-            page,
-            format: 'json',
-          },
-          parseResponse:
-            schema &&
-            ((responseText) =>
-              Effect.runSync(parseZod(schema, JSON.parse(responseText), JSON.stringify({ url })))),
-        })
-      )
-    )
+    Effect.flatMap(() => getLiquipediaParseUrl({ game })),
+    Effect.flatMap((url) =>
+      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+        query: {
+          action: 'parse',
+          page,
+          format: 'json',
+        },
+        parseResponse:
+          schema &&
+          ((responseText) =>
+            Effect.runSync(parseZod(schema, JSON.parse(responseText), JSON.stringify({ url })))),
+      })
+    ),
+    Effect.flatMap(Effect.promise)
   );

@@ -11,7 +11,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
 import { View } from 'react-native';
 
-import { useInitLeaderboards } from './shared/hooks/data/use-leaderboards';
+import { useLeaderboards } from './lib/karmine-corp-api/adapters/react-native-hook/use-leaderboards';
+import { useTeams } from './lib/karmine-corp-api/adapters/react-native-hook/use-teams';
+import { useMatches } from './shared/hooks/data/use-matches';
 import { useTheme } from './shared/hooks/use-theme';
 import RootNavigator from './shared/navigation';
 
@@ -94,7 +96,9 @@ export default function App() {
 const _App = ({ onLayoutRootView }: { onLayoutRootView: () => void }) => {
   const theme = useTheme();
 
-  useInitLeaderboards();
+  useTeams(); // Ensure teams are loaded on app start
+  useLeaderboards(); // Ensure leaderboards are loaded on app start
+  useMatches(); // Ensure matches are loaded on app start
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }} onLayout={onLayoutRootView}>

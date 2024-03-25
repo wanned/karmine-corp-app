@@ -1,3 +1,4 @@
+import destr from 'destr';
 import { Effect, Layer } from 'effect';
 import { z } from 'zod';
 
@@ -6,7 +7,6 @@ import { leagueOfLegendsApiSchemas } from './schemas/league-of-legends-api-schem
 import { parseZod } from '../../utils/parse-zod/parse-zod';
 import { EnvService } from '../env/env-service';
 import { FetchService } from '../fetch/fetch-service';
-import destr from 'destr';
 
 export const LeagueOfLegendsApiServiceImpl = Layer.succeed(
   LeagueOfLegendsApiService,
@@ -65,8 +65,7 @@ type LEAGUE_OF_LEGENDS_API_TYPE = 'esport' | 'feed' | 'ddragon';
 
 const getLeagueOfLegendsUrl = ({ url, type }: { url: string; type: LEAGUE_OF_LEGENDS_API_TYPE }) =>
   Effect.Do.pipe(
-    () => EnvService,
-    Effect.flatMap((envService) => envService.getEnv()),
+    Effect.flatMap(() => Effect.serviceFunctionEffect(EnvService, (_) => _.getEnv)()),
     Effect.map(
       (env) =>
         `${
@@ -80,7 +79,7 @@ const getLeagueOfLegendsUrl = ({ url, type }: { url: string; type: LEAGUE_OF_LEG
 const getLeagueOfLegendsHeaders = () =>
   Effect.Do.pipe(
     () => EnvService,
-    Effect.flatMap((envService) => envService.getEnv()),
+    Effect.flatMap(() => Effect.serviceFunctionEffect(EnvService, (_) => _.getEnv)()),
     Effect.map((env) => ({ 'x-api-key': env.LOL_API_KEY }))
   );
 
@@ -96,25 +95,27 @@ const fetchLol = <S extends z.ZodType = z.ZodAny>({
   schema: S;
 }) =>
   Effect.Do.pipe(
-    Effect.bind('fetchService', () => FetchService),
     Effect.bind('envService', () => EnvService),
     Effect.bind('url', () => getLeagueOfLegendsUrl({ url, type })),
     Effect.bind('headers', () => getLeagueOfLegendsHeaders()),
-    Effect.flatMap(({ fetchService, url, headers }) =>
-      Effect.promise(
-        fetchService.fetch<z.output<S>>(url, {
-          query: {
-            hl: 'en-US',
-            ...query,
-          },
-          parseResponse:
-            schema &&
-            ((responseText) =>
-              Effect.runSync(
-                parseZod(schema, destr(responseText) || undefined, JSON.stringify({ url, type, query }))
-              )),
-          headers,
-        })
-      )
-    )
+    Effect.flatMap(({ url, headers }) =>
+      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+        query: {
+          hl: 'en-US',
+          ...query,
+        },
+        parseResponse:
+          schema &&
+          ((responseText) =>
+            Effect.runSync(
+              parseZod(
+                schema,
+                destr(responseText) || undefined,
+                JSON.stringify({ url, type, query })
+              )
+            )),
+        headers,
+      })
+    ),
+    Effect.flatMap((_) => Effect.promise(_))
   );
