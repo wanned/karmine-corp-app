@@ -62,7 +62,7 @@ const Player = ({ name, imageUrl, streamLink, isStreaming = false }: PlayerProps
   return (
     <TouchableOpacity
       onPress={() => {
-        Linking.openURL(streamLink);
+        if (streamLink !== undefined) Linking.openURL(streamLink);
       }}>
       <View style={styles.playerContainer}>
         <View style={styles.playerTopContainer}>

@@ -3,8 +3,9 @@ import * as datefns from 'date-fns';
 import { useCallback, useState } from 'react';
 import { Linking } from 'react-native';
 
-import { CoreData } from '../data/core/types';
 import { searchYoutube } from '../utils/youtube-search';
+
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 interface SearchReplayProps {
   date: Date;
