@@ -70,7 +70,7 @@ const getCoreLeaderboard = ({
 
         return {
           ...leaderboardItem,
-          logoUrl: team?.image ?? '',
+          logoUrl: team?.image.replace('http:', 'https:') ?? '',
         };
       })
     )
