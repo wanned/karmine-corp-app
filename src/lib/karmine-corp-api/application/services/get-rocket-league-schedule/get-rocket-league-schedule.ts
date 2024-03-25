@@ -152,7 +152,7 @@ const getTeamDetailsFromMatch = (team: OctaneApiMatch['blue'] | OctaneApiMatch['
     Effect.map(() => ({
       name: team.team.team.name,
       logoUrl:
-        team.team.team.image ?? 'https:///medias.kametotv.fr/karmine/teams_logo/NO_TEAM_RL.png',
+        team.team.team.image ?? 'https://medias.kametotv.fr/karmine/teams_logo/NO_TEAM_RL.png',
       score: {
         score: team.score,
         isWinner: team.winner,
