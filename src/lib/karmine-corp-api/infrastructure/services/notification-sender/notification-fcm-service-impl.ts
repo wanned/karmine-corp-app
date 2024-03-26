@@ -1,5 +1,6 @@
 import { Effect, Layer } from 'effect';
 import { initializeApp, credential, messaging } from 'firebase-admin';
+import serializeJavascript from 'serialize-javascript';
 
 import { NotificationSenderService } from './notification-sender-service';
 import { EnvService } from '../env/env-service';
@@ -21,9 +22,9 @@ export const NotificationFcmServiceImpl = Layer.effect(
     ),
     Effect.map((app) =>
       NotificationSenderService.of({
-        sendNotification: (notification) => {
+        sendNotification: ({ notification }) => {
           const message: messaging.MessagingPayload = {
-            data: { data: JSON.stringify(notification) },
+            data: { data: serializeJavascript(notification) },
           };
           return Effect.promise(() => app.messaging().sendToTopic(APP_TOPIC, message));
         },

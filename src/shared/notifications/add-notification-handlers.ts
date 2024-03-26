@@ -7,7 +7,10 @@ import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export const addNotificationHandlers = () => {
   async function onMessageReceived(message: FirebaseMessagingTypes.RemoteMessage) {
-    const data = message.data as unknown as CoreData.Notifications.Notification;
+    const rawData = message.data?.data;
+    if (!rawData || typeof rawData !== 'string') return;
+    // eslint-disable-next-line no-eval -- The incoming data is trusted, as it comes from the server. It is serialized using `serialize-javascript`.
+    const data = eval(`(${rawData})`) as CoreData.Notifications.Notification;
 
     const handler = notificationHandlers[data.type];
     if (handler) {
