@@ -1,11 +1,11 @@
 import { Image } from 'expo-image';
-import React from 'react';
+import { useAtom } from 'jotai';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
 import { Typographies } from '~/shared/components/typographies';
-import { MatchScoreContext } from '~/shared/contexts/match-score-context';
-import { useSettings } from '~/shared/hooks/use-settings';
+import { SpoilerContext } from '~/shared/contexts/match-score-context';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
@@ -20,26 +20,11 @@ export const MatchTeam = React.memo<MatchTeamProps>(
   ({ logo, name, score, isWinner }: MatchTeamProps) => {
     const styles = useStyles(getStyles);
 
-    const { hideSpoilers } = useSettings();
-
-    const { isSpoilerHidden, setIsSpoilerHidden } = React.useContext(MatchScoreContext);
-
     const [spoilerWidth, setSpoilerWidth] = React.useState(0);
-
-    React.useEffect(() => {
-      if (score === '-') return setIsSpoilerHidden(true);
-
-      setIsSpoilerHidden(hideSpoilers);
-    }, [hideSpoilers]);
-
-    const spoil = () => setIsSpoilerHidden(!isSpoilerHidden);
 
     return (
       <View
-        style={StyleSheet.compose(
-          styles.teamScore,
-          isWinner === false && isSpoilerHidden && styles.teamScoreLoser
-        )}>
+        style={StyleSheet.compose(styles.teamScore, isWinner === false && styles.teamScoreLoser)}>
         <View style={styles.teamScoreLeftContainer}>
           <Image
             source={{ uri: logo }}
@@ -62,20 +47,46 @@ export const MatchTeam = React.memo<MatchTeamProps>(
 
             setSpoilerWidth(width);
           }}>
-          <Typographies.Body color={styles.teamScore.color}>{score.toString()}</Typographies.Body>
-          {!isSpoilerHidden && score !== '-' && (
-            <TouchableOpacity
-              style={StyleSheet.compose(styles.hideSpoiler, {
-                width: Math.max(20, spoilerWidth),
-              })}
-              onPress={spoil}
-            />
-          )}
+          <ScoreText score={score} styles={styles} spoilerWidth={spoilerWidth} />
         </View>
       </View>
     );
   }
 );
+
+interface ScoreTextProps {
+  score: string | number;
+  styles: any;
+  spoilerWidth: number;
+}
+
+const ScoreText = ({ score, styles, spoilerWidth }: ScoreTextProps) => {
+  const hideSpoilersAtom = useContext(SpoilerContext);
+  const [hideSpoilers, setHideSpoilers] = useAtom(hideSpoilersAtom);
+
+  const spoil = useCallback(() => {
+    setHideSpoilers(!hideSpoilers);
+  }, []);
+
+  const textElement = useMemo(
+    () => <Typographies.Body color={styles.teamScore.color}>{score.toString()}</Typographies.Body>,
+    [score]
+  );
+
+  return (
+    <>
+      {textElement}
+      {!hideSpoilers && score !== '-' && (
+        <TouchableOpacity
+          style={StyleSheet.compose(styles.hideSpoiler, {
+            width: Math.max(20, spoilerWidth),
+          })}
+          onPress={spoil}
+        />
+      )}
+    </>
+  );
+};
 
 const getStyles = createStylesheet((theme) => ({
   teamScore: {
