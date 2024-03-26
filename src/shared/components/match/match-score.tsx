@@ -69,17 +69,20 @@ export const MatchScore = React.memo<MatchScoreProps>(
             </View>
           )}
         </View>
-        <View>
-          <MatchScoreContextProvider
-            value={{
-              isSpoilerHidden,
-              setIsSpoilerHidden,
-            }}>
-            {children}
-          </MatchScoreContextProvider>
+        <View style={styles.childrenContainer}>
+          <View style={styles.children}>
+            <MatchScoreContextProvider
+              value={{
+                isSpoilerHidden,
+                setIsSpoilerHidden,
+              }}>
+              {children}
+            </MatchScoreContextProvider>
+          </View>
+
           <Iconify icon="solar:alt-arrow-right-outline" color={styles.icon.color} size={16} />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   },
   (prevProps, nextProps) => prevProps.match.id === nextProps.match.id
