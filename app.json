@@ -23,14 +23,19 @@
         "backgroundColor": "#101E35",
         "monochromeImage": "./assets/icons/adaptive-icon.png"
       },
+      "googleServicesFile": "./google-services.json",
       "package": "plus.karmine.karmineplus"
     },
+    "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "plus.karmine.karmineplus"
+    },
     "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging",
+      "@notifee/react-native",
       "expo-localization",
       "expo-font"
-    ],
-    "ios": {
-      "bundleIdentifier": "plus.karmine.karmineplus"
-    }
+    ]
   }
 }
