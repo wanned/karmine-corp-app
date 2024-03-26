@@ -90,6 +90,7 @@ export type Translations = Record<
         opponentName: string | undefined;
         opponentScore: number | undefined;
         oldOpponentScore: number | undefined;
+        scoreType: NonNullable<NonNullable<CoreData.Match['teams'][0]['score']>['scoreType']>;
       }) => {
         title: string;
         body: string;
@@ -100,6 +101,7 @@ export type Translations = Record<
         karmineScore: number;
         opponentName: string | undefined;
         opponentScore: number | undefined;
+        scoreType: NonNullable<NonNullable<CoreData.Match['teams'][0]['score']>['scoreType']>;
         showResults: boolean;
       }) => {
         title: string;

@@ -119,12 +119,36 @@ function getMatchInfosForNotification(
   const opponentTeam = match.teams.find((team) => team !== karmineTeam);
 
   return {
-    game: match.matchDetails.competitionName, // TODO: we need to format this and use the abbreviation
+    game: getGameAbbreviation(match.matchDetails.competitionName),
     karmineName: karmineTeam.name,
-    karmineScore: karmineTeam.score?.score ?? 0, // TODO: this may be a "Top" score, so we need to modify this
+    karmineScore: karmineTeam.score?.score ?? 0,
     oldKarmineScore: 0, // TODO
     opponentName: opponentTeam?.name,
-    opponentScore: opponentTeam?.score?.score ?? 0, // TODO: this may be a "Top" score, so we need to modify this
+    opponentScore: opponentTeam?.score?.score ?? 0,
     oldOpponentScore: 0, // TODO
+    scoreType: karmineTeam.score?.scoreType ?? 'gameWins',
   };
+}
+
+function getGameAbbreviation(game: CoreData.CompetitionName) {
+  switch (game) {
+    case CoreData.CompetitionName.LeagueOfLegendsLFL:
+      return 'LFL';
+    case CoreData.CompetitionName.LeagueOfLegendsLEC:
+      return 'LEC';
+    case CoreData.CompetitionName.RocketLeague:
+      return 'RL';
+    case CoreData.CompetitionName.SuperSmashBrosUltimate:
+      return 'SSBU';
+    case CoreData.CompetitionName.TFT:
+      return 'TFT';
+    case CoreData.CompetitionName.TeamfightTacticsGSC:
+      return 'TFT';
+    case CoreData.CompetitionName.TrackMania:
+      return 'TM';
+    case CoreData.CompetitionName.ValorantVCT:
+      return 'VCT';
+    case CoreData.CompetitionName.ValorantVCTGC:
+      return 'VCTGC';
+  }
 }

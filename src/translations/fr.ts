@@ -99,11 +99,15 @@ export const frTranslations: Translations['fr'] = {
       opponentName,
       opponentScore,
       oldOpponentScore,
+      scoreType,
     }) => {
-      const title =
-        opponentScore !== undefined && opponentName !== undefined ?
-          `(${karmineScore} - ${opponentScore}) ${game} : ${karmineName} vs ${opponentName}`
-        : `(${karmineScore}) ${game} : ${karmineName}`;
+      let title = `${game} : `;
+      title += `(${scoreType === 'top' ? 'Top ' : ''}${karmineScore}`;
+      if (opponentScore !== undefined)
+        title += ` - ${scoreType === 'top' ? 'Top ' : ''}${opponentScore}`;
+      title += `) ${karmineName}`;
+      if (opponentName) title += ` vs ${opponentName}`;
+
       const defaultBody = 'Les scores ont changé';
 
       if (
@@ -149,14 +153,15 @@ export const frTranslations: Translations['fr'] = {
       opponentName,
       opponentScore,
       showResults,
+      scoreType,
     }) => {
       let title = `${game} : ${karmineName}${opponentName ? ` vs ${opponentName}` : ''}`;
       if (showResults) {
-        let score = `(${karmineScore}`;
-        if (opponentScore !== undefined) {
-          score += ` - ${opponentScore}`;
-        }
+        let score = `(${scoreType === 'top' ? 'Top ' : ''}${karmineScore}`;
+        if (opponentScore !== undefined)
+          score += ` - ${scoreType === 'top' ? 'Top ' : ''}${opponentScore}`;
         score += ')';
+
         title = `${score} ${title}`;
       }
 
