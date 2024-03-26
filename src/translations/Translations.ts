@@ -73,5 +73,37 @@ export type Translations = Record<
       shareStreamButtonText: string;
       noGameDetails: string;
     };
+    notifications: {
+      matchStarting: (params: {
+        game: string;
+        karmineName: string;
+        opponentName: string | undefined;
+      }) => {
+        title: string;
+        body: string;
+      };
+      matchScoreUpdated: (params: {
+        game: string;
+        karmineName: string;
+        karmineScore: number;
+        oldKarmineScore: number;
+        opponentName: string | undefined;
+        opponentScore: number | undefined;
+        oldOpponentScore: number | undefined;
+      }) => {
+        title: string;
+        body: string;
+      };
+      matchFinished: (params: {
+        game: string;
+        karmineName: string;
+        karmineScore: number;
+        opponentName: string | undefined;
+        opponentScore: number | undefined;
+      }) => {
+        title: string;
+        body: string;
+      };
+    };
   }
 >;

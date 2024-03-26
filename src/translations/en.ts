@@ -81,4 +81,85 @@ export const enTranslations: Translations['en'] = {
     shareStreamButtonText: 'Share stream',
     noGameDetails: 'No game details available',
   },
+  notifications: {
+    matchStarting: ({ game, karmineName, opponentName }) => {
+      return {
+        title:
+          opponentName !== undefined ?
+            `${game} : ${karmineName} vs ${opponentName}`
+          : `${game} : ${karmineName}`,
+        body: 'The match is about to start',
+      };
+    },
+    matchScoreUpdated: ({
+      game,
+      karmineName,
+      karmineScore,
+      oldKarmineScore,
+      opponentName,
+      opponentScore,
+      oldOpponentScore,
+    }) => {
+      const title =
+        opponentScore !== undefined && opponentName !== undefined ?
+          `(${karmineScore} - ${opponentScore}) ${game} : ${karmineName} vs ${opponentName}`
+        : `(${karmineScore}) ${game} : ${karmineName}`;
+      const defaultBody = 'The scores have changed';
+
+      if (
+        opponentScore === undefined ||
+        oldOpponentScore === undefined ||
+        opponentName === undefined
+      ) {
+        return { title, body: defaultBody };
+      }
+
+      const generateBody = (teamName: string, teamScore: number, opponentScore: number) => {
+        // The team just scored
+        if (teamScore === opponentScore) {
+          return `${teamName} is back to a tie`;
+        }
+        if (oldKarmineScore === oldOpponentScore && teamScore > opponentScore) {
+          return `${teamName} takes the lead`;
+        }
+        if (teamScore > opponentScore) {
+          return `${teamName} increases its lead`;
+        }
+        if (teamScore < opponentScore) {
+          return `${teamName} reduces the gap`;
+        }
+
+        return defaultBody;
+      };
+
+      if (oldKarmineScore < karmineScore) {
+        return { title, body: generateBody(karmineName, karmineScore, opponentScore) };
+      }
+
+      if (oldOpponentScore < opponentScore) {
+        return { title, body: generateBody(opponentName, opponentScore, karmineScore) };
+      }
+
+      return { title, body: defaultBody };
+    },
+    matchFinished: ({ game, karmineName, karmineScore, opponentName, opponentScore }) => {
+      const title =
+        opponentScore !== undefined && opponentName !== undefined ?
+          `(${karmineScore} - ${opponentScore}) ${game} : ${karmineName} vs ${opponentName}`
+        : `(${karmineScore}) ${game} : ${karmineName}`;
+
+      if (opponentScore === undefined || opponentName === undefined) {
+        return { title, body: 'The match is over' };
+      }
+
+      if (karmineName.toLowerCase().startsWith('karmine')) {
+        karmineName = `The ${karmineName}`;
+      }
+
+      return {
+        title,
+        body: karmineScore > opponentScore ? `${karmineName} won` : `${karmineName} lost`,
+      };
+    },
+  },
 };
