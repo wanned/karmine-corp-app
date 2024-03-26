@@ -100,6 +100,7 @@ export type Translations = Record<
         karmineScore: number;
         opponentName: string | undefined;
         opponentScore: number | undefined;
+        showResults: boolean;
       }) => {
         title: string;
         body: string;

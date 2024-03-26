@@ -142,11 +142,23 @@ export const esTranslations: Translations['es'] = {
 
       return { title, body: defaultBody };
     },
-    matchFinished: ({ game, karmineName, karmineScore, opponentName, opponentScore }) => {
-      const title =
-        opponentScore !== undefined && opponentName !== undefined ?
-          `(${karmineScore} - ${opponentScore}) ${game} : ${karmineName} vs ${opponentName}`
-        : `(${karmineScore}) ${game} : ${karmineName}`;
+    matchFinished: ({
+      game,
+      karmineName,
+      karmineScore,
+      opponentName,
+      opponentScore,
+      showResults,
+    }) => {
+      let title = `${game} : ${karmineName}${opponentName ? ` vs ${opponentName}` : ''}`;
+      if (showResults) {
+        let score = `(${karmineScore}`;
+        if (opponentScore !== undefined) {
+          score += ` - ${opponentScore}`;
+        }
+        score += ')';
+        title = `${score} ${title}`;
+      }
 
       if (opponentScore === undefined || opponentName === undefined) {
         return { title, body: 'El partido ha terminado' };
