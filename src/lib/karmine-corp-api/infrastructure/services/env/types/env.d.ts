@@ -10,4 +10,7 @@ export interface Env {
   LIQUIPEDIA_PARSE_API_URL: string;
   LIQUIPEDIA_PARSE_URL_GAME_REPLACER: string;
   YOUTUBE_API_URL: string;
+  FIREBASE_CLIENT_EMAIL: string;
+  FIREBASE_PRIVATE_KEY: string;
+  FIREBASE_PROJECT_ID: string;
 }
