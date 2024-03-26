@@ -117,4 +117,28 @@ export namespace CoreData {
   }
 
   export type Leaderboards = Partial<Record<CompetitionName, LeaderboardItem[]>>;
+
+  export namespace Notifications {
+    interface BaseNotification<T extends string> {
+      type: T;
+      createdAt: IsoDate;
+    }
+
+    export interface MatchStartingSoonNotification extends BaseNotification<'matchStarting'> {
+      match: Match;
+    }
+
+    export interface MatchFinishedNotification extends BaseNotification<'matchFinished'> {
+      match: Match;
+    }
+
+    export interface MatchScoreUpdatedNotification extends BaseNotification<'matchScoreUpdated'> {
+      match: Match;
+    }
+
+    export type Notification =
+      | MatchStartingSoonNotification
+      | MatchFinishedNotification
+      | MatchScoreUpdatedNotification;
+  }
 }
