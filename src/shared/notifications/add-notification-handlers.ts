@@ -32,7 +32,7 @@ const notificationHandlers: {
 } = {
   matchStarting: async (notificationData) => {
     const { language } = await getSavedSettings();
-    const matchInfos = getMatchInfosForNotification(notificationData.match);
+    const matchInfos = getMatchInfosForNotification(notificationData);
     if (!matchInfos) return;
 
     const { title, body } = translate('notifications.matchStarting', language)(matchInfos);
@@ -48,7 +48,7 @@ const notificationHandlers: {
     const { language, hideSpoilers } = await getSavedSettings();
     if (hideSpoilers) return;
 
-    const matchInfos = getMatchInfosForNotification(notificationData.match);
+    const matchInfos = getMatchInfosForNotification(notificationData);
     if (!matchInfos) return;
 
     const { title, body } = translate('notifications.matchScoreUpdated', language)(matchInfos);
@@ -62,7 +62,7 @@ const notificationHandlers: {
   },
   matchFinished: async (notificationData) => {
     const { language, hideSpoilers } = await getSavedSettings();
-    const matchInfos = getMatchInfosForNotification(notificationData.match);
+    const matchInfos = getMatchInfosForNotification(notificationData);
     if (!matchInfos) return;
 
     const { title, body } = translate(
@@ -104,9 +104,13 @@ async function getNotification(notification: { id: string; title: string; body: 
   );
 }
 
-function getMatchInfosForNotification(
-  match: Extract<CoreData.Notifications.Notification, { match: any }>['match']
-) {
+function getMatchInfosForNotification({
+  match,
+  oldMatch,
+}: {
+  match: Extract<CoreData.Notifications.Notification, { match: any }>['match'];
+  oldMatch?: typeof match;
+}) {
   const karmineTeam = match.teams.find(
     (team) =>
       team?.name.toLowerCase().includes('karmine') || team?.name.toLowerCase().startsWith('kc')
@@ -116,16 +120,22 @@ function getMatchInfosForNotification(
     return null;
   }
 
+  const oldKarmineTeam = oldMatch?.teams.find(
+    (team) =>
+      team?.name.toLowerCase().includes('karmine') || team?.name.toLowerCase().startsWith('kc')
+  );
+  const oldOpponentTeam = oldMatch?.teams.find((team) => team !== oldKarmineTeam);
+
   const opponentTeam = match.teams.find((team) => team !== karmineTeam);
 
   return {
     game: getGameAbbreviation(match.matchDetails.competitionName),
     karmineName: karmineTeam.name,
     karmineScore: karmineTeam.score?.score ?? 0,
-    oldKarmineScore: 0, // TODO
+    oldKarmineScore: oldKarmineTeam?.score?.score ?? 0,
     opponentName: opponentTeam?.name,
     opponentScore: opponentTeam?.score?.score ?? 0,
-    oldOpponentScore: 0, // TODO
+    oldOpponentScore: oldOpponentTeam?.score?.score ?? 0,
     scoreType: karmineTeam.score?.scoreType ?? 'gameWins',
   };
 }

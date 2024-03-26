@@ -70,6 +70,7 @@ const notifier = () =>
             return Option.some({
               type: 'matchScoreUpdated',
               match,
+              oldMatch: savedMatch,
               createdAt: new Date().toISOString() as IsoDate,
             } satisfies CoreData.Notifications.MatchScoreUpdatedNotification);
           }

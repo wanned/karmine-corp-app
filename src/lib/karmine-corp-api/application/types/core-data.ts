@@ -134,6 +134,7 @@ export namespace CoreData {
 
     export interface MatchScoreUpdatedNotification extends BaseNotification<'matchScoreUpdated'> {
       match: Match;
+      oldMatch: Match;
     }
 
     export type Notification =
