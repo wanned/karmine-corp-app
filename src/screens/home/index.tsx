@@ -10,8 +10,6 @@ import { useTranslate } from '~/shared/hooks/use-translate';
 import { DefaultLayout } from '~/shared/layouts/default-layout';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { styleTokens } from '~/shared/styles/tokens';
-import { useEffect } from 'react';
-import { useSettings } from '~/shared/hooks/use-settings';
 
 export default function HomeScreen() {
   const styles = getStyles(styleTokens);
