@@ -416,7 +416,7 @@ const getTeamsFromEvent = (
         name: team.name,
         logoUrl: team.image.replace('http:', 'https:'),
         score:
-          team.result !== null && team.result.outcome !== null ?
+          team.result !== null ?
             {
               score: team.result.gameWins,
               scoreType: 'gameWins',
