@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useAtom } from 'jotai';
 import React, { useCallback, useContext, useMemo } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
 import { Typographies } from '~/shared/components/typographies';
@@ -47,7 +47,7 @@ export const MatchTeam = React.memo<MatchTeamProps>(
 
             setSpoilerWidth(width);
           }}>
-          <ScoreText score={score} styles={styles} spoilerWidth={spoilerWidth} />
+          <ScoreText score={score} spoilerWidth={spoilerWidth} />
         </View>
       </View>
     );
@@ -56,28 +56,29 @@ export const MatchTeam = React.memo<MatchTeamProps>(
 
 interface ScoreTextProps {
   score: string | number;
-  styles: any;
   spoilerWidth: number;
 }
 
-const ScoreText = ({ score, styles, spoilerWidth }: ScoreTextProps) => {
+const ScoreText = ({ score, spoilerWidth }: ScoreTextProps) => {
+  const styles = useStyles(getStyles);
+
   const hideSpoilersAtom = useContext(SpoilerContext);
   const [hideSpoilers, setHideSpoilers] = useAtom(hideSpoilersAtom);
 
   const spoil = useCallback(() => {
-    setHideSpoilers(!hideSpoilers);
-  }, []);
+    setHideSpoilers((prev) => !prev);
+  }, [setHideSpoilers]);
 
   const textElement = useMemo(
     () => <Typographies.Body color={styles.teamScore.color}>{score.toString()}</Typographies.Body>,
-    [score]
+    [score, styles.teamScore.color]
   );
 
   return (
     <>
       {textElement}
       {!hideSpoilers && score !== '-' && (
-        <TouchableOpacity
+        <Pressable
           style={StyleSheet.compose(styles.hideSpoiler, {
             width: Math.max(20, spoilerWidth),
           })}
