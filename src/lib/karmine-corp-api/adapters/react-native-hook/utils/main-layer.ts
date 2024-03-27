@@ -1,7 +1,7 @@
 import { Layer } from 'effect';
 
 import { createOpSqliteImpl } from '~/lib/karmine-corp-api/infrastructure/services/database/op-sqlite-impl';
-import { createEnvServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/env/env-service-impl';
+import { EnvRnServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/env/env-rn-service-impl';
 import { FetchServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/fetch/fetch-service-impl';
 import { KarmineApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api-service-impl';
 import { LeagueOfLegendsApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api-service-impl';
@@ -17,5 +17,5 @@ export const mainLayer = Layer.empty.pipe(
   Layer.merge(LiquipediaParseApiServiceImpl),
   Layer.merge(FetchServiceImpl),
   Layer.merge(createOpSqliteImpl('karmine-corp-api')),
-  Layer.merge(createEnvServiceImpl())
+  Layer.merge(EnvRnServiceImpl)
 );
