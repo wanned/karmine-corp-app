@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
-import { useAtom } from 'jotai';
-import React, { useCallback, useContext, useMemo } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
 
@@ -20,11 +20,17 @@ export const MatchTeam = React.memo<MatchTeamProps>(
   ({ logo, name, score, isWinner }: MatchTeamProps) => {
     const styles = useStyles(getStyles);
 
-    const [spoilerWidth, setSpoilerWidth] = React.useState(0);
+    const [spoilerWidth, setSpoilerWidth] = useState(0);
+
+    const hideSpoilersAtom = useContext(SpoilerContext);
+    const hideSpoilers = useAtomValue(hideSpoilersAtom);
 
     return (
       <View
-        style={StyleSheet.compose(styles.teamScore, isWinner === false && styles.teamScoreLoser)}>
+        style={StyleSheet.compose(
+          styles.teamScore,
+          isWinner === false && hideSpoilers && styles.teamScoreLoser
+        )}>
         <View style={styles.teamScoreLeftContainer}>
           <Image
             source={{ uri: logo }}
@@ -32,7 +38,7 @@ export const MatchTeam = React.memo<MatchTeamProps>(
             style={{ width: 24, height: 24 }}
           />
           <Typographies.Body color={styles.teamScore.color}>{name}</Typographies.Body>
-          {isWinner && (
+          {isWinner && hideSpoilers && (
             <Iconify
               icon="solar:crown-bold"
               size={16}
