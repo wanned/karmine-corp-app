@@ -1,5 +1,5 @@
 import notifee from '@notifee/react-native';
 
-export const requestPermission = async () => {
+export const requestNotificationPermission = async () => {
   await notifee.requestPermission();
 };
