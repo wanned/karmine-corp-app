@@ -265,7 +265,9 @@ const getGameDetailsFromEvent = ({
     }
 
     return {
-      status: yield* _(getCoreStatus(lastFrame.gameState === 'paused' ? 'finished' : 'live')),
+      status: yield* _(
+        getCoreStatus(lastFrame.gameState === 'paused' ? 'finished' : lastFrame.gameState)
+      ),
       score: {
         home: lastFrame[`${homeColor}Team`].totalKills,
         away: lastFrame[`${awayColor}Team`].totalKills,
