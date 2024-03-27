@@ -9,7 +9,7 @@ export const useYoutubeVideos = () => {
 
   return useQuery({
     queryKey: ['youtube-videos'],
-    queryFn: () => dataFetcher.getYoutubeVideos(),
+    queryFn: async () => await dataFetcher.getYoutubeVideos(),
     refetchInterval: durationUtils.toMs.fromMinutes(5),
   });
 };

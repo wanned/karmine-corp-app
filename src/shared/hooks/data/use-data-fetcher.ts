@@ -1,5 +1,5 @@
 import { useQueryClient, useIsRestoring } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 import { DataFetcher } from '~/shared/data/core/data-fetcher';
 
@@ -50,12 +50,24 @@ export const useDataFetcher = (
 
 const useWaitForIsRestoring = () => {
   const isRestoring = useIsRestoring();
-  const waitForIsRestoring = useCallback(async () => {
-    if (isRestoring) {
-      await new Promise((resolve) => setTimeout(resolve, 100)); // Wait 100ms
-      await waitForIsRestoring();
-    }
+  const { promise, resolve } = useMemo(() => {
+    let resolve: () => void;
+    const promise = new Promise<void>((r) => {
+      resolve = r;
+    });
+    return { promise, resolve: resolve! };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isRestoring) {
+        resolve();
+        clearInterval(interval);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
   }, [isRestoring]);
 
-  return waitForIsRestoring;
+  return useCallback(() => promise, [promise]);
 };
