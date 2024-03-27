@@ -31,11 +31,19 @@
       "bundleIdentifier": "plus.karmine.karmineplus"
     },
     "plugins": [
+      "expo-localization",
+      "expo-font",
       "@react-native-firebase/app",
       "@react-native-firebase/messaging",
-      "@notifee/react-native",
-      "expo-localization",
-      "expo-font"
+      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
     ]
   }
 }
