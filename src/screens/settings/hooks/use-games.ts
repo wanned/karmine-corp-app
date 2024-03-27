@@ -7,7 +7,7 @@ export const useGames = () => {
 
   const { data: games } = useQuery({
     queryKey: ['karmineGames'],
-    queryFn: dataFetcher.getGames,
+    queryFn: async () => await dataFetcher.getGames(),
   });
 
   return games?.map((game) => game.game_name) ?? [];
