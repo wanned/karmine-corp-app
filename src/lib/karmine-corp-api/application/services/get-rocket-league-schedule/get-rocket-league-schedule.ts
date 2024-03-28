@@ -10,7 +10,7 @@ import { isSameDay } from '~/shared/utils/is-same-day';
 const KARMINE_CORP_OCTANE_TEAM_ID = '60fbc5b887f814e9fbffdcbd';
 
 export const getRocketLeagueSchedule = () => {
-  const matchesStream = Stream.unfoldEffect(
+  const matchesStream = Stream.paginateChunkEffect(
     undefined as OctaneApi.GetMatches | undefined,
     (lastResponse) =>
       Effect.Do.pipe(
@@ -23,14 +23,15 @@ export const getRocketLeagueSchedule = () => {
             page: lastResponse ? lastResponse.page + 1 : undefined,
           })
         ),
-        Effect.map((newResponse) =>
-          newResponse.pageSize < newResponse.perPage ?
-            Option.none()
-          : Option.some([newResponse.matches, newResponse])
-        )
+        Effect.map((newResponse) => {
+          const matchesChunk = Chunk.fromIterable(newResponse.matches);
+
+          return newResponse.pageSize < newResponse.perPage ?
+              [matchesChunk, Option.none<OctaneApi.GetMatches>()]
+            : [matchesChunk, Option.some<OctaneApi.GetMatches>(newResponse)];
+        })
       )
   ).pipe(
-    Stream.flatMap((matches) => Stream.fromIterable(matches)),
     Stream.flatMap((match) => Stream.fromEffect(getCoreMatch(match)), {
       concurrency: 10,
     })

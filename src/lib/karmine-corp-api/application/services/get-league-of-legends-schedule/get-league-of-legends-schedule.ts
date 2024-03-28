@@ -1,4 +1,4 @@
-import { Data, Effect, Match, Option, Stream } from 'effect';
+import { Chunk, Data, Effect, Match, Option, Stream } from 'effect';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { LeagueOfLegendsApi } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api';
@@ -31,25 +31,28 @@ export const getLeagueOfLegendsSchedule = () =>
   );
 
 const getLolMatchesInLeague = (leagueId: string) =>
-  Stream.unfoldEffect(undefined as LeagueOfLegendsApi.GetSchedule | undefined, (lastResponse) =>
-    Effect.Do.pipe(
-      Effect.flatMap(() =>
-        Effect.serviceFunctionEffect(
-          LeagueOfLegendsApiService,
-          (_) => _.getSchedule
-        )({
-          leagueIds: [leagueId],
-          pageToken: lastResponse?.data.schedule.pages.older ?? undefined,
+  Stream.paginateChunkEffect(
+    undefined as LeagueOfLegendsApi.GetSchedule | undefined,
+    (lastResponse) =>
+      Effect.Do.pipe(
+        Effect.flatMap(() =>
+          Effect.serviceFunctionEffect(
+            LeagueOfLegendsApiService,
+            (_) => _.getSchedule
+          )({
+            leagueIds: [leagueId],
+            pageToken: lastResponse?.data.schedule.pages.older ?? undefined,
+          })
+        ),
+        Effect.map((newResponse) => {
+          const matchesChunk = Chunk.fromIterable(newResponse.data.schedule.events);
+
+          return (newResponse.data.schedule.pages.older ?? null) === null ?
+              [matchesChunk, Option.none<LeagueOfLegendsApi.GetSchedule>()]
+            : [matchesChunk, Option.some<LeagueOfLegendsApi.GetSchedule>(newResponse)];
         })
-      ),
-      Effect.map((newResponse) =>
-        (newResponse.data.schedule.pages.older ?? null) === null ?
-          Option.none()
-        : Option.some([newResponse.data.schedule.events, newResponse])
       )
-    )
   ).pipe(
-    Stream.flatMap((matches) => Stream.fromIterable(matches)),
     Stream.filter(isKarmineMatch),
     Stream.flatMap((match) => Stream.fromEffect(getCoreMatch(match)))
   );
