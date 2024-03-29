@@ -16,13 +16,18 @@ import { useTeams } from './lib/karmine-corp-api/adapters/react-native-hook/use-
 import { useMatches } from './shared/hooks/data/use-matches';
 import { useTheme } from './shared/hooks/use-theme';
 import RootNavigator from './shared/navigation';
-import { addNotificationHandlers } from './shared/notifications/add-notification-handlers';
+import {
+  addBackgroundNotificationHandlers,
+  addForegroundNotificationHandlers,
+} from './shared/notifications/add-notification-handlers';
 import { requestNotificationPermission } from './shared/notifications/request-permission';
 import { subscribeToTopic } from './shared/notifications/subscribe-to-topic';
 
 import { SettingsProvider } from '~/shared/contexts/settings-context';
 import { ThemeContext } from '~/shared/contexts/theme-context';
 import { styleTokens } from '~/shared/styles/tokens';
+
+addBackgroundNotificationHandlers();
 
 SplashScreen.preventAutoHideAsync();
 
@@ -78,7 +83,7 @@ export default function App() {
   useEffect(() => {
     requestNotificationPermission();
     subscribeToTopic();
-    addNotificationHandlers();
+    addForegroundNotificationHandlers();
   }, []);
 
   if (!fontsLoaded) {

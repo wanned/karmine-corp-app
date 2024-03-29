@@ -8,22 +8,25 @@ import { translate } from '../utils/translate';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
-export const addNotificationHandlers = () => {
-  async function onMessageReceived(message: FirebaseMessagingTypes.RemoteMessage) {
-    const rawData = message.data?.data;
-    if (!rawData || typeof rawData !== 'string') return;
-    // eslint-disable-next-line no-eval -- The incoming data is trusted, as it comes from the server. It is serialized using `serialize-javascript`.
-    const data = eval(`(${rawData})`) as CoreData.Notifications.Notification;
-
-    const handler = notificationHandlers[data.type];
-    if (handler) {
-      await handler(data as any);
-    }
-  }
-
-  messaging().onMessage(onMessageReceived);
+export const addBackgroundNotificationHandlers = () => {
   messaging().setBackgroundMessageHandler(onMessageReceived);
 };
+
+export const addForegroundNotificationHandlers = () => {
+  messaging().onMessage(onMessageReceived);
+};
+
+async function onMessageReceived(message: FirebaseMessagingTypes.RemoteMessage) {
+  const rawData = message.data?.data;
+  if (!rawData || typeof rawData !== 'string') return;
+  // eslint-disable-next-line no-eval -- The incoming data is trusted, as it comes from the server. It is serialized using `serialize-javascript`.
+  const data = eval(`(${rawData})`) as CoreData.Notifications.Notification;
+
+  const handler = notificationHandlers[data.type];
+  if (handler) {
+    await handler(data as any);
+  }
+}
 
 const notificationHandlers: {
   [K in CoreData.Notifications.Notification['type']]: (
