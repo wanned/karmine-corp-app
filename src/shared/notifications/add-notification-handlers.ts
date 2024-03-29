@@ -3,7 +3,7 @@ import type * as Notifee from '@notifee/react-native';
 import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 import defu from 'defu';
 
-import { getSavedSettings } from '../utils/settings';
+import { getSettings } from '../utils/settings';
 import { translate } from '../utils/translate';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
@@ -31,12 +31,12 @@ const notificationHandlers: {
   ) => Promise<void>;
 } = {
   matchStarting: async (notificationData) => {
-    const { language, notifications: notificationsSettings } = await getSavedSettings();
+    const { language, notifications: notificationsSettings } = await getSettings();
     if (!notificationsSettings[notificationData.match.matchDetails.competitionName]) return;
     const matchInfos = getMatchInfosForNotification(notificationData);
     if (!matchInfos) return;
 
-    const { title, body } = translate('notifications.matchStarting', language)(matchInfos);
+    const { title, body } = translate('notifications.matchStarting', language)[0](matchInfos);
 
     const notification = await getNotification({
       id: notificationData.match.id,
@@ -46,18 +46,15 @@ const notificationHandlers: {
     await notifee.displayNotification(notification);
   },
   matchScoreUpdated: async (notificationData) => {
-    const {
-      language,
-      hideSpoilers,
-      notifications: notificationsSettings,
-    } = await getSavedSettings();
+    const settings = await getSettings();
+    const { language, hideSpoilers, notifications: notificationsSettings } = settings;
     if (!notificationsSettings[notificationData.match.matchDetails.competitionName]) return;
     if (hideSpoilers) return;
 
     const matchInfos = getMatchInfosForNotification(notificationData);
     if (!matchInfos) return;
 
-    const { title, body } = translate('notifications.matchScoreUpdated', language)(matchInfos);
+    const { title, body } = translate('notifications.matchScoreUpdated', language)[0](matchInfos);
 
     const notification = await getNotification({
       id: notificationData.match.id,
@@ -67,20 +64,13 @@ const notificationHandlers: {
     await notifee.displayNotification(notification);
   },
   matchFinished: async (notificationData) => {
-    const {
-      language,
-      hideSpoilers,
-      notifications: notificationsSettings,
-    } = await getSavedSettings();
+    const { language, hideSpoilers, notifications: notificationsSettings } = await getSettings();
     if (!notificationsSettings[notificationData.match.matchDetails.competitionName]) return;
 
     const matchInfos = getMatchInfosForNotification(notificationData);
     if (!matchInfos) return;
 
-    const { title, body } = translate(
-      'notifications.matchFinished',
-      language
-    )({
+    const { title, body } = translate('notifications.matchFinished', language)[0]({
       ...matchInfos,
       showResults: !hideSpoilers,
     });

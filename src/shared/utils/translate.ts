@@ -3,9 +3,9 @@ import { I18n } from 'i18n-js';
 import { translations } from '~/translations';
 import { Translations } from '~/translations/Translations';
 
-const i18n = new I18n(translations);
-
-i18n.enableFallback = true;
+const i18n = new I18n(translations, {
+  enableFallback: true,
+});
 
 export const translate = <K extends TranslationKeys>(
   key: K,

@@ -3,7 +3,7 @@ import * as Localization from 'expo-localization';
 import { createContext, useState, useCallback, useEffect } from 'react';
 
 import { Settings } from '../types/Settings';
-import { getSavedSettings, saveSettings } from '../utils/settings';
+import { getSettings, saveSettings } from '../utils/settings';
 
 interface SettingsContextValue {
   settings: Settings;
@@ -14,22 +14,6 @@ export const SettingsContext = createContext<SettingsContextValue>({
   settings: {} as SettingsContextValue['settings'],
   setSettings: () => {},
 });
-
-const defaultSettings: Settings = {
-  hideSpoilers: false,
-  language: 'en',
-  notifications: {
-    LeagueOfLegendsLEC: true,
-    LeagueOfLegendsLFL: true,
-    RocketLeague: true,
-    SuperSmashBrosUltimate: true,
-    TeamfightTacticsGSC: true,
-    TFT: true,
-    TrackMania: true,
-    ValorantVCT: true,
-    ValorantVCT_GC: true,
-  },
-};
 
 export const SettingsProvider = ({
   children,
@@ -43,8 +27,8 @@ export const SettingsProvider = ({
   } as Settings);
 
   useEffect(() => {
-    getSavedSettings().then((savedSettings) => {
-      _setSettings(defu<Settings, Settings[]>(value, savedSettings, defaultSettings));
+    getSettings().then((settings) => {
+      _setSettings(defu<Settings, Settings[]>(value, settings));
     });
   }, []);
 

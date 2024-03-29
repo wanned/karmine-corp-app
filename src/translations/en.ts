@@ -82,101 +82,107 @@ export const enTranslations: Translations['en'] = {
     noGameDetails: 'No game details available',
   },
   notifications: {
-    matchStarting: ({ game, karmineName, opponentName }) => {
-      return {
-        title:
-          opponentName !== undefined ?
-            `${game} : ${karmineName} vs ${opponentName}`
-          : `${game} : ${karmineName}`,
-        body: 'The match is about to start',
-      };
-    },
-    matchScoreUpdated: ({
-      game,
-      karmineName,
-      karmineScore,
-      oldKarmineScore,
-      opponentName,
-      opponentScore,
-      oldOpponentScore,
-      scoreType,
-    }) => {
-      let title = `${game} : `;
-      title += `(${scoreType === 'top' ? 'Top ' : ''}${karmineScore}`;
-      if (opponentScore !== undefined)
-        title += ` - ${scoreType === 'top' ? 'Top ' : ''}${opponentScore}`;
-      title += `) ${karmineName}`;
-      if (opponentName) title += ` vs ${opponentName}`;
-
-      const defaultBody = 'The scores have changed';
-
-      if (
-        opponentScore === undefined ||
-        oldOpponentScore === undefined ||
-        opponentName === undefined
-      ) {
-        return { title, body: defaultBody };
-      }
-
-      const generateBody = (teamName: string, teamScore: number, opponentScore: number) => {
-        // The team just scored
-        if (teamScore === opponentScore) {
-          return `${teamName} is back to a tie`;
-        }
-        if (oldKarmineScore === oldOpponentScore && teamScore > opponentScore) {
-          return `${teamName} takes the lead`;
-        }
-        if (teamScore > opponentScore) {
-          return `${teamName} increases its lead`;
-        }
-        if (teamScore < opponentScore) {
-          return `${teamName} reduces the gap`;
-        }
-
-        return defaultBody;
-      };
-
-      if (oldKarmineScore < karmineScore) {
-        return { title, body: generateBody(karmineName, karmineScore, opponentScore) };
-      }
-
-      if (oldOpponentScore < opponentScore) {
-        return { title, body: generateBody(opponentName, opponentScore, karmineScore) };
-      }
-
-      return { title, body: defaultBody };
-    },
-    matchFinished: ({
-      game,
-      karmineName,
-      karmineScore,
-      opponentName,
-      opponentScore,
-      showResults,
-      scoreType,
-    }) => {
-      let title = `${game} : ${karmineName}${opponentName ? ` vs ${opponentName}` : ''}`;
-      if (showResults) {
-        let score = `(${scoreType === 'top' ? 'Top ' : ''}${karmineScore}`;
+    matchStarting: [
+      ({ game, karmineName, opponentName }) => {
+        return {
+          title:
+            opponentName !== undefined ?
+              `${game} : ${karmineName} vs ${opponentName}`
+            : `${game} : ${karmineName}`,
+          body: 'The match is about to start',
+        };
+      },
+    ],
+    matchScoreUpdated: [
+      ({
+        game,
+        karmineName,
+        karmineScore,
+        oldKarmineScore,
+        opponentName,
+        opponentScore,
+        oldOpponentScore,
+        scoreType,
+      }) => {
+        let title = `${game} : `;
+        title += `(${scoreType === 'top' ? 'Top ' : ''}${karmineScore}`;
         if (opponentScore !== undefined)
-          score += ` - ${scoreType === 'top' ? 'Top ' : ''}${opponentScore}`;
-        score += ')';
+          title += ` - ${scoreType === 'top' ? 'Top ' : ''}${opponentScore}`;
+        title += `) ${karmineName}`;
+        if (opponentName) title += ` vs ${opponentName}`;
 
-        title = `${score} ${title}`;
-      }
+        const defaultBody = 'The scores have changed';
 
-      if (opponentScore === undefined || opponentName === undefined) {
-        return { title, body: 'The match is over' };
-      }
+        if (
+          opponentScore === undefined ||
+          oldOpponentScore === undefined ||
+          opponentName === undefined
+        ) {
+          return { title, body: defaultBody };
+        }
 
-      if (karmineName.toLowerCase().startsWith('karmine')) {
-        karmineName = `The ${karmineName}`;
-      }
+        const generateBody = (teamName: string, teamScore: number, opponentScore: number) => {
+          // The team just scored
+          if (teamScore === opponentScore) {
+            return `${teamName} is back to a tie`;
+          }
+          if (oldKarmineScore === oldOpponentScore && teamScore > opponentScore) {
+            return `${teamName} takes the lead`;
+          }
+          if (teamScore > opponentScore) {
+            return `${teamName} increases its lead`;
+          }
+          if (teamScore < opponentScore) {
+            return `${teamName} reduces the gap`;
+          }
 
-      return {
-        title,
-        body: karmineScore > opponentScore ? `${karmineName} won` : `${karmineName} lost`,
-      };
-    },
+          return defaultBody;
+        };
+
+        if (oldKarmineScore < karmineScore) {
+          return { title, body: generateBody(karmineName, karmineScore, opponentScore) };
+        }
+
+        if (oldOpponentScore < opponentScore) {
+          return { title, body: generateBody(opponentName, opponentScore, karmineScore) };
+        }
+
+        return { title, body: defaultBody };
+      },
+    ],
+    matchFinished: [
+      ({
+        game,
+        karmineName,
+        karmineScore,
+        opponentName,
+        opponentScore,
+        showResults,
+        scoreType,
+      }) => {
+        let title = `${game} : ${karmineName}${opponentName ? ` vs ${opponentName}` : ''}`;
+        if (showResults) {
+          let score = `(${scoreType === 'top' ? 'Top ' : ''}${karmineScore}`;
+          if (opponentScore !== undefined)
+            score += ` - ${scoreType === 'top' ? 'Top ' : ''}${opponentScore}`;
+          score += ')';
+
+          title = `${score} ${title}`;
+        }
+
+        if (opponentScore === undefined || opponentName === undefined) {
+          return { title, body: 'The match is over' };
+        }
+
+        if (karmineName.toLowerCase().startsWith('karmine')) {
+          karmineName = `The ${karmineName}`;
+        }
+
+        return {
+          title,
+          body: karmineScore > opponentScore ? `${karmineName} won` : `${karmineName} lost`,
+        };
+      },
+    ],
   },
 };
