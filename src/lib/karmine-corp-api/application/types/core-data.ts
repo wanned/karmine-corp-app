@@ -124,17 +124,28 @@ export namespace CoreData {
       createdAt: IsoDate;
     }
 
+    interface NotificationMatch {
+      id: string;
+      teams: {
+        name: string;
+        score?: Score;
+      }[];
+      matchDetails: {
+        competitionName: CompetitionName;
+      };
+    }
+
     export interface MatchStartingSoonNotification extends BaseNotification<'matchStarting'> {
-      match: Match;
+      match: NotificationMatch;
     }
 
     export interface MatchFinishedNotification extends BaseNotification<'matchFinished'> {
-      match: Match;
+      match: NotificationMatch;
     }
 
     export interface MatchScoreUpdatedNotification extends BaseNotification<'matchScoreUpdated'> {
-      match: Match;
-      oldMatch: Match;
+      match: NotificationMatch;
+      oldMatch: NotificationMatch;
     }
 
     export type Notification =
