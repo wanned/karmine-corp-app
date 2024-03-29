@@ -29,8 +29,14 @@ export const NotificationFcmServiceImpl = Layer.effect(
           return Effect.Do.pipe(
             Effect.flatMap(() => Console.log('Sending notification:', notification)),
             Effect.flatMap(() =>
-              Effect.promise(() => app.messaging().sendToTopic(APP_TOPIC, message))
-            )
+              Effect.promise(() =>
+                app.messaging().sendToTopic(APP_TOPIC, message, {
+                  contentAvailable: true,
+                  priority: 'high',
+                })
+              )
+            ),
+            Effect.tap((n) => Console.log('Notification sent:', n))
           );
         },
       })
