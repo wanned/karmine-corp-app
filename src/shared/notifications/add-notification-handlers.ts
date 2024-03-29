@@ -103,6 +103,7 @@ async function getNotification(notification: { id: string; title: string; body: 
     {
       android: {
         channelId,
+        smallIcon: 'notification_icon',
       },
     },
     notification
