@@ -50,9 +50,9 @@ const notificationHandlers: {
   },
   matchScoreUpdated: async (notificationData) => {
     const settings = await getSettings();
-    const { language, hideSpoilers, notifications: notificationsSettings } = settings;
+    const { language, showResults, notifications: notificationsSettings } = settings;
     if (!notificationsSettings[notificationData.match.matchDetails.competitionName]) return;
-    if (hideSpoilers) return;
+    if (!showResults) return;
 
     const matchInfos = getMatchInfosForNotification(notificationData);
     if (!matchInfos) return;
@@ -67,7 +67,7 @@ const notificationHandlers: {
     await notifee.displayNotification(notification);
   },
   matchFinished: async (notificationData) => {
-    const { language, hideSpoilers, notifications: notificationsSettings } = await getSettings();
+    const { language, showResults, notifications: notificationsSettings } = await getSettings();
     if (!notificationsSettings[notificationData.match.matchDetails.competitionName]) return;
 
     const matchInfos = getMatchInfosForNotification(notificationData);
@@ -75,7 +75,7 @@ const notificationHandlers: {
 
     const { title, body } = translate('notifications.matchFinished', language)[0]({
       ...matchInfos,
-      showResults: !hideSpoilers,
+      showResults,
     });
 
     const notification = await getNotification({

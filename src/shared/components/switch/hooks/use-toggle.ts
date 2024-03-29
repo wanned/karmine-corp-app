@@ -16,6 +16,6 @@ export const useToggle = ({
       easing: Easing.linear,
     });
 
-    onValueChange(value);
+    onValueChange(!value);
   }, [onValueChange, thumbAnimatedValue, value]);
 };

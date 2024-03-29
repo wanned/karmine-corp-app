@@ -6,7 +6,7 @@ import { Settings } from '../types/Settings';
 const SETTINGS_ASYNC_STORAGE_KEY = 'settings';
 
 const defaultSettings: Settings = {
-  hideSpoilers: false,
+  showResults: true,
   language: 'en',
   notifications: {
     LeagueOfLegendsLEC: true,

@@ -8,11 +8,11 @@ import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { Settings } from '~/shared/types/Settings';
 
 export function SpoilerSettings({
-  hideSpoilersSettings,
-  setHideSpoilersSettings,
+  showResultsSettings,
+  setShowResultsSettings,
 }: {
-  hideSpoilersSettings: Settings['hideSpoilers'];
-  setHideSpoilersSettings: (notificationSettings: Settings['hideSpoilers']) => void;
+  showResultsSettings: Settings['showResults'];
+  setShowResultsSettings: (notificationSettings: Settings['showResults']) => void;
 }) {
   const translate = useTranslate();
 
@@ -22,8 +22,8 @@ export function SpoilerSettings({
     <View style={styles.showResultsContainer}>
       <Typographies.Body>{translate('settings.spoiler.showResults')}</Typographies.Body>
       <Switch
-        value={!hideSpoilersSettings}
-        onValueChange={(value) => setHideSpoilersSettings(value)}
+        value={showResultsSettings}
+        onValueChange={(value) => setShowResultsSettings(value)}
       />
     </View>
   );
