@@ -104,12 +104,15 @@ export const frTranslations: Translations['fr'] = {
         oldOpponentScore,
         scoreType,
       }) => {
-        let title = `${game} : `;
-        title += `(${scoreType === 'top' ? 'Top ' : ''}${karmineScore}`;
+        let title = '';
+        let scoreTitle = `(${scoreType === 'top' ? 'Top ' : ''}${karmineScore}`;
         if (opponentScore !== undefined)
-          title += ` - ${scoreType === 'top' ? 'Top ' : ''}${opponentScore}`;
-        title += `) ${karmineName}`;
-        if (opponentName) title += ` vs ${opponentName}`;
+          scoreTitle += ` - ${scoreType === 'top' ? 'Top ' : ''}${opponentScore}`;
+        scoreTitle += ')';
+
+        title = `${scoreTitle} ${game} : ${karmineName}${
+          opponentName ? ` vs ${opponentName}` : ''
+        }`;
 
         const defaultBody = 'Les scores ont changé';
 
@@ -160,15 +163,17 @@ export const frTranslations: Translations['fr'] = {
         showResults,
         scoreType,
       }) => {
-        let title = `${game} : ${karmineName}${opponentName ? ` vs ${opponentName}` : ''}`;
-        if (showResults) {
-          let score = `(${scoreType === 'top' ? 'Top ' : ''}${karmineScore}`;
-          if (opponentScore !== undefined)
-            score += ` - ${scoreType === 'top' ? 'Top ' : ''}${opponentScore}`;
-          score += ')';
+        let title = '';
 
-          title = `${score} ${title}`;
+        if (showResults) {
+          let scoreTitle = `(${scoreType === 'top' ? 'Top ' : ''}${karmineScore}`;
+          if (opponentScore !== undefined)
+            scoreTitle += ` - ${scoreType === 'top' ? 'Top ' : ''}${opponentScore}`;
+          scoreTitle += ')';
+          title += `${scoreTitle} `;
         }
+
+        title += `${game} : ${karmineName}${opponentName ? ` vs ${opponentName}` : ''}`;
 
         if (!showResults || opponentScore === undefined || opponentName === undefined) {
           return { title, body: 'Le match est terminé' };
