@@ -1,6 +1,5 @@
 import { Layer } from 'effect';
 
-import { createGetScheduleParamsStateImpl } from '~/lib/karmine-corp-api/application/use-cases/get-schedule/get-schedule-params-state';
 import { createOpSqliteImpl } from '~/lib/karmine-corp-api/infrastructure/services/database/op-sqlite-impl/op-sqlite-impl';
 import { EnvRnServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/env/env-rn-service-impl';
 import { FetchServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/fetch/fetch-service-impl';
@@ -18,6 +17,5 @@ export const mainLayer = Layer.empty.pipe(
   Layer.merge(LiquipediaParseApiServiceImpl),
   Layer.merge(FetchServiceImpl),
   Layer.merge(createOpSqliteImpl('karmine-corp-api')),
-  Layer.merge(EnvRnServiceImpl),
-  Layer.merge(createGetScheduleParamsStateImpl({}))
+  Layer.merge(EnvRnServiceImpl)
 );
