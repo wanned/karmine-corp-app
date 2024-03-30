@@ -21,7 +21,7 @@ export namespace DataFetcher {
     status: number;
     statusText: string;
     ok: boolean;
-    headers: Headers;
+    contentType?: string;
   }>;
 }
 
@@ -33,7 +33,7 @@ const defaultFetch: DataFetcher.Fetch = async (...params) => {
     status: response.status,
     statusText: response.statusText,
     ok: response.ok,
-    headers: response.headers,
+    contentType: response.headers.get('content-type') || undefined,
   };
 };
 
