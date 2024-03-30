@@ -8,7 +8,11 @@ import { CoreData } from '../../types/core-data';
 
 import { MatchesRepository } from '~/lib/karmine-corp-api/infrastructure/repositories/matches/matches-repository';
 
-export const getSchedule = () => {
+export const getSchedule = ({ onlyFromDatabase }: { onlyFromDatabase?: boolean } = {}) => {
+  if (onlyFromDatabase) {
+    return getScheduleFromDatabase();
+  }
+
   const remoteScheduleStream = Stream.merge(
     getOtherSchedule().pipe(
       Stream.filter(

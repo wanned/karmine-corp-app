@@ -67,16 +67,7 @@ export const useMatches = () => {
           ),
           Effect.flatMap(() =>
             getMatches().pipe(
-              Stream.groupedWithin(Infinity, 1_000),
-              Stream.runForEach((matches) =>
-                Effect.succeed(
-                  addMatches(
-                    Chunk.toArray(matches).filter(
-                      (match): match is Exclude<typeof match, void> => match !== undefined
-                    )
-                  )
-                )
-              )
+              Stream.runForEach((matches) => Effect.succeed(addMatches(Chunk.toArray(matches))))
             )
           )
         ),
@@ -98,7 +89,14 @@ const getMatches = () =>
   Stream.empty.pipe(
     Stream.merge(getLiveMatches()),
     Stream.merge(getFutureMatches()),
-    Stream.merge(getPastMatches())
+    Stream.merge(getPastMatches()),
+    Stream.groupedWithin(Infinity, 1_000),
+    Stream.merge(
+      getSchedule({ onlyFromDatabase: true }).pipe(
+        Stream.provideSomeLayer(createGetScheduleParamsStateImpl({})),
+        Stream.runCollect
+      )
+    )
   );
 
 const getLiveMatches = () => {
