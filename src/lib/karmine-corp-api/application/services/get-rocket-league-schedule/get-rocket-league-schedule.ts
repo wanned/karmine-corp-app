@@ -1,6 +1,7 @@
 import { Chunk, Effect, Option, Schedule, Stream } from 'effect';
 
 import { CoreData } from '../../types/core-data';
+import { GetScheduleParamsState } from '../../use-cases/get-schedule/get-schedule-params-state';
 import { getOtherSchedule } from '../get-other-schedule/get-other-schedule';
 
 import { OctaneApi } from '~/lib/karmine-corp-api/infrastructure/services/octane-api/octane-api';
@@ -23,13 +24,19 @@ export const getRocketLeagueSchedule = () => {
             page: lastResponse ? lastResponse.page + 1 : undefined,
           })
         ),
-        Effect.map((newResponse) => {
-          const matchesChunk = Chunk.fromIterable(newResponse.matches);
-
-          return newResponse.pageSize < newResponse.perPage ?
-              [matchesChunk, Option.none<OctaneApi.GetMatches>()]
-            : [matchesChunk, Option.some<OctaneApi.GetMatches>(newResponse)];
-        })
+        // FIXME: If the page has not reached yet the date range filter, we should keep fetching until we reach it. But we are not doing that.
+        Effect.flatMap(applyFilters),
+        Effect.map(([matchesChunk, matchesResponse]) =>
+          matchesResponse.pipe(
+            Option.flatMap((newResponse) =>
+              newResponse.pageSize < newResponse.perPage ? Option.some(newResponse) : Option.none()
+            ),
+            Option.match({
+              onSome: (newResponse) => [matchesChunk, Option.some(newResponse)] as const,
+              onNone: () => [matchesChunk, Option.none<OctaneApi.GetMatches>()] as const,
+            })
+          )
+        )
       )
   ).pipe(
     Stream.flatMap((match) => Stream.fromEffect(getCoreMatch(match)), {
@@ -74,6 +81,30 @@ export const getRocketLeagueSchedule = () => {
 };
 
 type OctaneApiMatch = OctaneApi.GetMatches['matches'][number];
+
+const applyFilters = (matchesResponse: OctaneApi.GetMatches) =>
+  Effect.Do.pipe(
+    Effect.flatMap(() =>
+      Effect.all({
+        dateRange: Effect.serviceConstants(GetScheduleParamsState).dateRange,
+      })
+    ),
+    Effect.map(({ dateRange }) =>
+      Chunk.fromIterable(matchesResponse.matches).pipe(applyDateRangeFilter(dateRange))
+    ),
+    Effect.map((matchesChunk) =>
+      matchesChunk.length > 0 ?
+        ([matchesChunk, Option.some<OctaneApi.GetMatches>(matchesResponse)] as const)
+      : ([matchesChunk, Option.none<OctaneApi.GetMatches>()] as const)
+    )
+  );
+
+const applyDateRangeFilter = (dateRange: GetScheduleParamsState['Type']['dateRange']) =>
+  Chunk.filter<OctaneApiMatch>(
+    (match) =>
+      (dateRange?.start === undefined || match.date >= dateRange.start) &&
+      (dateRange?.end === undefined || match.date <= dateRange.end)
+  );
 
 const getCoreMatch = (rlApiMatch: OctaneApiMatch) =>
   Effect.gen(function* (_) {

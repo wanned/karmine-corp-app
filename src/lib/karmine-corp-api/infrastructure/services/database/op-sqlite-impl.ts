@@ -4,7 +4,7 @@ import { Effect, Layer } from 'effect';
 import { DatabaseService } from './database-service';
 
 export const createOpSqliteImpl = (databaseName: string) => {
-  const DATABASE_VERSION = 1; // TODO: We may use version from package.json
+  const DATABASE_VERSION = 2; // TODO: We may use version from package.json
   const database = Database.open({ name: `${databaseName}-${DATABASE_VERSION}` });
 
   return Layer.succeed(
@@ -13,7 +13,9 @@ export const createOpSqliteImpl = (databaseName: string) => {
       initializeTables: () =>
         Effect.succeed(
           database
-            .prepareStatement('CREATE TABLE IF NOT EXISTS matches (id TEXT PRIMARY KEY, data TEXT)')
+            .prepareStatement(
+              'CREATE TABLE IF NOT EXISTS matches (id TEXT PRIMARY KEY, data TEXT, timestamp INTEGER)'
+            )
             .execute()
         ),
       executeQuery: (query: string, params: string[] = []) => {

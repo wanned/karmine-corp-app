@@ -2,6 +2,7 @@ import { Console, Effect, Layer, Option, Schedule, Stream } from 'effect';
 
 import { CoreData } from '../../application/types/core-data';
 import { getSchedule } from '../../application/use-cases/get-schedule/get-schedule';
+import { createGetScheduleParamsStateImpl } from '../../application/use-cases/get-schedule/get-schedule-params-state';
 import { MatchesRepository } from '../../infrastructure/repositories/matches/matches-repository';
 import { createBetterSqlite3Impl } from '../../infrastructure/services/database/better-sqlite3-impl';
 import { DatabaseService } from '../../infrastructure/services/database/database-service';
@@ -21,7 +22,7 @@ const notifier = () =>
     Effect.flatMap(() =>
       Effect.serviceFunctionEffect(DatabaseService, (_) => _.initializeTables)()
     ),
-    Effect.flatMap(() => MatchesRepository.getAllMatches()),
+    Effect.flatMap(() => MatchesRepository.getMatches()),
     Effect.map((matches) =>
       matches.reduce<Map<string, CoreData.Match>>((acc, match) => {
         acc.set(match.id, JSON.parse(match.data));
@@ -131,6 +132,15 @@ const getMainLayer = () =>
     Layer.merge(FetchServiceImpl),
     Layer.merge(createBetterSqlite3Impl()),
     Layer.merge(createEnvServiceImpl({ firebaseEnvShouldBeDefined: true })),
+    Layer.merge(
+      createGetScheduleParamsStateImpl({
+        dateRange: {
+          // We want to get matches that have started 12 hours ago and will start in the next 12 hours
+          start: new Date(new Date().getTime() - 12 * 60 * 60 * 1000),
+          end: new Date(new Date().getTime() + 12 * 60 * 60 * 1000),
+        },
+      })
+    ),
     (layer) => Layer.merge(Layer.provide(NotificationFcmServiceImpl, layer), layer)
   );
 

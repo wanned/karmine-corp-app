@@ -1,5 +1,7 @@
 import { Chunk, Data, Effect, Match, Option, Stream } from 'effect';
 
+import { GetScheduleParamsState } from '../../use-cases/get-schedule/get-schedule-params-state';
+
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { LeagueOfLegendsApi } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api';
 import { LeagueOfLegendsApiService } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api-service';
@@ -44,18 +46,54 @@ const getLolMatchesInLeague = (leagueId: string) =>
             pageToken: lastResponse?.data.schedule.pages.older ?? undefined,
           })
         ),
-        Effect.map((newResponse) => {
-          const matchesChunk = Chunk.fromIterable(newResponse.data.schedule.events);
-
-          return (newResponse.data.schedule.pages.older ?? null) === null ?
-              [matchesChunk, Option.none<LeagueOfLegendsApi.GetSchedule>()]
-            : [matchesChunk, Option.some<LeagueOfLegendsApi.GetSchedule>(newResponse)];
-        })
+        // FIXME: If the page has not reached yet the date range filter, we should keep fetching until we reach it. But we are not doing that.
+        Effect.flatMap(applyFilters),
+        Effect.map(([matchesChunk, scheduleResponse]) =>
+          scheduleResponse.pipe(
+            Option.flatMap((newResponse) =>
+              newResponse.data.schedule.pages.older !== null ?
+                Option.some(newResponse)
+              : Option.none()
+            ),
+            Option.match({
+              onSome: (newResponse) => [matchesChunk, Option.some(newResponse)] as const,
+              onNone: () => [matchesChunk, Option.none<LeagueOfLegendsApi.GetSchedule>()] as const,
+            })
+          )
+        )
       )
   ).pipe(
     Stream.filter(isKarmineMatch),
     Stream.flatMap((match) => Stream.fromEffect(getCoreMatch(match)))
   );
+
+const applyFilters = (scheduleResponse: LeagueOfLegendsApi.GetSchedule) =>
+  Effect.Do.pipe(
+    Effect.flatMap(() =>
+      Effect.all({
+        dateRange: Effect.serviceConstants(GetScheduleParamsState).dateRange,
+      })
+    ),
+    Effect.map(({ dateRange }) =>
+      Chunk.fromIterable(scheduleResponse.data.schedule.events).pipe(
+        applyDateRangeFilter(dateRange)
+      )
+    ),
+    Effect.map((matchesChunk) =>
+      matchesChunk.length > 0 ?
+        ([matchesChunk, Option.some<LeagueOfLegendsApi.GetSchedule>(scheduleResponse)] as const)
+      : ([matchesChunk, Option.none<LeagueOfLegendsApi.GetSchedule>()] as const)
+    )
+  );
+
+const applyDateRangeFilter = (dateRange: GetScheduleParamsState['Type']['dateRange']) =>
+  Chunk.filter<LeagueOfLegendsApi.GetSchedule['data']['schedule']['events'][number]>((match) => {
+    const date = new Date(match.startTime);
+    return (
+      (dateRange?.start === undefined || date >= dateRange.start) &&
+      (dateRange?.end === undefined || date <= dateRange.end)
+    );
+  });
 
 const isKarmineMatch = (
   match: LeagueOfLegendsApi.GetSchedule['data']['schedule']['events'][number]

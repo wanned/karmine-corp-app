@@ -6,16 +6,37 @@ import { DatabaseSchema } from '../../services/database/types/database-schema';
 import { Exact } from '~/lib/karmine-corp-api/types/exact';
 
 export const MatchesRepository = {
-  getAllMatches: () =>
-    Effect.serviceFunctionEffect(
+  getMatches: ({
+    dateRange,
+  }: {
+    dateRange?: { start?: Date; end?: Date };
+  } = {}) => {
+    const filters: string[] = [];
+    const filterValues: string[] = [];
+
+    if (dateRange?.start) {
+      filters.push('timestamp >= ?');
+      filterValues.push(dateRange.start.getTime().toString());
+    }
+
+    if (dateRange?.end) {
+      filters.push('timestamp <= ?');
+      filterValues.push(dateRange.end.getTime().toString());
+    }
+
+    const whereClause = filters.length ? ` WHERE ${filters.join(' AND ')}` : '';
+    const query = `SELECT * FROM matches${whereClause}`;
+
+    return Effect.serviceFunctionEffect(
       DatabaseService,
       (_) => _.executeReturningQuery<DatabaseSchema.Match>
-    )('SELECT * FROM matches'),
+    )(query, filterValues);
+  },
   upsertMatches: <T>(matches: Exact<T, DatabaseSchema.Match>[]) =>
     Effect.serviceFunctionEffect(DatabaseService, (_) => _.executeQuery)(
-      `INSERT OR REPLACE INTO matches (id, data)
-       VALUES ${Array(matches.length).fill('(?, ?)').join(', ')}
+      `INSERT OR REPLACE INTO matches (id, data, timestamp)
+       VALUES ${Array(matches.length).fill('(?, ?, ?)').join(', ')}
       `,
-      matches.flatMap((match) => [match.id, match.data])
+      matches.flatMap((match) => [match.id, match.data, match.timestamp.toString()])
     ),
 };

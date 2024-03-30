@@ -31,7 +31,11 @@ export const getSchedule = () => {
         // TODO: insertMatches is an Effect, not a Sink
         Sink.forEach((schedule) =>
           MatchesRepository.upsertMatches(
-            Chunk.toArray(schedule).map((match) => ({ id: match.id, data: JSON.stringify(match) }))
+            Chunk.toArray(schedule).map((match) => ({
+              id: match.id,
+              data: JSON.stringify(match),
+              timestamp: new Date(match.date).getTime(),
+            }))
           )
         )
       )
