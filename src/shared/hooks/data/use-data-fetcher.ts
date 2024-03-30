@@ -27,7 +27,7 @@ export const useDataFetcher = (
             status: response.status,
             statusText: response.statusText,
             ok: response.ok,
-            headers: response.headers,
+            contentType: response.headers.get('content-type') || undefined,
           };
         },
         retry: true,

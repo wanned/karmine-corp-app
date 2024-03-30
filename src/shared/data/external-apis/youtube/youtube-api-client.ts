@@ -41,7 +41,7 @@ export class YoutubeApiClient {
     const dataText = response.text;
     const data =
       dataText === '' ? null
-      : response.headers.get('content-type')?.includes('xml') ?
+      : response.contentType?.includes('xml') ?
         new XMLParser({
           ignoreAttributes: false,
           attributeNamePrefix: '@_',
