@@ -77,6 +77,8 @@ type OctaneApiMatch = OctaneApi.GetMatches['matches'][number];
 
 const getCoreMatch = (rlApiMatch: OctaneApiMatch) =>
   Effect.gen(function* (_) {
+    const status = yield* _(getStatusFromMatch(rlApiMatch));
+
     return {
       id: `rl:${rlApiMatch._id}`,
       date: rlApiMatch.date,
@@ -89,10 +91,10 @@ const getCoreMatch = (rlApiMatch: OctaneApiMatch) =>
           away: yield* _(getPlayersFromMatchTeam(rlApiMatch.orange)),
         },
       },
-      status: yield* _(getStatusFromMatch(rlApiMatch)),
+      status,
       teams: [
-        yield* _(getTeamDetailsFromMatch(rlApiMatch.blue)),
-        yield* _(getTeamDetailsFromMatch(rlApiMatch.orange)),
+        yield* _(getTeamDetailsFromMatch(rlApiMatch.blue, status)),
+        yield* _(getTeamDetailsFromMatch(rlApiMatch.orange, status)),
       ],
       streamLink: 'kamet0', // TODO
     };
@@ -148,16 +150,22 @@ const getStatusFromMatch = (rlApiMatch: OctaneApiMatch) =>
     )
   ) satisfies Effect.Effect<CoreData.RocketLeagueMatch['status'], any, any>;
 
-const getTeamDetailsFromMatch = (team: OctaneApiMatch['blue'] | OctaneApiMatch['orange']) =>
+const getTeamDetailsFromMatch = (
+  team: OctaneApiMatch['blue'] | OctaneApiMatch['orange'],
+  status: 'upcoming' | 'live' | 'finished'
+) =>
   Effect.Do.pipe(
     Effect.map(() => ({
       name: team.team.team.name,
       logoUrl:
         team.team.team.image ?? 'https://medias.kametotv.fr/karmine/teams_logo/NO_TEAM_RL.png',
-      score: {
-        score: team.score,
-        isWinner: team.winner,
-        scoreType: 'gameWins',
-      },
+      score:
+        status === 'upcoming' ? undefined : (
+          {
+            score: team.score,
+            isWinner: team.winner,
+            scoreType: 'gameWins',
+          }
+        ),
     }))
   ) satisfies Effect.Effect<CoreData.RocketLeagueMatch['teams'][0], any, any>;
