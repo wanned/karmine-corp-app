@@ -7,15 +7,15 @@ export const SpoilerContext = createContext<PrimitiveAtom<boolean>>({} as any);
 
 export const MatchScoreContextProvider = ({ children }: { children: React.ReactNode }) => {
   const {
-    settings: { hideSpoilers },
+    settings: { showResults },
   } = useContext(SettingsContext);
 
-  const hideSpoilersAtom = useMemo(() => atom(false), []);
-  const setHideSpoilers = useSetAtom(hideSpoilersAtom);
+  const showResultsAtom = useMemo(() => atom(false), []);
+  const setShowResults = useSetAtom(showResultsAtom);
 
   useEffect(() => {
-    setHideSpoilers(hideSpoilers);
-  }, [hideSpoilers, setHideSpoilers]);
+    setShowResults(showResults);
+  }, [showResults, setShowResults]);
 
-  return <SpoilerContext.Provider value={hideSpoilersAtom}>{children}</SpoilerContext.Provider>;
+  return <SpoilerContext.Provider value={showResultsAtom}>{children}</SpoilerContext.Provider>;
 };

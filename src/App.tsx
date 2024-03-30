@@ -8,7 +8,7 @@ import { registerRootComponent } from 'expo';
 import * as FileSystem from 'expo-file-system';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 
 import { useLeaderboards } from './lib/karmine-corp-api/adapters/react-native-hook/use-leaderboards';
@@ -16,10 +16,18 @@ import { useTeams } from './lib/karmine-corp-api/adapters/react-native-hook/use-
 import { useMatches } from './shared/hooks/data/use-matches';
 import { useTheme } from './shared/hooks/use-theme';
 import RootNavigator from './shared/navigation';
+import {
+  addBackgroundNotificationHandlers,
+  addForegroundNotificationHandlers,
+} from './shared/notifications/add-notification-handlers';
+import { requestNotificationPermission } from './shared/notifications/request-permission';
+import { subscribeToTopic } from './shared/notifications/subscribe-to-topic';
 
 import { SettingsProvider } from '~/shared/contexts/settings-context';
 import { ThemeContext } from '~/shared/contexts/theme-context';
 import { styleTokens } from '~/shared/styles/tokens';
+
+addBackgroundNotificationHandlers();
 
 SplashScreen.preventAutoHideAsync();
 
@@ -71,6 +79,12 @@ export default function App() {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
+
+  useEffect(() => {
+    requestNotificationPermission();
+    subscribeToTopic();
+    addForegroundNotificationHandlers();
+  }, []);
 
   if (!fontsLoaded) {
     return null;

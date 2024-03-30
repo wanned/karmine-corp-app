@@ -22,14 +22,14 @@ export const MatchTeam = React.memo<MatchTeamProps>(
 
     const [spoilerWidth, setSpoilerWidth] = useState(0);
 
-    const hideSpoilersAtom = useContext(SpoilerContext);
-    const hideSpoilers = useAtomValue(hideSpoilersAtom);
+    const showResultsAtom = useContext(SpoilerContext);
+    const showResults = useAtomValue(showResultsAtom);
 
     return (
       <View
         style={StyleSheet.compose(
           styles.teamScore,
-          isWinner === false && hideSpoilers && styles.teamScoreLoser
+          showResults && isWinner === false && styles.teamScoreLoser
         )}>
         <View style={styles.teamScoreLeftContainer}>
           <Image
@@ -38,7 +38,7 @@ export const MatchTeam = React.memo<MatchTeamProps>(
             style={{ width: 24, height: 24 }}
           />
           <Typographies.Body color={styles.teamScore.color}>{name}</Typographies.Body>
-          {isWinner && hideSpoilers && (
+          {showResults && isWinner && (
             <Iconify
               icon="solar:crown-bold"
               size={16}
@@ -68,12 +68,12 @@ interface ScoreTextProps {
 const ScoreText = ({ score, spoilerWidth }: ScoreTextProps) => {
   const styles = useStyles(getStyles);
 
-  const hideSpoilersAtom = useContext(SpoilerContext);
-  const [hideSpoilers, setHideSpoilers] = useAtom(hideSpoilersAtom);
+  const showResultsAtom = useContext(SpoilerContext);
+  const [showResults, setShowResults] = useAtom(showResultsAtom);
 
   const spoil = useCallback(() => {
-    setHideSpoilers((prev) => !prev);
-  }, [setHideSpoilers]);
+    setShowResults((prev) => !prev);
+  }, [setShowResults]);
 
   const textElement = useMemo(
     () => <Typographies.Body color={styles.teamScore.color}>{score.toString()}</Typographies.Body>,
@@ -83,9 +83,9 @@ const ScoreText = ({ score, spoilerWidth }: ScoreTextProps) => {
   return (
     <>
       {textElement}
-      {!hideSpoilers && score !== '-' && (
+      {!showResults && score !== '-' && (
         <Pressable
-          style={StyleSheet.compose(styles.hideSpoiler, {
+          style={StyleSheet.compose(styles.spoilerRectangle, {
             width: Math.max(20, spoilerWidth),
           })}
           onPress={spoil}
@@ -110,7 +110,7 @@ const getStyles = createStylesheet((theme) => ({
     alignItems: 'center',
     gap: 8,
   },
-  hideSpoiler: {
+  spoilerRectangle: {
     height: 20,
     borderRadius: 4,
     backgroundColor: theme.colors.subtleBackground,

@@ -13,10 +13,6 @@ export const getMatchSchema = z.object({
             index: z.number().int(),
             winner: z.enum(['home', 'away']).nullable(),
             game: z.object({
-              score: z.object({
-                home: z.number().int(),
-                away: z.number().int(),
-              }),
               duration: z.number().int(),
             }),
           }),

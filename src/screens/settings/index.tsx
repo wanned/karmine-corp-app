@@ -46,8 +46,8 @@ export default function SettingsScreen() {
           <View>
             <Typographies.Title2>{translate('settings.spoiler.title')}</Typographies.Title2>
             <SpoilerSettings
-              hideSpoilersSettings={settings.hideSpoilers}
-              setHideSpoilersSettings={(hideSpoilers) => setSettings({ ...settings, hideSpoilers })}
+              showResultsSettings={settings.showResults}
+              setShowResultsSettings={(showResults) => setSettings({ ...settings, showResults })}
             />
           </View>
 
