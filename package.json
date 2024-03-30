@@ -5,8 +5,11 @@
     "android": "expo run:android",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
     "ios": "expo run:ios",
-    "start": "expo start --dev-client",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "prebuild": "node ./scripts/prebuild.mjs",
+    "build": "eas build --platform all --local",
+    "build:android": "eas build --platform android --local",
+    "build:ios": "eas build --platform ios --local"
   },
   "dependencies": {
     "@effect/platform": "^0.48.15",
