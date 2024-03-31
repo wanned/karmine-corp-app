@@ -49,17 +49,11 @@ export const GameDetailsModal = React.memo(
           teamHome={match.teams[0]}
           teamAway={match.teams[1]}
         />
-        <View style={styles.gameDetailsContainer}>
+        <View style={styles.date}>
           <MatchDate date={match.date} />
-          {match.status === 'upcoming' && (
-            <GameDetailsNotificationButton
-              match={match}
-              isNotified={isNotified}
-              setIsNotified={setIsNotified}
-            />
-          )}
-          {match.status === 'live' && <GameDetailsStreamButton match={match} />}
-          <GameDetailsReplayButton match={match} />
+        </View>
+        <View style={styles.gameDetailsContainer}>
+          <GameButtons match={match} isNotified={isNotified} setIsNotified={setIsNotified} />
           {gameDetails === null && gamePlayers === null ?
             <View style={styles.noGameDetails}>
               <Typographies.Body>{translate('gameDetails.noGameDetails')}</Typographies.Body>
@@ -138,6 +132,37 @@ function GameDetailsHeader({
   );
 }
 
+const GameButtons = ({
+  match,
+  isNotified,
+  setIsNotified,
+}: {
+  match: CoreData.Match;
+  isNotified: boolean;
+  setIsNotified: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const buttons: React.ReactElement[] = [];
+
+  if (match.status === 'upcoming') {
+    buttons.push(
+      <GameDetailsNotificationButton
+        match={match}
+        isNotified={isNotified}
+        setIsNotified={setIsNotified}
+      />
+    );
+  }
+
+  if (match.status === 'live') {
+    buttons.push(<GameDetailsStreamButton match={match} />);
+  }
+  if (match.status === 'finished') {
+    buttons.push(<GameDetailsReplayButton match={match} />);
+  }
+
+  return buttons;
+};
+
 function GameDetailsNotificationButton({
   match,
   isNotified,
@@ -203,10 +228,6 @@ function GameDetailsReplayButton({ match }: { match: CoreData.Match }) {
     match.matchDetails.competitionName === CoreData.CompetitionName.LeagueOfLegendsLFL ||
     match.matchDetails.competitionName === CoreData.CompetitionName.LeagueOfLegendsLEC
   ) {
-    return null;
-  }
-
-  if (match.status !== 'finished') {
     return null;
   }
 
@@ -310,6 +331,11 @@ const getStyles = createStylesheet((theme) => ({
     flex: 1,
     paddingHorizontal: 16,
     gap: 48,
+  },
+  date: {
+    flex: 1,
+    paddingHorizontal: 16,
+    marginBottom: 8,
   },
   playersContainer: {
     flexDirection: 'row',
