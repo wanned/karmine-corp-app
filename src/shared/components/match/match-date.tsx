@@ -22,7 +22,7 @@ export const MatchDate = React.memo<MatchDateProps>(
     const { formatDate, formatTime } = useDate();
 
     const formattedDate = formatDate(date);
-    const formattedTime = formatTime(date);
+    const formattedTime = formatTime(date, "HH'H'mm");
 
     const { yesterday, today, tomorrow } = dayUtils;
 

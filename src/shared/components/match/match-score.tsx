@@ -33,6 +33,7 @@ export const MatchScore = React.memo<MatchScoreProps>(
         <View style={styles.titleHeader}>
           <MatchDate date={match.date} />
           <Typographies.Label color={styles.titleGame.color} verticalTrim>
+            {' '}
             · {translate(`games.${match.matchDetails.competitionName}`)}
             {match.matchDetails.bo !== undefined ? ` · BO${match.matchDetails.bo}` : ''}
           </Typographies.Label>
