@@ -1,6 +1,24 @@
 import { Translations } from './Translations';
 
 export const enTranslations: Translations['en'] = {
+  onboarding: {
+    pages: {
+      0: {
+        title: 'Welcome to Karmine Corp',
+        description: 'Follow the matches of your favorite teams',
+      },
+      1: {
+        title: 'Notifications',
+        description: 'Receive notifications to not miss anything',
+      },
+      2: {
+        title: 'Let’s go!',
+        description: 'Discover the latest results and the next matches',
+      },
+    },
+    startButton: 'Start',
+    nextButton: 'Next',
+  },
   home: {
     screenName: 'Home',
     nextMatchesTitle: 'Next matches',

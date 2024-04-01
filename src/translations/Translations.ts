@@ -5,6 +5,24 @@ export type Language = 'en' | 'es' | 'fr';
 export type Translations = Record<
   Language,
   {
+    onboarding: {
+      pages: {
+        0: {
+          title: string;
+          description: string;
+        };
+        1: {
+          title: string;
+          description: string;
+        };
+        2: {
+          title: string;
+          description: string;
+        };
+      };
+      startButton: string;
+      nextButton: string;
+    };
     home: {
       screenName: string;
       nextMatchesTitle: string;

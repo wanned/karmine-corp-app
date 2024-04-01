@@ -10,8 +10,10 @@ import { GameDetailsModal } from '~/screens/game-details-modal';
 import HomeScreen from '~/screens/home';
 import { LastResultsModal } from '~/screens/home/modals/last-results-modal';
 import { NextMatchesModal } from '~/screens/home/modals/next-matches-modal';
+import { OnboardingModal } from '~/screens/onboarding/modals/onboarding-modal';
 import SettingsScreen from '~/screens/settings';
 import TeamsScreen from '~/screens/teams';
+import { Translations } from '~/translations/Translations';
 
 const RootNavigator = ModalsNavigator;
 export default RootNavigator;
@@ -27,6 +29,13 @@ export type ModalsParamList = {
   root: undefined;
   nextMatchesModal: undefined;
   lastResultsModal: undefined;
+  onboardingModal: {
+    children?: React.ReactNode;
+    title: string;
+    description: string;
+    currentStep: keyof Translations['en']['onboarding']['pages'];
+    totalSteps: number;
+  };
   gameDetailsModal: {
     match: CoreData.Match;
   };
@@ -48,6 +57,7 @@ function ModalsNavigator() {
         <Modals.Screen name="nextMatchesModal" component={NextMatchesModal} />
         <Modals.Screen name="lastResultsModal" component={LastResultsModal} />
         <Modals.Screen name="gameDetailsModal" component={GameDetailsModal} />
+        <Modals.Screen name="onboardingModal" component={OnboardingModal} />
       </Modals.Navigator>
     </NavigationContainer>
   );
