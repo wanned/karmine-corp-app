@@ -2,8 +2,7 @@ import React from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
-import { MatchScore } from '~/shared/components/match/match-score';
-import { MatchTeam } from '~/shared/components/match/match-team';
+import { MatchPreview } from '~/shared/components/match-preview/match-preview';
 import { Typographies } from '~/shared/components/typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
@@ -33,29 +32,7 @@ export const MatchesList = React.memo(({ matches }: MatchesListProps) => {
   return (
     <View style={{ width: screenWidth, paddingHorizontal: 16 }}>
       {matches.map(
-        (match, matchIndex) =>
-          match && (
-            <MatchScore key={match.id} match={match}>
-              {match.teams.map(
-                (team, index) =>
-                  team && (
-                    <MatchTeam
-                      // key={`${match.id}-${team.name}-${index}`}
-                      key={`${matchIndex}-${team.name}-${index}`} // FIXME: We may not use index as key. match.id seems to exist but it not typed.
-                      logo={team.logoUrl}
-                      name={team.name}
-                      isWinner={team.score?.isWinner}
-                      score={
-                        team.score === undefined ? '-'
-                        : team.score.scoreType === 'top' ?
-                          `TOP ${team.score.score}`
-                        : team.score.score
-                      }
-                    />
-                  )
-              )}
-            </MatchScore>
-          )
+        (match) => match && <MatchPreview key={match.id} match={match} variant="compact" />
       )}
     </View>
   );
