@@ -1,77 +1,89 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
+
 import { Buttons } from '~/shared/components/buttons';
 import { Body } from '~/shared/components/typographies/body';
 import { Title1 } from '~/shared/components/typographies/title1';
 import { useNavigation } from '~/shared/hooks/use-navigation';
-
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { useTranslate } from '~/shared/hooks/use-translate';
 import { ModalLayout } from '~/shared/layouts/modal-layout';
-import { ModalsParamList } from '~/shared/navigation';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
+import { Translations } from '~/translations/Translations';
 
-interface OnboardingModalProps extends NativeStackScreenProps<ModalsParamList, 'onboardingModal'> {}
+export const OnboardingModal = React.memo(() => {
+  const styles = useStyles(getStyles);
+  const theme = useTheme();
+  const translate = useTranslate();
 
-export const OnboardingModal = React.memo(
-  ({
-    route: {
-      params: { children, title, description, currentStep, totalSteps },
-    },
-  }: OnboardingModalProps) => {
-    const styles = useStyles(getStyles);
+  const navigation = useNavigation();
+  const handleEnd = useCallback(() => {
+    navigation.goBack();
+  }, []);
 
-    const theme = useTheme();
+  const { currentStep, totalSteps, title, description, handleNext } = useOnboardingController({
+    handleEnd,
+  });
 
-    const navigation = useNavigation();
-
-    const translate = useTranslate();
-
-    const handleNext = useCallback(() => {
-      console.log({ currentStep, totalSteps });
-      if (currentStep < totalSteps - 1) {
-        const nextStep = (currentStep + 1) as typeof currentStep;
-
-        console.log({ nextStep });
-
-        navigation.replace('onboardingModal', {
-          title: translate(`onboarding.pages.${nextStep}.title`),
-          description: translate(`onboarding.pages.${nextStep}.description`),
-          currentStep: nextStep,
-          totalSteps,
-        });
-      } else {
-        navigation.pop();
-      }
-    }, [currentStep, totalSteps]);
-
-    return (
-      <ModalLayout useScrollView={false} hideHeader>
-        {children}
-        <View style={styles.container}>
-          <View style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Title1>{title}</Title1>
-              <Body textAlign="center" color={theme.colors.subtleForeground}>
-                {description}
-              </Body>
-            </View>
-            <Buttons.Primary
-              text={
-                currentStep === totalSteps - 1 ?
-                  translate('onboarding.startButton')
-                : translate('onboarding.nextButton')
-              }
-              onPress={handleNext}
-            />
+  return (
+    <ModalLayout useScrollView={false} hideHeader>
+      {/* {children} */}
+      <View style={styles.container}>
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Title1>{title}</Title1>
+            <Body textAlign="center" color={theme.colors.subtleForeground}>
+              {description}
+            </Body>
           </View>
+          <Buttons.Primary
+            text={
+              currentStep === totalSteps - 1 ?
+                translate('onboarding.startButton')
+              : translate('onboarding.nextButton')
+            }
+            onPress={handleNext}
+          />
         </View>
-      </ModalLayout>
-    );
-  }
-);
+      </View>
+    </ModalLayout>
+  );
+});
+
+interface UseOnboardingControllerProps {
+  handleEnd: () => void;
+}
+
+const useOnboardingController = ({ handleEnd }: UseOnboardingControllerProps) => {
+  const [currentStep, setCurrentStep] =
+    useState<keyof Translations['en']['onboarding']['pages']>(0);
+  const totalSteps = 3;
+
+  const translate = useTranslate();
+
+  const title = useMemo(() => translate(`onboarding.pages.${currentStep}.title`), [currentStep]);
+  const description = useMemo(
+    () => translate(`onboarding.pages.${currentStep}.description`),
+    [currentStep]
+  );
+
+  const handleNext = useCallback(() => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep((prev) => (prev + 1) as typeof currentStep);
+    } else {
+      handleEnd();
+    }
+  }, [currentStep, handleEnd]);
+
+  return {
+    currentStep,
+    totalSteps,
+    title,
+    description,
+    handleNext,
+  };
+};
 
 const getStyles = createStylesheet((theme) => ({
   container: {

@@ -1,8 +1,13 @@
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useEffect, useMemo, useRef } from 'react';
+import { InteractionManager } from 'react-native';
 
 import { TabBar } from './tab-bar';
+import { RootParamList } from '../hooks/use-navigation';
+import { useSplashScreen } from '../hooks/use-splash-screen';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import CalendarScreen from '~/screens/calendar';
@@ -13,10 +18,6 @@ import { NextMatchesModal } from '~/screens/home/modals/next-matches-modal';
 import { OnboardingModal } from '~/screens/onboarding/modals/onboarding-modal';
 import SettingsScreen from '~/screens/settings';
 import TeamsScreen from '~/screens/teams';
-import { Translations } from '~/translations/Translations';
-
-const RootNavigator = ModalsNavigator;
-export default RootNavigator;
 
 export type PagesParamList = {
   home: undefined;
@@ -29,13 +30,7 @@ export type ModalsParamList = {
   root: undefined;
   nextMatchesModal: undefined;
   lastResultsModal: undefined;
-  onboardingModal: {
-    children?: React.ReactNode;
-    title: string;
-    description: string;
-    currentStep: keyof Translations['en']['onboarding']['pages'];
-    totalSteps: number;
-  };
+  onboardingModal: undefined;
   gameDetailsModal: {
     match: CoreData.Match;
   };
@@ -44,22 +39,61 @@ export type ModalsParamList = {
 const Modals = createNativeStackNavigator<ModalsParamList>();
 const Pages = createBottomTabNavigator<PagesParamList>();
 
+const RootNavigator = () => {
+  const { createHideSplashScreen } = useSplashScreen();
+  const hideSplashScreen = useMemo(() => createHideSplashScreen(), []);
+  const navigationRef = useRef<NavigationContainerRef<RootParamList> | null>(null);
+
+  const isFirstLaunch = useAsyncStorage('isFirstLaunch');
+
+  useEffect(() => {
+    const navigation = navigationRef.current;
+
+    if (!navigation) return;
+
+    // If you want to test in development, replace `isFirstLaunch.getItem()` with `new Promise((resolve) => resolve(null))`
+    isFirstLaunch.getItem().then(async (value) => {
+      await isFirstLaunch.setItem('false');
+
+      if (value === null) {
+        navigation.navigate('onboardingModal');
+      } else {
+        navigation.navigate('home');
+      }
+
+      InteractionManager.runAfterInteractions(() => {
+        hideSplashScreen();
+      });
+    });
+  }, []);
+
+  return (
+    <NavigationContainer ref={navigationRef}>
+      <ModalsNavigator />
+    </NavigationContainer>
+  );
+};
+
 function ModalsNavigator() {
   return (
-    <NavigationContainer>
-      <Modals.Navigator
-        initialRouteName="root"
-        screenOptions={{
-          headerShown: false,
-          presentation: 'fullScreenModal',
-        }}>
-        <Modals.Screen name="root" component={PagesNavigator} options={{ headerShown: false }} />
-        <Modals.Screen name="nextMatchesModal" component={NextMatchesModal} />
-        <Modals.Screen name="lastResultsModal" component={LastResultsModal} />
-        <Modals.Screen name="gameDetailsModal" component={GameDetailsModal} />
-        <Modals.Screen name="onboardingModal" component={OnboardingModal} />
-      </Modals.Navigator>
-    </NavigationContainer>
+    <Modals.Navigator
+      initialRouteName="root"
+      screenOptions={{
+        headerShown: false,
+        presentation: 'fullScreenModal',
+      }}>
+      <Modals.Screen name="root" component={PagesNavigator} options={{ headerShown: false }} />
+      <Modals.Screen name="nextMatchesModal" component={NextMatchesModal} />
+      <Modals.Screen name="lastResultsModal" component={LastResultsModal} />
+      <Modals.Screen name="gameDetailsModal" component={GameDetailsModal} />
+      <Modals.Screen
+        name="onboardingModal"
+        component={OnboardingModal}
+        options={{
+          animation: 'none',
+        }}
+      />
+    </Modals.Navigator>
   );
 }
 
@@ -78,3 +112,5 @@ function PagesNavigator() {
     </Pages.Navigator>
   );
 }
+
+export default RootNavigator;

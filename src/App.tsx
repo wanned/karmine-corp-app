@@ -6,12 +6,13 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { registerRootComponent } from 'expo';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 
 import { useLeaderboards } from './lib/karmine-corp-api/adapters/react-native-hook/use-leaderboards';
 import { useTeams } from './lib/karmine-corp-api/adapters/react-native-hook/use-teams';
 import { useMatches } from './shared/hooks/data/use-matches';
+import { useSplashScreen } from './shared/hooks/use-splash-screen';
 import { useTheme } from './shared/hooks/use-theme';
 import RootNavigator from './shared/navigation';
 import {
@@ -56,9 +57,13 @@ export default function App() {
     'MonaspaceNeon-SemiBold': require('../assets/fonts/MonaspaceNeon/MonaspaceNeon-SemiBold.otf'),
   });
 
-  const onLayoutRootView = useCallback(async () => {
+  const { createHideSplashScreen } = useSplashScreen();
+  const hideSplashScreenWhenFontsLoaded = useMemo(() => createHideSplashScreen(), []);
+  const hideSplashScreenOnRootViewLayout = useMemo(() => createHideSplashScreen(), []);
+
+  useEffect(() => {
     if (fontsLoaded) {
-      await SplashScreen.hideAsync();
+      hideSplashScreenWhenFontsLoaded();
     }
   }, [fontsLoaded]);
 
@@ -82,7 +87,7 @@ export default function App() {
           value={{
             theme: styleTokens,
           }}>
-          <_App onLayoutRootView={onLayoutRootView} />
+          <_App onLayoutRootView={() => hideSplashScreenOnRootViewLayout()} />
         </ThemeContext.Provider>
       </SettingsProvider>
     </PersistQueryClientProvider>

@@ -2,7 +2,6 @@ import { CardsSlot } from './components/cards-slot';
 import { LastResults } from './components/last-results';
 import { NextMatches } from './components/next-matches';
 
-import { useEffect } from 'react';
 import { Buttons } from '~/shared/components/buttons';
 import { Spacer } from '~/shared/components/spacer/spacer';
 import { useNavigation } from '~/shared/hooks/use-navigation';
@@ -19,15 +18,6 @@ export default function HomeScreen() {
   const navigation = useNavigation();
 
   const translate = useTranslate();
-
-  useEffect(() => {
-    navigation.navigate('onboardingModal', {
-      title: translate(`onboarding.pages.0.title`),
-      description: translate(`onboarding.pages.0.description`),
-      currentStep: 0,
-      totalSteps: 3,
-    });
-  }, []);
 
   return (
     <DefaultLayout>
