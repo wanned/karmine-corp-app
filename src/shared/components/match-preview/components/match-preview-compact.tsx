@@ -43,6 +43,7 @@ export const MatchPreviewCompact = React.memo(({ match }: MatchPreviewProps) => 
                     crownSize={16}
                     logoSize={24}
                     hideResultColor={theme.colors.subtleBackground}
+                    changeLoserOpacity
                   />
                 )
             )}

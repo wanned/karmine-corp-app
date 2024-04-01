@@ -21,6 +21,7 @@ interface MatchTeamProps {
   logoSize: number;
   crownSize: number;
   hideResultColor: string;
+  changeLoserOpacity?: boolean;
 }
 
 export const MatchTeam = React.memo(
@@ -31,6 +32,7 @@ export const MatchTeam = React.memo(
     logoSize,
     crownSize,
     hideResultColor,
+    changeLoserOpacity,
   }: MatchTeamProps) => {
     const styles = getMatchTeamStyles(styleTokens);
 
@@ -46,7 +48,14 @@ export const MatchTeam = React.memo(
     if (team === null) return null;
 
     return (
-      <View style={styles.matchTeam}>
+      <View
+        style={[
+          styles.matchTeam,
+          changeLoserOpacity &&
+            resultsShown &&
+            team.score?.isWinner === false &&
+            styles.matchTeamLoser,
+        ]}>
         <Image
           source={{ uri: team.logoUrl }}
           cachePolicy="memory-disk"
@@ -81,6 +90,9 @@ const getMatchTeamStyles = createStylesheet((tokens) => ({
   matchTeam: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  matchTeamLoser: {
+    opacity: tokens.opacities.priority2,
   },
   teamLogo: {
     marginRight: tokens.spacing.large,
