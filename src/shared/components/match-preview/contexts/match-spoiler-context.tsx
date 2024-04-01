@@ -1,11 +1,11 @@
 import { atom, useSetAtom, PrimitiveAtom } from 'jotai';
 import { createContext, useContext, useEffect, useMemo } from 'react';
 
-import { SettingsContext } from './settings-context';
+import { SettingsContext } from '../../../contexts/settings-context';
 
-export const SpoilerContext = createContext<PrimitiveAtom<boolean>>({} as any);
+export const MatchSpoilerContext = createContext<PrimitiveAtom<boolean>>({} as any);
 
-export const MatchScoreContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const MatchSpoilerProvider = ({ children }: { children: React.ReactNode }) => {
   const {
     settings: { showResults },
   } = useContext(SettingsContext);
@@ -17,5 +17,7 @@ export const MatchScoreContextProvider = ({ children }: { children: React.ReactN
     setShowResults(showResults);
   }, [showResults, setShowResults]);
 
-  return <SpoilerContext.Provider value={showResultsAtom}>{children}</SpoilerContext.Provider>;
+  return (
+    <MatchSpoilerContext.Provider value={showResultsAtom}>{children}</MatchSpoilerContext.Provider>
+  );
 };

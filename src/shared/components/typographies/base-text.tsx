@@ -89,6 +89,9 @@ export const BaseText = ({
 
   return (
     <Text style={defaultFontStyle} numberOfLines={maxLines} ellipsizeMode="tail">
+      <Text style={defaultFontStyle}>{'\u200B'}</Text>
+      {/* usage of \u200B (empty character) is a hack to make sure that even a "only number" string will have the same height as a string with letters */}
+
       {separatedText.map(({ type, value }, index) => {
         if (type === 'number') {
           return (

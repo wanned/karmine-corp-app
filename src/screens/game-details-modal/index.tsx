@@ -324,4 +324,7 @@ const getStyles = createStylesheet((theme) => ({
     position: 'relative',
     top: -70,
   },
+  titleDate: {
+    color: theme.colors.accent,
+  },
 }));
