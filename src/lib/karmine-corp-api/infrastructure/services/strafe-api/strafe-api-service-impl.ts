@@ -1,10 +1,10 @@
+import * as v from '@badrap/valita';
 import destr from 'destr';
 import { Effect, Layer } from 'effect';
-import { z } from 'zod';
 
 import { strafeApiSchemas } from './schemas/strafe-api-schemas';
 import { StrafeApiService } from './strafe-api-service';
-import { parseZod } from '../../utils/parse-zod/parse-zod';
+import { parseValita } from '../../utils/parse-valita/parse-valita';
 import { EnvService } from '../env/env-service';
 import { FetchService } from '../fetch/fetch-service';
 
@@ -38,12 +38,12 @@ const getStrafeHeaders = () =>
     }))
   );
 
-const fetchStrafe = <S extends z.ZodType = z.ZodAny>({ url, schema }: { url: string; schema: S }) =>
+const fetchStrafe = <S extends v.Type = v.Type>({ url, schema }: { url: string; schema: S }) =>
   Effect.Do.pipe(
     Effect.bind('url', () => getStrafeUrl({ url })),
     Effect.bind('headers', () => getStrafeHeaders()),
     Effect.flatMap(({ url, headers }) =>
-      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+      Effect.serviceFunction(FetchService, (_) => _.fetch<v.Infer<S>>)(url, {
         parseResponse:
           schema &&
           ((responseText) => {
@@ -61,7 +61,7 @@ const fetchStrafe = <S extends z.ZodType = z.ZodAny>({ url, schema }: { url: str
             }
 
             return Effect.runSync(
-              parseZod(schema, JSON.parse(responseText), JSON.stringify({ url }))
+              parseValita(schema, JSON.parse(responseText), JSON.stringify({ url }))
             );
           }),
         headers,

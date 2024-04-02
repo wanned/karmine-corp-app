@@ -1,9 +1,9 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-export const getGamesSchema = z.array(
-  z.object({
-    game_name: z.string(),
-    game_name_friendly: z.string(),
-    game_picture: z.string().url(),
+export const getGamesSchema = v.array(
+  v.object({
+    game_name: v.string(),
+    game_name_friendly: v.string(),
+    game_picture: v.string(),
   })
 );

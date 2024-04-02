@@ -1,24 +1,24 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-const teamDetailsInGameSchema = z.object({
-  team: z.object({
-    stats: z
+const teamDetailsInGameSchema = v.object({
+  team: v.object({
+    stats: v
       .object({
-        core: z.object({
-          goals: z.number(),
-          saves: z.number(),
-          score: z.number(),
+        core: v.object({
+          goals: v.number(),
+          saves: v.number(),
+          score: v.number(),
         }),
       })
       .optional(),
   }),
 });
 
-export const getMatchesGamesSchema = z.object({
-  games: z.array(
-    z.object({
-      _id: z.string(),
-      number: z.number(),
+export const getMatchesGamesSchema = v.object({
+  games: v.array(
+    v.object({
+      _id: v.string(),
+      number: v.number(),
       blue: teamDetailsInGameSchema,
       orange: teamDetailsInGameSchema,
     })

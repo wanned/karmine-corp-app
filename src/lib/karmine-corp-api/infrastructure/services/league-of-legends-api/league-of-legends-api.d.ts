@@ -1,22 +1,22 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
 import { leagueOfLegendsApiSchemas } from './schemas/league-of-legends-api-schemas';
 
 export namespace LeagueOfLegendsApi {
-  export interface GetMatch extends z.infer<typeof leagueOfLegendsApiSchemas.getMatchById> {}
+  export interface GetMatch extends v.Infer<typeof leagueOfLegendsApiSchemas.getMatchById> {}
 
-  export interface GetTeams extends z.infer<typeof leagueOfLegendsApiSchemas.getAllTeams> {}
+  export interface GetTeams extends v.Infer<typeof leagueOfLegendsApiSchemas.getAllTeams> {}
 
   export interface GetSchedule
-    extends z.infer<typeof leagueOfLegendsApiSchemas.getScheduleByLeagueIds> {}
+    extends v.Infer<typeof leagueOfLegendsApiSchemas.getScheduleByLeagueIds> {}
 
-  export type GetGameWindow = z.infer<typeof leagueOfLegendsApiSchemas.getGameWindow>;
+  export type GetGameWindow = v.Infer<typeof leagueOfLegendsApiSchemas.getGameWindow>;
 
-  export interface GetVersions extends z.infer<typeof leagueOfLegendsApiSchemas.getAllVersions> {}
+  export interface GetVersions extends v.Infer<typeof leagueOfLegendsApiSchemas.getAllVersions> {}
 
   export interface GetTournaments
-    extends z.infer<typeof leagueOfLegendsApiSchemas.getTournamentsForLeague> {}
+    extends v.Infer<typeof leagueOfLegendsApiSchemas.getTournamentsForLeague> {}
 
   export interface GetStandings
-    extends z.infer<typeof leagueOfLegendsApiSchemas.getStandingsByTournamentId> {}
+    extends v.Infer<typeof leagueOfLegendsApiSchemas.getStandingsByTournamentId> {}
 }

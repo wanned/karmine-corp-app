@@ -1,18 +1,19 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-const nullStringSchema = z.string().transform((x) => (x === 'null' ? null : x));
+import { vDateString } from '../../../utils/valita-types/date-string';
+import { vNullAsString } from '../../../utils/valita-types/null-as-string';
 
-export const getEventsSchema = z.array(
-  z.object({
-    id: z.number(),
-    title: z.string(),
-    initial: z.string(),
-    competition_name: z.string(),
-    team_domicile: z.union([z.string().url(), nullStringSchema]),
-    team_exterieur: z.union([z.string().url(), nullStringSchema]),
-    player: nullStringSchema.transform((x) => (x === null ? null : x.split(';')[0])),
-    start: z.coerce.date(),
-    end: z.coerce.date(),
-    streamLink: z.string().nullable(),
+export const getEventsSchema = v.array(
+  v.object({
+    id: v.number(),
+    title: v.string(),
+    initial: v.string(),
+    competition_name: v.string(),
+    team_domicile: v.union(v.string(), vNullAsString),
+    team_exterieur: v.union(v.string(), vNullAsString),
+    player: vNullAsString.chain((x) => (x === null ? v.ok(null) : v.ok(x.split(';')[0]))),
+    start: vDateString,
+    end: vDateString,
+    streamLink: v.string().nullable(),
   })
 );

@@ -1,11 +1,11 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-export const getPlayersSchema = z.array(
-  z.object({
-    twitch_identifier: z.string(),
-    twitch_login: z.string(),
-    friendly_name: z.string(),
-    twitch_picture: z.string().url(),
-    category_game: z.string(),
+export const getPlayersSchema = v.array(
+  v.object({
+    twitch_identifier: v.string(),
+    twitch_login: v.string(),
+    friendly_name: v.string(),
+    twitch_picture: v.string(),
+    category_game: v.string(),
   })
 );
