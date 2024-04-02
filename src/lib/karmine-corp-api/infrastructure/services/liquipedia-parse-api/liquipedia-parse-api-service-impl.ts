@@ -1,9 +1,9 @@
+import * as v from '@badrap/valita';
 import { Effect, Layer } from 'effect';
-import { z } from 'zod';
 
 import { LiquipediaApiService } from './liquipedia-parse-api-service';
 import { liquipediaApiSchemas } from './schemas/liquipedia-api-schemas';
-import { parseZod } from '../../utils/parse-zod/parse-zod';
+import { parseValita } from '../../utils/parse-valita/parse-valita';
 import { EnvService } from '../env/env-service';
 import { FetchService } from '../fetch/fetch-service';
 
@@ -27,7 +27,7 @@ const getLiquipediaParseUrl = ({ game }: { game: string }) =>
     )
   );
 
-const fetchLiquipediaParse = <S extends z.ZodType = z.ZodAny>({
+const fetchLiquipediaParse = <S extends v.Type = v.Type>({
   page,
   game,
   schema,
@@ -39,7 +39,7 @@ const fetchLiquipediaParse = <S extends z.ZodType = z.ZodAny>({
   Effect.Do.pipe(
     Effect.flatMap(() => getLiquipediaParseUrl({ game })),
     Effect.flatMap((url) =>
-      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+      Effect.serviceFunction(FetchService, (_) => _.fetch<v.Infer<S>>)(url, {
         query: {
           action: 'parse',
           page,
@@ -48,7 +48,7 @@ const fetchLiquipediaParse = <S extends z.ZodType = z.ZodAny>({
         parseResponse:
           schema &&
           ((responseText) =>
-            Effect.runSync(parseZod(schema, JSON.parse(responseText), JSON.stringify({ url })))),
+            Effect.runSync(parseValita(schema, JSON.parse(responseText), JSON.stringify({ url })))),
       })
     ),
     Effect.flatMap(Effect.promise)

@@ -1,17 +1,19 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-export const getTwitchSchema = z.array(
-  z.object({
-    twitch_identifier: z.string(),
-    twitch_login: z.string(),
-    friendly_name: z.string(),
-    category_game: z.string(),
-    sub_category_game: z.string().nullable(),
-    twitch_title: z.string(),
-    twitch_picture: z.string().url(),
-    twitch_game: z.string(),
-    twitch_uptime: z.coerce.date(),
-    twitch_viewers: z.number(),
-    thumbnail: z.string(),
+import { vDateString } from '../../../utils/valita-types/date-string';
+
+export const getTwitchSchema = v.array(
+  v.object({
+    twitch_identifier: v.string(),
+    twitch_login: v.string(),
+    friendly_name: v.string(),
+    category_game: v.string(),
+    sub_category_game: v.string().nullable(),
+    twitch_title: v.string(),
+    twitch_picture: v.string(),
+    twitch_game: v.string(),
+    twitch_uptime: vDateString,
+    twitch_viewers: v.number(),
+    thumbnail: v.string(),
   })
 );

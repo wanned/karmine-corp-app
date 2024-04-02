@@ -1,3 +1,3 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-export const getAllVersionsSchema = z.array(z.string());
+export const getAllVersionsSchema = v.array(v.string());

@@ -1,9 +1,9 @@
+import * as v from '@badrap/valita';
 import { Effect, Layer } from 'effect';
-import { z } from 'zod';
 
 import { youtubeApiSchemas } from './schemas/youtube-api-schemas';
 import { YoutubeApiService } from './youtube-api-service';
-import { parseZod } from '../../utils/parse-zod/parse-zod';
+import { parseValita } from '../../utils/parse-valita/parse-valita';
 import { EnvService } from '../env/env-service';
 import { FetchService } from '../fetch/fetch-service';
 
@@ -27,7 +27,7 @@ const getYoutubeUrl = ({ url }: { url: string }) =>
     Effect.map((env) => `${env.YOUTUBE_API_URL}/${url}`)
   );
 
-const fetchYoutube = <S extends z.ZodType = z.ZodAny>({
+const fetchYoutube = <S extends v.Type = v.Type>({
   url,
   query,
   schema,
@@ -39,13 +39,13 @@ const fetchYoutube = <S extends z.ZodType = z.ZodAny>({
   Effect.Do.pipe(
     Effect.flatMap(() => getYoutubeUrl({ url })),
     Effect.flatMap((url) =>
-      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+      Effect.serviceFunction(FetchService, (_) => _.fetch<v.Infer<S>>)(url, {
         query,
         parseResponse:
           schema &&
           ((responseText) =>
             Effect.runSync(
-              parseZod(schema, JSON.parse(responseText), JSON.stringify({ url, query }))
+              parseValita(schema, JSON.parse(responseText), JSON.stringify({ url, query }))
             )),
       })
     ),

@@ -1,27 +1,31 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-export const getCalendarSchema = z.object({
-  data: z.preprocess(
-    (data: any) => {
-      return Array.isArray(data) ? data.filter((match: any) => match.game === 2) : [];
-    },
-    z
-      .array(
-        z.object({
-          id: z.number(),
-          away: z
+import { vDateString } from '../../../utils/valita-types/date-string';
+
+export const getCalendarSchema = v.object({
+  data: v
+    .array(
+      v.union(
+        v.object({
+          game: v.literal(2),
+          id: v.number(),
+          away: v
             .object({
-              name: z.string(),
+              name: v.string(),
             })
             .nullable(),
-          home: z
+          home: v
             .object({
-              name: z.string(),
+              name: v.string(),
             })
             .nullable(),
-          start_date: z.coerce.date(),
-        })
+          start_date: vDateString,
+        }),
+        v.unknown().chain(() => v.ok(undefined))
       )
-      .optional()
-  ),
+    )
+    .chain((data) =>
+      v.ok(data.filter((d): d is NonNullable<typeof d> => d !== null && d !== undefined))
+    )
+    .optional(),
 });
