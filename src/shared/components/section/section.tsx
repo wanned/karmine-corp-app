@@ -15,7 +15,9 @@ export const Section = ({ title, children }: SectionProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
-        <Typographies.Title1 color={styles.title.color}>{title}</Typographies.Title1>
+        <Typographies.Title1 color={styles.title.color} verticalTrim>
+          {title}
+        </Typographies.Title1>
       </View>
       <View style={styles.contentContainer}>{children}</View>
     </View>

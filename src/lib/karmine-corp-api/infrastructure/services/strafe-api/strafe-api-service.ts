@@ -1,5 +1,5 @@
+import * as v from '@badrap/valita';
 import { Context, Effect } from 'effect';
-import { z } from 'zod';
 
 import { StrafeApi } from './strafe-api';
 import { EnvService } from '../env/env-service';
@@ -12,7 +12,7 @@ export class StrafeApiService extends Context.Tag(STRAFE_API_SERVICE_TAG)<
   {
     getCalendar(args: {
       date: Date;
-    }): Effect.Effect<StrafeApi.GetCalendar, z.ZodError<any>, FetchService | EnvService>;
+    }): Effect.Effect<StrafeApi.GetCalendar, v.Err, FetchService | EnvService>;
     getMatch(args: {
       matchId: number;
     }): Effect.Effect<StrafeApi.GetMatch, never, FetchService | EnvService>;

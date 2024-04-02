@@ -1,23 +1,26 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-export const getMatchSchema = z.object({
-  data: z.object({
-    live: z.preprocess(
-      (data: any) => {
-        return Array.isArray(data) ? data.filter((d: any) => d.key === 'game-lol') : [];
-      },
-      z.array(
-        z.object({
-          data: z.object({
-            status: z.enum(['live', 'finished']),
-            index: z.number().int(),
-            winner: z.enum(['home', 'away']).nullable(),
-            game: z.object({
-              duration: z.number().int(),
+export const getMatchSchema = v.object({
+  data: v.object({
+    live: v
+      .array(
+        v.union(
+          v.object({
+            key: v.literal('game-lol'),
+            data: v.object({
+              status: v.union(v.literal('live'), v.literal('finished')),
+              index: v.number(),
+              winner: v.union(v.literal('home'), v.literal('away')).nullable(),
+              game: v.object({
+                duration: v.number(),
+              }),
             }),
           }),
-        })
+          v.unknown().chain(() => v.ok(undefined))
+        )
       )
-    ),
+      .chain((data) =>
+        v.ok(data.filter((d): d is NonNullable<typeof d> => d !== null && d !== undefined))
+      ),
   }),
 });

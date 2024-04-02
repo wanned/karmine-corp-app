@@ -17,9 +17,8 @@ export const Body = ({ children, color, maxLines, verticalTrim = false }: Typogr
           fontWeight="SemiBold"
           lineHeight={verticalTrim ? 16 : undefined}
           maxLines={maxLines}>
-          {['\u200B', ...(Array.isArray(children) ? children : [children])]}
+          {children}
         </BaseText>
-        {/* usage of \u200B is a hack to make sure that even a "only number" string will have the same height as a string with letters */}
       </View>
     </View>
   );
