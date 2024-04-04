@@ -62,6 +62,10 @@ export const enTranslations: Translations['en'] = {
       title: 'Contributors',
       description: 'Thanks to all the contributors who made this project possible',
     },
+    apis: {
+      title: 'APIs',
+      description: 'The data displayed in this app is fetched from the following APIs',
+    },
   },
   games: {
     LeagueOfLegendsLFL: 'LFL',

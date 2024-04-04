@@ -62,6 +62,10 @@ export const frTranslations: Translations['fr'] = {
       title: 'Contributeurs',
       description: 'Merci à toutes les personnes qui permettent à cette application d’exister.',
     },
+    apis: {
+      title: 'APIs',
+      description: 'Les données de l’application proviennent des sources suivantes.',
+    },
   },
   games: {
     LeagueOfLegendsLFL: 'LFL',

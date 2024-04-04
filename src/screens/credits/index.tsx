@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 
+import { Apis } from './components/apis';
 import { Contributors } from './components/contributors';
 
 import { Typographies } from '~/shared/components/typographies';
@@ -24,6 +25,13 @@ export default function CreditsScreen() {
             <Typographies.Body>{translate('credits.contributors.description')}</Typographies.Body>
           </View>
           <Contributors />
+        </View>
+        <View>
+          <Typographies.Title2>{translate('credits.apis.title')}</Typographies.Title2>
+          <View style={styles.sectionDescriptionContainer}>
+            <Typographies.Body>{translate('credits.apis.description')}</Typographies.Body>
+          </View>
+          <Apis />
         </View>
       </View>
     </DefaultLayout>

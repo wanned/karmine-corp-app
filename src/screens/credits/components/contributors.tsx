@@ -18,8 +18,6 @@ export const Contributors = () => {
   const { data: contributors } = useContributors();
   const styles = useStyles(getStyles);
 
-  console.log('salut', contributors);
-
   const redirect = (contributor: ContributorProps) => {
     if (contributor.user.twitter) {
       Linking.openURL(`https://x.com/${contributor.user.twitter}`);
