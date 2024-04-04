@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 
 import { Buttons } from '~/shared/components/buttons';
@@ -11,6 +11,8 @@ import { useTranslate } from '~/shared/hooks/use-translate';
 import { ModalLayout } from '~/shared/layouts/modal-layout';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { Translations } from '~/translations/Translations';
+import { Step1 } from '../children/step-1';
+import { Step2 } from '../children/step-2';
 
 export const OnboardingModal = React.memo(() => {
   const styles = useStyles(getStyles);
@@ -22,14 +24,19 @@ export const OnboardingModal = React.memo(() => {
     navigation.goBack();
   }, []);
 
-  const { currentStep, totalSteps, title, description, handleNext } = useOnboardingController({
-    handleEnd,
+  const { currentStep, totalSteps, title, description, handleNext, children } =
+    useOnboardingController({
+      handleEnd,
+    });
+
+  useEffect(() => {
+    console.log('Current step:', currentStep);
   });
 
   return (
     <ModalLayout useScrollView={false} hideHeader>
-      {/* {children} */}
-      <View style={styles.container}>
+      <View style={styles.childrenContainer}>{children}</View>
+      <View style={styles.cardContainer}>
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Title1>{title}</Title1>
@@ -58,7 +65,7 @@ interface UseOnboardingControllerProps {
 const useOnboardingController = ({ handleEnd }: UseOnboardingControllerProps) => {
   const [currentStep, setCurrentStep] =
     useState<keyof Translations['en']['onboarding']['pages']>(0);
-  const totalSteps = 3;
+  const totalSteps = 4;
 
   const translate = useTranslate();
 
@@ -67,6 +74,17 @@ const useOnboardingController = ({ handleEnd }: UseOnboardingControllerProps) =>
     () => translate(`onboarding.pages.${currentStep}.description`),
     [currentStep]
   );
+
+  const children = useMemo(() => {
+    switch (currentStep) {
+      case 1:
+        return <Step1 />;
+      case 2:
+        return <Step2 />;
+      default:
+        return <View />;
+    }
+  }, [currentStep]);
 
   const handleNext = useCallback(() => {
     if (currentStep < totalSteps - 1) {
@@ -77,6 +95,7 @@ const useOnboardingController = ({ handleEnd }: UseOnboardingControllerProps) =>
   }, [currentStep, handleEnd]);
 
   return {
+    children,
     currentStep,
     totalSteps,
     title,
@@ -86,7 +105,13 @@ const useOnboardingController = ({ handleEnd }: UseOnboardingControllerProps) =>
 };
 
 const getStyles = createStylesheet((theme) => ({
-  container: {
+  childrenContainer: {
+    flex: 1,
+    paddingBottom: 400,
+    justifyContent: 'center',
+    paddingHorizontal: theme.spacing.xlarge,
+  },
+  cardContainer: {
     width: '100%',
     height: 400,
     backgroundColor: theme.colors.subtleBackground,

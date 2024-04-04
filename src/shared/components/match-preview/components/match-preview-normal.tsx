@@ -20,73 +20,82 @@ import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
-export const MatchPreviewNormal = React.memo(({ match }: MatchPreviewProps) => {
-  return (
-    <MatchSpoilerProvider>
-      <MatchPreviewNormalWithoutSpoilerProvider match={match} />
-    </MatchSpoilerProvider>
-  );
-});
-
-const MatchPreviewNormalWithoutSpoilerProvider = React.memo(({ match }: MatchPreviewProps) => {
-  const styles = useStyles(getStyles);
-  const theme = useTheme();
-
-  const openGameDetailsModal = useOpenGameDetailsModal({ match });
-  const { showResults } = useShowResults();
-
-  const gameImageAssets = useGameBackgroundImage();
-  const gameImage = useMemo(
-    () => gameImageAssets?.[match.matchDetails.competitionName],
-    [gameImageAssets, match.matchDetails.competitionName]
-  );
-
-  const gradientColor = theme.colors.subtleBackground;
-
-  return (
-    <TouchableScale onPress={openGameDetailsModal} onLongPress={showResults}>
-      <View style={styles.matchPreview}>
-        {gameImage && (
-          <Image
-            source={{ uri: gameImage.uri }}
-            cachePolicy="memory-disk"
-            style={styles.backgroundImage}
-          />
-        )}
-        <LinearGradient
-          style={styles.backgroundImage}
-          colors={[`${gradientColor}00`, `${gradientColor}33`, `${gradientColor}FF`]}
-          locations={[0, 0.83, 1]}
+export const MatchPreviewNormal = React.memo(
+  ({ match, shouldPreventOpenModal }: MatchPreviewProps) => {
+    return (
+      <MatchSpoilerProvider>
+        <MatchPreviewNormalWithoutSpoilerProvider
+          match={match}
+          shouldPreventOpenModal={shouldPreventOpenModal}
         />
-        <View style={[styles.backgroundImage, { backgroundColor: gradientColor, opacity: 0.94 }]} />
-        <MatchLabel
-          date={match.date}
-          competitionName={match.matchDetails.competitionName}
-          bo={match.matchDetails.bo}
-          status={match.status}
-        />
-        <Spacer size={16} direction="vertical" />
+      </MatchSpoilerProvider>
+    );
+  }
+);
 
-        <View style={styles.teamsContainer}>
-          {match.teams.map(
-            (team, index) =>
-              team && (
-                <MatchTeam
-                  key={`${match.id}-${team.name}-${index}`}
-                  team={team}
-                  renderTeamName={renderTeamName}
-                  renderTeamScore={renderTeamScore}
-                  crownSize={16}
-                  logoSize={24}
-                  hideResultColor={theme.colors.subtleForeground2}
-                />
-              )
+const MatchPreviewNormalWithoutSpoilerProvider = React.memo(
+  ({ match, shouldPreventOpenModal }: MatchPreviewProps) => {
+    const styles = useStyles(getStyles);
+    const theme = useTheme();
+
+    const openGameDetailsModal = useOpenGameDetailsModal({ match, shouldPreventOpenModal });
+    const { showResults } = useShowResults();
+
+    const gameImageAssets = useGameBackgroundImage();
+    const gameImage = useMemo(
+      () => gameImageAssets?.[match.matchDetails.competitionName],
+      [gameImageAssets, match.matchDetails.competitionName]
+    );
+
+    const gradientColor = theme.colors.subtleBackground;
+
+    return (
+      <TouchableScale onPress={openGameDetailsModal} onLongPress={showResults}>
+        <View style={styles.matchPreview}>
+          {gameImage && (
+            <Image
+              source={{ uri: gameImage.uri }}
+              cachePolicy="memory-disk"
+              style={styles.backgroundImage}
+            />
           )}
+          <LinearGradient
+            style={styles.backgroundImage}
+            colors={[`${gradientColor}00`, `${gradientColor}33`, `${gradientColor}FF`]}
+            locations={[0, 0.83, 1]}
+          />
+          <View
+            style={[styles.backgroundImage, { backgroundColor: gradientColor, opacity: 0.94 }]}
+          />
+          <MatchLabel
+            date={match.date}
+            competitionName={match.matchDetails.competitionName}
+            bo={match.matchDetails.bo}
+            status={match.status}
+          />
+          <Spacer size={16} direction="vertical" />
+
+          <View style={styles.teamsContainer}>
+            {match.teams.map(
+              (team, index) =>
+                team && (
+                  <MatchTeam
+                    key={`${match.id}-${team.name}-${index}`}
+                    team={team}
+                    renderTeamName={renderTeamName}
+                    renderTeamScore={renderTeamScore}
+                    crownSize={16}
+                    logoSize={24}
+                    hideResultColor={theme.colors.subtleForeground2}
+                  />
+                )
+            )}
+          </View>
         </View>
-      </View>
-    </TouchableScale>
-  );
-});
+      </TouchableScale>
+    );
+  }
+);
 
 const renderTeamName = ({ teamName, foreground }: { teamName: string; foreground: string }) => {
   return (

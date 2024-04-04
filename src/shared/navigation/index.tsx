@@ -5,9 +5,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect, useMemo, useRef } from 'react';
 import { InteractionManager } from 'react-native';
 
-import { TabBar } from './tab-bar';
 import { RootParamList } from '../hooks/use-navigation';
 import { useSplashScreen } from '../hooks/use-splash-screen';
+import { TabBar } from './tab-bar';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import CalendarScreen from '~/screens/calendar';

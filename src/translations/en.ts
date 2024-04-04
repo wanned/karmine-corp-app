@@ -12,6 +12,10 @@ export const enTranslations: Translations['en'] = {
         description: 'Receive notifications to not miss anything',
       },
       2: {
+        title: 'Spoilers',
+        description: "Don't want to know the results? Turn off the spoilers",
+      },
+      3: {
         title: 'Let’s go!',
         description: 'Discover the latest results and the next matches',
       },

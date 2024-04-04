@@ -19,6 +19,10 @@ export type Translations = Record<
           title: string;
           description: string;
         };
+        3: {
+          title: string;
+          description: string;
+        };
       };
       startButton: string;
       nextButton: string;
