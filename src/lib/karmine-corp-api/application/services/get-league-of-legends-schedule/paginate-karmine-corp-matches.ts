@@ -84,7 +84,6 @@ function getResultForPaginatorFormatter(): PaginateChunkEffectPaginatorFormatter
         }
       }
 
-      shouldContinuePagination = shouldContinuePagination && karmineMatchesChunk.length === 0;
       shouldContinuePagination =
         shouldContinuePagination && schedule.data.schedule.pages.older !== null;
 

@@ -62,7 +62,6 @@ function getResultForPaginatorFormatter(): PaginateChunkEffectPaginatorFormatter
         }
       }
 
-      shouldContinuePagination = shouldContinuePagination && karmineMatchesChunk.length === 0;
       shouldContinuePagination = shouldContinuePagination && schedule.pageSize < schedule.perPage;
 
       if (!shouldContinuePagination) {
