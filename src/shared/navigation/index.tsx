@@ -6,6 +6,7 @@ import { TabBar } from './tab-bar';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import CalendarScreen from '~/screens/calendar';
+import CreditsScreen from '~/screens/credits';
 import { GameDetailsModal } from '~/screens/game-details-modal';
 import HomeScreen from '~/screens/home';
 import { LastResultsModal } from '~/screens/home/modals/last-results-modal';
@@ -21,6 +22,7 @@ export type PagesParamList = {
   calendar: undefined;
   teams: undefined;
   settings: undefined;
+  credits: undefined;
 };
 
 export type ModalsParamList = {
@@ -65,6 +67,7 @@ function PagesNavigator() {
       <Pages.Screen name="calendar" component={CalendarScreen} />
       <Pages.Screen name="teams" component={TeamsScreen} />
       <Pages.Screen name="settings" component={SettingsScreen} />
+      <Pages.Screen name="credits" component={CreditsScreen} />
     </Pages.Navigator>
   );
 }
