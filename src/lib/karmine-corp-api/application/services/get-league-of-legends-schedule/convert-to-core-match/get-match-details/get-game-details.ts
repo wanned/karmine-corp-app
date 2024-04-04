@@ -154,10 +154,7 @@ function getTeamPicks({
             player: Effect.succeed(participant.summonerName),
           })
         )
-      ),
-    {
-      concurrency: 'unbounded',
-    }
+      )
   );
 }
 

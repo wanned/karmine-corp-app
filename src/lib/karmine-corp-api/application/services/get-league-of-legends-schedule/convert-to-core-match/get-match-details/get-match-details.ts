@@ -59,17 +59,12 @@ function getGames(match: LeagueOfLegendsMatch) {
       Effect.flatMap(getMatchCached, (matchCache) => matchCache.get({ matchId: match.match.id }))
     ),
     Effect.flatMap((matchDetails) =>
-      Effect.forEach(
-        matchDetails.data.event.match.games,
-        (game) =>
-          getGameDetails({
-            ...game,
-            match: matchDetails,
-            startTime: match.startTime,
-          }),
-        {
-          concurrency: 'unbounded',
-        }
+      Effect.forEach(matchDetails.data.event.match.games, (game) =>
+        getGameDetails({
+          ...game,
+          match: matchDetails,
+          startTime: match.startTime,
+        })
       )
     ),
     Effect.catchAll(() => Effect.succeed([]))

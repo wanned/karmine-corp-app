@@ -11,10 +11,14 @@ export function getLeagueOfLegendsSchedule() {
         concurrency: 'unbounded',
       })
     ),
-    Stream.mapEffect((match) =>
-      Effect.catchAll(convertToCoreMatch(match).pipe(Effect.map(Stream.succeed)), () =>
-        Effect.succeed(Stream.empty)
-      )
+    Stream.mapEffect(
+      (match) =>
+        Effect.catchAll(convertToCoreMatch(match).pipe(Effect.map(Stream.succeed)), () =>
+          Effect.succeed(Stream.empty)
+        ),
+      {
+        concurrency: 'unbounded',
+      }
     ),
     (_) => Stream.flatten(_)
   );

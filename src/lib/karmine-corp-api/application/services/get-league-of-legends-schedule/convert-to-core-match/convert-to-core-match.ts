@@ -1,8 +1,8 @@
 import { Effect } from 'effect';
 
-import { convertToCoreStatus } from './utils/convert-to-core-status';
 import { getMatchDetails } from './get-match-details/get-match-details';
 import { getTeams } from './get-teams/get-teams';
+import { convertToCoreStatus } from './utils/convert-to-core-status';
 import { CoreData } from '../../../types/core-data';
 
 import { LeagueOfLegendsApi } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api';

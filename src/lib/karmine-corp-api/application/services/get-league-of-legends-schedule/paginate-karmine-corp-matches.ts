@@ -62,6 +62,7 @@ function getResultForPaginatorFormatter(): PaginateChunkEffectPaginatorFormatter
         Chunk.fromIterable(schedule.data.schedule.events),
         (match) => match.match.teams.some((team) => team.name.toLowerCase().includes('karmine'))
       );
+      let shouldContinuePagination = true;
 
       // Filter by date
       const dateRange = yield* _(Effect.serviceConstants(GetScheduleParamsState).dateRange);
@@ -79,11 +80,15 @@ function getResultForPaginatorFormatter(): PaginateChunkEffectPaginatorFormatter
         });
 
         if (!enteredInDateRange) {
-          return [Chunk.empty<LeagueOfLegendsMatch>(), Option.none()];
+          shouldContinuePagination = true;
         }
       }
 
-      if (karmineMatchesChunk.length === 0 || schedule.data.schedule.pages.older === null) {
+      shouldContinuePagination = shouldContinuePagination && karmineMatchesChunk.length === 0;
+      shouldContinuePagination =
+        shouldContinuePagination && schedule.data.schedule.pages.older !== null;
+
+      if (!shouldContinuePagination) {
         return [karmineMatchesChunk, Option.none()];
       }
 
