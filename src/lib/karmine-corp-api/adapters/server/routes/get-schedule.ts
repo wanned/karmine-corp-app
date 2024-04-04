@@ -1,6 +1,6 @@
 import { HttpServer } from '@effect/platform';
 import { Schema } from '@effect/schema';
-import { Chunk, Context, Effect, Layer, Option, Stream } from 'effect';
+import { Chunk, Console, Context, Effect, Layer, Option, Stream } from 'effect';
 
 import { getSchedule } from '~/lib/karmine-corp-api/application/use-cases/get-schedule/get-schedule';
 import { GetScheduleParamsState } from '~/lib/karmine-corp-api/application/use-cases/get-schedule/get-schedule-params-state';
@@ -21,22 +21,25 @@ export const GetScheduleRoute = () =>
           Effect.serviceFunctionEffect(DatabaseService, (_) => _.initializeTables)()
         ),
         Effect.map(() =>
-          Stream.concatAll(
-            Chunk.make(
-              Stream.make('[\n'),
-              getSchedule().pipe(
-                Stream.filter(
-                  (schedule): schedule is Exclude<typeof schedule, undefined | void> =>
-                    schedule !== undefined
+          Stream.map(
+            Stream.concatAll(
+              Chunk.make(
+                Stream.make('[\n'),
+                getSchedule().pipe(
+                  Stream.filter(
+                    (schedule): schedule is Exclude<typeof schedule, undefined | void> =>
+                      schedule !== undefined
+                  ),
+                  Stream.zipWithIndex,
+                  Stream.map(
+                    ([schedule, index]) => `${index === 0 ? '' : ',\n'}${JSON.stringify(schedule)}`
+                  )
                 ),
-                Stream.zipWithIndex,
-                Stream.map(
-                  ([schedule, index]) => `${index === 0 ? '' : ',\n'}${JSON.stringify(schedule)}`
-                )
-              ),
-              Stream.make('\n]')
-            )
-          ).pipe(Stream.map((schedule) => new TextEncoder().encode(schedule)))
+                Stream.make('\n]')
+              )
+            ),
+            (schedule) => new TextEncoder().encode(schedule)
+          )
         ),
         Effect.flatMap((schedule) =>
           getLayers([
@@ -49,7 +52,9 @@ export const GetScheduleRoute = () =>
             EnvService,
             GetScheduleParamsState,
           ]).pipe(
-            Effect.map((layers) => schedule.pipe(Stream.provideLayer(layers))),
+            Effect.map((layers) =>
+              schedule.pipe(Stream.provideLayer(layers), Stream.tapError(Console.error))
+            ),
             Effect.map((schedule) =>
               HttpServer.response.stream(schedule, {
                 contentType: 'application/json',
