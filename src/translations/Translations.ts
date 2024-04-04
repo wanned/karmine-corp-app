@@ -66,6 +66,10 @@ export type Translations = Record<
         title: string;
         description: string;
       };
+      libraries: {
+        title: string;
+        description: string;
+      };
     };
     games: {
       [K in CoreData.CompetitionName]: string;

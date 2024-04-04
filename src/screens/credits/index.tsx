@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
-import { Apis } from './components/apis';
 import { Contributors } from './components/contributors';
+import { CreditsSection } from './components/creditsSection';
 
 import { Typographies } from '~/shared/components/typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
@@ -31,7 +31,14 @@ export default function CreditsScreen() {
           <View style={styles.sectionDescriptionContainer}>
             <Typographies.Body>{translate('credits.apis.description')}</Typographies.Body>
           </View>
-          <Apis />
+          <CreditsSection sectionName="apis" />
+        </View>
+        <View>
+          <Typographies.Title2>{translate('credits.libraries.title')}</Typographies.Title2>
+          <View style={styles.sectionDescriptionContainer}>
+            <Typographies.Body>{translate('credits.libraries.description')}</Typographies.Body>
+          </View>
+          <CreditsSection sectionName="libraries" />
         </View>
       </View>
     </DefaultLayout>

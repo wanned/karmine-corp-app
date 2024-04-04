@@ -66,6 +66,10 @@ export const frTranslations: Translations['fr'] = {
       title: 'APIs',
       description: 'Les données de l’application proviennent des sources suivantes.',
     },
+    libraries: {
+      title: 'Librairies',
+      description: 'Cette application fonctionne grâce aux librairies suivantes.',
+    },
   },
   games: {
     LeagueOfLegendsLFL: 'LFL',
