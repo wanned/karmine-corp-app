@@ -1,11 +1,11 @@
-import { Chunk, Effect, Schedule, Stream } from 'effect';
+import { Chunk, Effect, Layer, Stream } from 'effect';
 import { atom, useAtom, useStore } from 'jotai';
 import { useCallback, useEffect } from 'react';
 
 import { mainLayer } from './utils/main-layer';
 import { CoreData } from '../../application/types/core-data';
 import { getSchedule } from '../../application/use-cases/get-schedule/get-schedule';
-import { createGetScheduleParamsStateImpl } from '../../application/use-cases/get-schedule/get-schedule-params-state';
+import { GetScheduleParamsState } from '../../application/use-cases/get-schedule/get-schedule-params-state';
 import { DatabaseService } from '../../infrastructure/services/database/database-service';
 
 import { IsoDate } from '~/shared/types/IsoDate';
@@ -66,12 +66,15 @@ export const useMatches = () => {
             Effect.serviceFunctionEffect(DatabaseService, (_) => _.initializeTables)()
           ),
           Effect.flatMap(() =>
-            getMatches().pipe(
+            getSchedule().pipe(
+              Stream.groupedWithin(Infinity, 1_000),
               Stream.runForEach((matches) => Effect.succeed(addMatches(Chunk.toArray(matches))))
             )
           )
         ),
-        mainLayer
+        mainLayer.pipe(
+          Layer.merge(Layer.succeed(GetScheduleParamsState, GetScheduleParamsState.of({})))
+        )
       )
     ).catch((error) => {
       console.error(error);
@@ -85,53 +88,53 @@ export const useMatches = () => {
   };
 };
 
-const getMatches = () =>
-  Stream.empty.pipe(
-    Stream.merge(getLiveMatches()),
-    Stream.merge(getFutureMatches()),
-    Stream.merge(getPastMatches()),
-    Stream.groupedWithin(Infinity, 1_000),
-    Stream.merge(
-      getSchedule({ onlyFromDatabase: true }).pipe(
-        Stream.provideSomeLayer(createGetScheduleParamsStateImpl({})),
-        Stream.runCollect
-      )
-    )
-  );
+// const getMatches = () =>
+//   Stream.empty.pipe(
+//     Stream.merge(getLiveMatches()),
+//     Stream.merge(getFutureMatches()),
+//     Stream.merge(getPastMatches()),
+//     Stream.groupedWithin(Infinity, 1_000),
+//     Stream.merge(
+//       getSchedule({ onlyFromDatabase: true }).pipe(
+//         Stream.provideSomeLayer(createGetScheduleParamsStateImpl({})),
+//         Stream.runCollect
+//       )
+//     )
+//   );
 
-const getLiveMatches = () => {
-  return Stream.Do.pipe(
-    Stream.flatMap(() => getSchedule()),
-    Stream.repeat(Schedule.spaced('1 minute')),
-    Stream.provideSomeLayer(
-      createGetScheduleParamsStateImpl({
-        dateRange: {
-          // We want to get matches that have started 12 hours ago and will start in the next 12 hours
-          start: new Date(new Date().getTime() - 12 * 60 * 60 * 1000),
-          end: new Date(new Date().getTime() + 12 * 60 * 60 * 1000),
-        },
-      })
-    )
-  );
-};
+// const getLiveMatches = () => {
+//   return Stream.Do.pipe(
+//     Stream.flatMap(() => getSchedule()),
+//     Stream.repeat(Schedule.spaced('1 minute')),
+//     Stream.provideSomeLayer(
+//       createGetScheduleParamsStateImpl({
+//         dateRange: {
+//           // We want to get matches that have started 12 hours ago and will start in the next 12 hours
+//           start: new Date(new Date().getTime() - 12 * 60 * 60 * 1000),
+//           end: new Date(new Date().getTime() + 12 * 60 * 60 * 1000),
+//         },
+//       })
+//     )
+//   );
+// };
 
-const getFutureMatches = () =>
-  Stream.Do.pipe(
-    Stream.flatMap(getSchedule),
-    Stream.repeat(Schedule.spaced('15 minutes')),
-    Stream.provideSomeLayer(
-      createGetScheduleParamsStateImpl({
-        dateRange: { start: new Date() },
-      })
-    )
-  );
+// const getFutureMatches = () =>
+//   Stream.Do.pipe(
+//     Stream.flatMap(getSchedule),
+//     Stream.repeat(Schedule.spaced('15 minutes')),
+//     Stream.provideSomeLayer(
+//       createGetScheduleParamsStateImpl({
+//         dateRange: { start: new Date() },
+//       })
+//     )
+//   );
 
-const getPastMatches = () =>
-  Stream.Do.pipe(
-    Stream.flatMap(getSchedule),
-    Stream.provideSomeLayer(
-      createGetScheduleParamsStateImpl({
-        dateRange: { end: new Date() },
-      })
-    )
-  );
+// const getPastMatches = () =>
+//   Stream.Do.pipe(
+//     Stream.flatMap(getSchedule),
+//     Stream.provideSomeLayer(
+//       createGetScheduleParamsStateImpl({
+//         dateRange: { end: new Date() },
+//       })
+//     )
+//   );

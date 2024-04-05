@@ -134,8 +134,7 @@ function getTeamPicks({
             team === 'blue' ? 'home' : 'away',
             Effect.all({
               name: Effect.succeed(participant.summonerName),
-              imageUrl: getAllPlayersCached.pipe(
-                Effect.flatMap((playersCache) => playersCache.get({})),
+              imageUrl: getAllPlayers().pipe(
                 Effect.map((players) =>
                   players.find((player) => player.id === participant.esportsPlayerId)
                 ),
@@ -158,16 +157,18 @@ function getTeamPicks({
   );
 }
 
-const getAllPlayersCached = Cache.make({
-  capacity: 100,
-  timeToLive: '1 hour',
-  lookup: getAllPlayers,
-});
-
+// Using the Cache.make function for allPlayers makes the app very slow, so we use a global variable instead
+let allPlayers: LeagueOfLegendsApi.GetTeams['data']['teams'][0]['players'] | undefined;
 function getAllPlayers() {
-  return Effect.serviceMembers(LeagueOfLegendsApiService)
-    .functions.getTeams()
-    .pipe(Effect.map((teams) => teams.data.teams.flatMap((team) => team.players)));
+  return Effect.if(Effect.succeed(allPlayers !== undefined), {
+    onTrue: Effect.succeed(allPlayers!),
+    onFalse: Effect.serviceMembers(LeagueOfLegendsApiService)
+      .functions.getTeams()
+      .pipe(
+        Effect.tap((teams) => (allPlayers = teams.data.teams.flatMap((team) => team.players))),
+        Effect.map((teams) => teams.data.teams.flatMap((team) => team.players))
+      ),
+  });
 }
 
 function getChampionImageUrl(championId: string) {
