@@ -23,7 +23,7 @@ export const SettingsProvider = ({
   value?: Settings;
 }) => {
   const [settings, _setSettings] = useState<Settings>({
-    language: Localization.locale.split('-')[0],
+    language: Localization.getLocales()[0].languageCode,
   } as Settings);
 
   useEffect(() => {
