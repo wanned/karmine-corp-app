@@ -1,11 +1,9 @@
 import './global';
 import 'react-native-gesture-handler';
 
-import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { registerRootComponent } from 'expo';
-import * as FileSystem from 'expo-file-system';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect } from 'react';
@@ -22,6 +20,7 @@ import {
 } from './shared/notifications/add-notification-handlers';
 import { requestNotificationPermission } from './shared/notifications/request-permission';
 import { subscribeToTopic } from './shared/notifications/subscribe-to-topic';
+import { reactQueryStoragePersister } from './shared/utils/react-query-storage-persister';
 
 import { SettingsProvider } from '~/shared/contexts/settings-context';
 import { ThemeContext } from '~/shared/contexts/theme-context';
@@ -35,23 +34,6 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: Infinity,
-    },
-  },
-});
-const asyncStoragePersister = createAsyncStoragePersister({
-  storage: {
-    getItem: async (key: string) => {
-      try {
-        return await FileSystem.readAsStringAsync(FileSystem.documentDirectory + key);
-      } catch {
-        return null;
-      }
-    },
-    setItem: async (key: string, value: string) => {
-      await FileSystem.writeAsStringAsync(FileSystem.documentDirectory + key, value);
-    },
-    removeItem: async (key: string) => {
-      await FileSystem.deleteAsync(FileSystem.documentDirectory + key);
     },
   },
 });
@@ -94,7 +76,7 @@ export default function App() {
   return (
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister: asyncStoragePersister, maxAge: Infinity }}>
+      persistOptions={{ persister: reactQueryStoragePersister, maxAge: Infinity }}>
       <SettingsProvider value={{} as any}>
         <ThemeContext.Provider
           value={{
