@@ -1,12 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import defu from 'defu';
 import * as Localization from 'expo-localization';
+import { MMKV } from 'react-native-mmkv';
 
 import { Settings } from '../types/Settings';
 
 import { Language } from '~/translations/Translations';
 
-const SETTINGS_ASYNC_STORAGE_KEY = 'settings';
+const storage = new MMKV();
+const SETTINGS_STORAGE_KEY = 'settings';
 
 const defaultSettings: Settings = {
   showResults: true,
@@ -26,7 +27,7 @@ const defaultSettings: Settings = {
 
 export async function saveSettings(settings: Settings) {
   try {
-    await AsyncStorage.setItem(SETTINGS_ASYNC_STORAGE_KEY, JSON.stringify(settings));
+    storage.set(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
   } catch (error) {
     console.error(error);
   }
@@ -36,7 +37,7 @@ export async function getSettings(): Promise<Settings> {
   let settings: Partial<Settings> = {};
 
   try {
-    const savedSettingsString = await AsyncStorage.getItem(SETTINGS_ASYNC_STORAGE_KEY);
+    const savedSettingsString = storage.getString(SETTINGS_STORAGE_KEY);
     settings = JSON.parse(savedSettingsString || '{}') as Settings;
   } catch (error) {
     console.error(error);
