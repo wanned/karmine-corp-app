@@ -6,6 +6,7 @@ export class GetScheduleParamsState extends Context.Tag(GET_SCHEDULE_PARAMS_TAG)
   GetScheduleParamsState,
   {
     dateRange?: { start?: Date; end?: Date };
+    ignoreIds?: string[];
   }
 >() {}
 
