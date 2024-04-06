@@ -8,13 +8,17 @@ export function getLeagueOfLegendsSchedule() {
   return Stream.Do.pipe(
     Stream.flatMap(() =>
       Stream.mergeAll(karmineCorpLeagues.map(paginateKarmineCorpMatches), {
-        concurrency: 1,
+        concurrency: 3,
       })
     ),
-    Stream.mapEffect((match) =>
-      Effect.catchAll(convertToCoreMatch(match).pipe(Effect.map(Stream.succeed)), () =>
-        Effect.succeed(Stream.empty)
-      )
+    Stream.mapEffect(
+      (match) =>
+        Effect.catchAll(convertToCoreMatch(match).pipe(Effect.map(Stream.succeed)), () =>
+          Effect.succeed(Stream.empty)
+        ),
+      {
+        concurrency: 3,
+      }
     ),
     (_) => Stream.flatten(_)
   );
