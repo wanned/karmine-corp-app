@@ -7,6 +7,7 @@ import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export interface MatchPreviewProps {
   match: CoreData.Match;
+  shouldPreventOpenModal?: boolean;
 }
 
 export const MatchPreview = React.memo(

@@ -13,47 +13,49 @@ import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
-export const MatchPreviewCompact = React.memo(({ match }: MatchPreviewProps) => {
-  const styles = useStyles(getStyles);
-  const theme = useTheme();
+export const MatchPreviewCompact = React.memo(
+  ({ match, shouldPreventOpenModal }: MatchPreviewProps) => {
+    const styles = useStyles(getStyles);
+    const theme = useTheme();
 
-  const openGameDetailsModal = useOpenGameDetailsModal({ match });
+    const openGameDetailsModal = useOpenGameDetailsModal({ match, shouldPreventOpenModal });
 
-  return (
-    <TouchableOpacity style={styles.matchPreview} onPress={openGameDetailsModal}>
-      <View style={styles.labelContainer}>
-        <MatchLabel
-          date={match.date}
-          competitionName={match.matchDetails.competitionName}
-          bo={match.matchDetails.bo}
-          status={match.status}
-        />
-      </View>
-      <View style={styles.teamsContainer2}>
-        <MatchSpoilerProvider>
-          <View style={styles.teamsContainer}>
-            {match.teams.map(
-              (team, index) =>
-                team && (
-                  <MatchTeam
-                    key={`${match.id}-${team.name}-${index}`}
-                    team={team}
-                    renderTeamName={renderTeamName}
-                    renderTeamScore={renderTeamScore}
-                    crownSize={16}
-                    logoSize={24}
-                    hideResultColor={theme.colors.subtleBackground}
-                    changeLoserOpacity
-                  />
-                )
-            )}
-          </View>
-        </MatchSpoilerProvider>
-        <Iconify icon="solar:alt-arrow-right-outline" color={styles.arrowIcon.color} size={16} />
-      </View>
-    </TouchableOpacity>
-  );
-});
+    return (
+      <TouchableOpacity style={styles.matchPreview} onPress={openGameDetailsModal}>
+        <View style={styles.labelContainer}>
+          <MatchLabel
+            date={match.date}
+            competitionName={match.matchDetails.competitionName}
+            bo={match.matchDetails.bo}
+            status={match.status}
+          />
+        </View>
+        <View style={styles.teamsContainer2}>
+          <MatchSpoilerProvider>
+            <View style={styles.teamsContainer}>
+              {match.teams.map(
+                (team, index) =>
+                  team && (
+                    <MatchTeam
+                      key={`${match.id}-${team.name}-${index}`}
+                      team={team}
+                      renderTeamName={renderTeamName}
+                      renderTeamScore={renderTeamScore}
+                      crownSize={16}
+                      logoSize={24}
+                      hideResultColor={theme.colors.subtleBackground}
+                      changeLoserOpacity
+                    />
+                  )
+              )}
+            </View>
+          </MatchSpoilerProvider>
+          <Iconify icon="solar:alt-arrow-right-outline" color={styles.arrowIcon.color} size={16} />
+        </View>
+      </TouchableOpacity>
+    );
+  }
+);
 
 const renderTeamName = ({ teamName, foreground }: { teamName: string; foreground: string }) => {
   return <Typographies.Body color={foreground}>{teamName}</Typographies.Body>;

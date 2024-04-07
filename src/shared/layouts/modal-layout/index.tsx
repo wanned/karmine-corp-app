@@ -9,15 +9,16 @@ import {
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { ModalHeaderBar } from './components/modal-header-bar';
 import { useStyles } from '../../hooks/use-styles';
 import { createStylesheet } from '../../styles/create-stylesheet';
+import { ModalHeaderBar } from './components/modal-header-bar';
 
 interface ModalLayoutProps {
   children: React.ReactNode;
   scrollViewStyle?: ScrollView['props']['style'];
   opacifyOnScroll?: boolean;
   useScrollView?: boolean;
+  hideHeader?: boolean;
 }
 
 export const ModalLayout = ({
@@ -25,6 +26,7 @@ export const ModalLayout = ({
   scrollViewStyle,
   opacifyOnScroll,
   useScrollView = true,
+  hideHeader = false,
 }: ModalLayoutProps) => {
   const styles = useStyles(getStyles);
   const [handleScroll, setHandleScroll] =
@@ -36,7 +38,9 @@ export const ModalLayout = ({
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <ModalHeaderBar opacifyOnScroll={opacifyOnScroll} setHandleScroll={setHandleScroll} />
+      {!hideHeader && (
+        <ModalHeaderBar opacifyOnScroll={opacifyOnScroll} setHandleScroll={setHandleScroll} />
+      )}
       <ModalContentContainer
         style={StyleSheet.compose(styles.modalContentContainer, scrollViewStyle)}
         contentContainerStyle={{ flexGrow: 1 }}

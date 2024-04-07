@@ -1,6 +1,29 @@
 import { Translations } from './Translations';
 
 export const enTranslations: Translations['en'] = {
+  onboarding: {
+    pages: {
+      0: {
+        title: 'Welcome to Karmine Board!',
+        description: 'Follow the matches of Karmine Corp and more.',
+      },
+      1: {
+        title: 'Notifications',
+        description: 'Choose the games you will receive notifications for.',
+      },
+      2: {
+        title: 'Spoilers',
+        description:
+          "Don't want to know the results? Turn off the spoilers.\nTo reveal them, just keep pressing on a match.",
+      },
+      3: {
+        title: "Let's go!",
+        description: 'Discover the latest results and the next matches',
+      },
+    },
+    startButton: 'Start',
+    nextButton: 'Next',
+  },
   home: {
     screenName: 'Home',
     nextMatchesTitle: 'Next matches',
