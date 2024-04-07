@@ -4,7 +4,7 @@ export const esTranslations: Translations['es'] = {
   onboarding: {
     pages: {
       0: {
-        title: '¡Bienvenido a Karmine Board!',
+        title: '¡Bienvenido a Karmine Plus!',
         description: 'Sigue los partidos de Karmine Corp y más.',
       },
       1: {
@@ -18,7 +18,7 @@ export const esTranslations: Translations['es'] = {
       },
       3: {
         title: '¡Vamos!',
-        description: 'Descubre los últimos resultados y los próximos partidos',
+        description: 'Descubre los últimos resultados y los próximos partidos.',
       },
     },
     startButton: 'Comenzar',
