@@ -1,5 +1,6 @@
 import { Chunk, Effect, Stream, Option } from 'effect';
 
+import { getMatchId } from './convert-to-core-match/utils/get-match-id';
 import { PaginateChunkEffectPaginatorFormatter } from '../../types/effect-utils';
 import { GetScheduleParamsState } from '../../use-cases/get-schedule/get-schedule-params-state';
 
@@ -82,6 +83,15 @@ function getResultForPaginatorFormatter(): PaginateChunkEffectPaginatorFormatter
         if (!enteredInDateRange) {
           shouldContinuePagination = true;
         }
+      }
+
+      // Filter by ignoreIds
+      const ignoreIds = yield* _(Effect.serviceConstants(GetScheduleParamsState).ignoreIds);
+      if (ignoreIds !== undefined) {
+        karmineMatchesChunk = Chunk.filter(
+          karmineMatchesChunk,
+          (match) => !ignoreIds.includes(Effect.runSync(getMatchId(match)))
+        );
       }
 
       shouldContinuePagination =

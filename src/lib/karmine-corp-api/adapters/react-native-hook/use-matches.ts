@@ -129,7 +129,11 @@ const getRemainingSchedule = () =>
       Stream.provideSomeLayer(
         getSchedule(),
         createGetScheduleParamsStateImpl({
-          ignoreIds: Chunk.toArray(Chunk.map(matches, (_) => _.id)), // TODO: Implement `ignoreIds` in `getSchedule` services
+          ignoreIds: matches.pipe(
+            Chunk.filter((match) => match.status === 'finished'),
+            Chunk.map((match) => match.id),
+            Chunk.toArray
+          ),
         })
       )
     ),

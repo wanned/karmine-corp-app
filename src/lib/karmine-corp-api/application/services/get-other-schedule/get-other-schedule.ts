@@ -14,14 +14,22 @@ const applyFilters = (match: CoreData.Match) =>
     Effect.flatMap(() =>
       Effect.all({
         dateRange: Effect.serviceConstants(GetScheduleParamsState).dateRange,
+        ignoreIds: Effect.serviceConstants(GetScheduleParamsState).ignoreIds,
       })
     ),
-    Effect.map(({ dateRange }) => {
+    Effect.map(({ dateRange, ignoreIds }) => {
       if (dateRange !== undefined) {
         if (
           (dateRange.start !== undefined && match.date < dateRange.start) ||
           (dateRange.end !== undefined && match.date > dateRange.end)
         ) {
+          return false;
+        }
+      }
+
+      // Filter by ignoreIds
+      if (ignoreIds !== undefined) {
+        if (ignoreIds.includes(match.id)) {
           return false;
         }
       }

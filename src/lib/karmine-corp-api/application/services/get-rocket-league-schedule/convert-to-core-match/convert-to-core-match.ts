@@ -1,5 +1,6 @@
 import { Effect } from 'effect';
 
+import { getMatchId } from './utils/get-match-id';
 import { CoreData } from '../../../types/core-data';
 
 import { OctaneApi } from '~/lib/karmine-corp-api/infrastructure/services/octane-api/octane-api';
@@ -9,7 +10,7 @@ type RocketLeagueMatch = OctaneApi.GetMatches['matches'][number];
 
 export function convertToCoreMatch(match: RocketLeagueMatch) {
   return Effect.all({
-    id: Effect.succeed(`rl:${match._id}`),
+    id: getMatchId(match),
     date: Effect.succeed(match.date),
     matchDetails: Effect.all({
       competitionName: Effect.succeed(CoreData.CompetitionName.RocketLeague as const),
