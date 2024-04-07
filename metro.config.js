@@ -8,4 +8,7 @@ const config = getDefaultConfig(
 // Adds support for `mjs` files
 config.resolver.sourceExts.push('mjs');
 
+// Adds support for `sql` files
+config.resolver.sourceExts.push('sql');
+
 module.exports = config;

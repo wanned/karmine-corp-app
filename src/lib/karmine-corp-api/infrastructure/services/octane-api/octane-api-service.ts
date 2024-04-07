@@ -14,6 +14,7 @@ export class OctaneApiService extends Context.Tag(OCTANE_API_SERVICE_TAG)<
       teamId?: string;
       page?: number;
       perPage?: number;
+      sort?: string;
     }): Effect.Effect<OctaneApi.GetMatches, v.Err, FetchService | EnvService>;
     getMatchGames(args: {
       matchId: string;

@@ -12,7 +12,9 @@ export const createBetterSqlite3Impl = (databasePath: string = ':memory:') => {
       initializeTables: () =>
         Effect.succeed(
           database
-            .prepare('CREATE TABLE IF NOT EXISTS matches (id TEXT PRIMARY KEY, data TEXT)')
+            .prepare(
+              'CREATE TABLE IF NOT EXISTS matches (id TEXT PRIMARY KEY, data TEXT, timestamp INTEGER)'
+            )
             .run()
         ),
       executeQuery: (query: string, params: string[] = []) => {
