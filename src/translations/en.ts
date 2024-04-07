@@ -4,7 +4,7 @@ export const enTranslations: Translations['en'] = {
   onboarding: {
     pages: {
       0: {
-        title: 'Welcome to Karmine Board!',
+        title: 'Welcome to Karmine Plus!',
         description: 'Follow the matches of Karmine Corp and more.',
       },
       1: {
@@ -18,7 +18,7 @@ export const enTranslations: Translations['en'] = {
       },
       3: {
         title: "Let's go!",
-        description: 'Discover the latest results and the next matches',
+        description: 'Discover the latest results and the next matches.',
       },
     },
     startButton: 'Start',
