@@ -1,8 +1,9 @@
-import { Chunk, Effect, Option, Order } from 'effect';
+import { Chunk, Effect, Order } from 'effect';
 
-import { parseLeaderboard } from '../parse-leaderboard/parse-leaderboard';
+import { Leaderboard, parseLeaderboard } from '../parse-leaderboard/parse-leaderboard';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
+import { LeagueOfLegendsApi } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api';
 import { LeagueOfLegendsApiService } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api-service';
 
 export const getLeagueOfLegendsLeaderboards = () =>
@@ -40,26 +41,34 @@ const getLeaderboardForTeam = (
 ) =>
   Effect.Do.pipe(
     Effect.flatMap(() =>
-      getCurrentTournamentId({
+      getAndSortTournaments({
         leagueIds: LOL_LEAGUES.filter((league) => league.team === team).map(({ id }) => id),
       })
     ),
-    Effect.flatMap((currentTournamentId) =>
+    Effect.flatMap((tournaments) =>
+      Effect.firstSuccessOf(
+        tournaments.pipe(
+          Chunk.map((tournament) => ({ tournamentId: tournament.id })),
+          Chunk.map(getLeaderboardForTournament)
+        )
+      )
+    )
+  );
+
+const getLeaderboardForTournament = ({ tournamentId }: { tournamentId: string }) =>
+  Effect.Do.pipe(
+    Effect.flatMap(() =>
       Effect.serviceFunctionEffect(
         LeagueOfLegendsApiService,
         (_) => _.getStandings
-      )({ tournamentId: currentTournamentId })
+      )({ tournamentId })
     ),
     Effect.map(({ data }) => data.standings),
-    Effect.map(parseLeaderboard),
+    Effect.flatMap(parseLeaderboard),
     Effect.flatMap((leaderboard) => getCoreLeaderboard({ leaderboard }))
   );
 
-const getCoreLeaderboard = ({
-  leaderboard,
-}: {
-  leaderboard: ReturnType<typeof parseLeaderboard>;
-}) =>
+const getCoreLeaderboard = ({ leaderboard }: { leaderboard: Leaderboard }) =>
   Effect.Do.pipe(
     Effect.flatMap(() =>
       Effect.serviceFunctionEffect(LeagueOfLegendsApiService, (_) => _.getTeams)()
@@ -76,14 +85,7 @@ const getCoreLeaderboard = ({
     )
   );
 
-class NoTournamentFound extends Error {
-  constructor() {
-    super('No tournament found');
-    this.name = 'NoTournamentFound';
-  }
-}
-
-const getCurrentTournamentId = ({ leagueIds }: { leagueIds: string[] }) =>
+const getAndSortTournaments = ({ leagueIds }: { leagueIds: string[] }) =>
   Effect.Do.pipe(
     Effect.flatMap(() =>
       Effect.serviceFunctionEffect(
@@ -93,28 +95,16 @@ const getCurrentTournamentId = ({ leagueIds }: { leagueIds: string[] }) =>
     ),
     Effect.map(({ data }) => data.leagues.flatMap(({ tournaments }) => tournaments)),
     Effect.map(Chunk.fromIterable),
-    Effect.map((tournaments) =>
-      tournaments.pipe(
-        (tournaments) =>
-          Chunk.findFirst(tournaments, (tournament) => {
-            const now = new Date();
-            const startDate = new Date(tournament.startDate);
-            const endDate = new Date(tournament.endDate);
-
-            return startDate <= now && now <= endDate;
-          }),
-        Option.orElse(() =>
-          tournaments.pipe(
-            Chunk.sortWith((tournament) => tournament.startDate, Order.Date),
-            Chunk.get(0)
-          )
-        )
-      )
-    ),
-    Effect.flatMap(
-      Option.match({
-        onSome: (tournament) => Effect.succeed(tournament.id),
-        onNone: () => Effect.fail(new NoTournamentFound()),
-      })
-    )
+    Effect.map((tournaments) => tournaments.pipe(Chunk.sort(nearestTournamentOrder)))
   );
+
+const nearestTournamentOrder = Order.mapInput(
+  Order.number,
+  (
+    tournament: LeagueOfLegendsApi.GetTournaments['data']['leagues'][number]['tournaments'][number]
+  ) =>
+    Math.min(
+      Math.abs(tournament.startDate.getTime() - new Date().getTime()),
+      Math.abs(tournament.endDate.getTime() - new Date().getTime())
+    )
+);
