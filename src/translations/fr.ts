@@ -1,6 +1,29 @@
 import { Translations } from './Translations';
 
 export const frTranslations: Translations['fr'] = {
+  onboarding: {
+    pages: {
+      0: {
+        title: 'Bienvenue sur Karmine Board !',
+        description: 'Suivez les matchs de Karmine Corp et plus encore.',
+      },
+      1: {
+        title: 'Notifications',
+        description: 'Choisissez les matchs pour lesquels vous recevrez des notifications.',
+      },
+      2: {
+        title: 'Spoiler',
+        description:
+          'Vous ne voulez pas connaître les résultats ? Désactivez les spoilers.\nPour les réveler, rester simplement appuyé sur un match.',
+      },
+      3: {
+        title: "C'est parti !",
+        description: 'Découvrez les derniers résultats et les prochains matchs',
+      },
+    },
+    startButton: 'Démarrer',
+    nextButton: 'Suivant',
+  },
   home: {
     screenName: 'Accueil',
     nextMatchesTitle: 'Les prochains matchs',

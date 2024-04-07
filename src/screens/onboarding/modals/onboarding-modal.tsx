@@ -29,10 +29,6 @@ export const OnboardingModal = React.memo(() => {
       handleEnd,
     });
 
-  useEffect(() => {
-    console.log('Current step:', currentStep);
-  });
-
   return (
     <ModalLayout useScrollView={false} hideHeader>
       <View style={styles.childrenContainer}>{children}</View>

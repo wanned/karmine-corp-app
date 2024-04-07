@@ -4,19 +4,20 @@ export const enTranslations: Translations['en'] = {
   onboarding: {
     pages: {
       0: {
-        title: 'Welcome to Karmine Corp',
-        description: 'Follow the matches of your favorite teams',
+        title: 'Welcome to Karmine Board!',
+        description: 'Follow the matches of Karmine Corp and more.',
       },
       1: {
         title: 'Notifications',
-        description: 'Receive notifications to not miss anything',
+        description: 'Choose the games you will receive notifications for.',
       },
       2: {
         title: 'Spoilers',
-        description: "Don't want to know the results? Turn off the spoilers",
+        description:
+          "Don't want to know the results? Turn off the spoilers.\nTo reveal them, just keep pressing on a match.",
       },
       3: {
-        title: 'Let’s go!',
+        title: "Let's go!",
         description: 'Discover the latest results and the next matches',
       },
     },

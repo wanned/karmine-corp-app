@@ -18,7 +18,7 @@ export const Step2 = () => {
     () => ({
       date: new Date(),
       id: '1',
-      matchDetails: { competitionName: CoreData.CompetitionName.ValorantVCTGC },
+      matchDetails: { competitionName: CoreData.CompetitionName.LeagueOfLegendsLEC },
       status: 'upcoming',
       streamLink: 'kamet0',
       teams: [
@@ -30,8 +30,8 @@ export const Step2 = () => {
           },
         },
         {
-          logoUrl: 'https://medias.kametotv.fr/karmine/teams_logo/FUT Esports.png',
-          name: 'FUT Esports',
+          logoUrl: 'https://medias.kametotv.fr/karmine/teams_logo/T1.png',
+          name: 'T1',
           score: {
             score: 0,
           },
