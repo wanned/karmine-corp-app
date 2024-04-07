@@ -52,8 +52,7 @@ const RootNavigator = () => {
     if (!navigation) return;
 
     // If you want to test in development, replace `isFirstLaunch.getItem()` with `new Promise((resolve) => resolve(null))`
-    new Promise((resolve) => resolve(null)).then(async (value) => {
-      // isFirstLaunch.getItem().then(async (value) => {
+    isFirstLaunch.getItem().then(async (value) => {
       await isFirstLaunch.setItem('false');
 
       if (value === null) {
