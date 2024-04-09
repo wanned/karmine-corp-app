@@ -18,6 +18,7 @@ export const EnvRnServiceImpl = Layer.succeed(
         KARMINE_API_URL: 'https://api2.kametotv.fr/karmine',
         LIQUIPEDIA_PARSE_API_URL: 'https://liquipedia.net/<GAME>/api.php',
         LIQUIPEDIA_PARSE_URL_GAME_REPLACER: '<GAME>',
+        VLR_API_URL: 'https://www.vlr.gg',
         YOUTUBE_API_URL: 'https://www.youtube.com',
         FIREBASE_CLIENT_EMAIL: '',
         FIREBASE_PRIVATE_KEY: '',
