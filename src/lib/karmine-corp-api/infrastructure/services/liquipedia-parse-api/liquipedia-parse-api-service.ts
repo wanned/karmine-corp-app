@@ -13,6 +13,6 @@ export class LiquipediaApiService extends Context.Tag(LIQUIPEDIA_API_SERVICE_TAG
     parse(args: {
       page: string;
       game: string;
-    }): Effect.Effect<LiquipediaParseApi.Parse, v.Err, FetchService | EnvService>;
+    }): Effect.Effect<LiquipediaParseApi.Parse, v.ValitaError, FetchService | EnvService>;
   }
 >() {}

@@ -12,22 +12,30 @@ export class LeagueOfLegendsApiService extends Context.Tag(LEAGUE_OF_LEGENDS_API
   {
     getMatch(args: {
       matchId: string;
-    }): Effect.Effect<LeagueOfLegendsApi.GetMatch, v.Err, FetchService | EnvService>;
-    getTeams(): Effect.Effect<LeagueOfLegendsApi.GetTeams, v.Err, FetchService | EnvService>;
+    }): Effect.Effect<LeagueOfLegendsApi.GetMatch, v.ValitaError, FetchService | EnvService>;
+    getTeams(): Effect.Effect<
+      LeagueOfLegendsApi.GetTeams,
+      v.ValitaError,
+      FetchService | EnvService
+    >;
     getSchedule(args: {
       leagueIds: string[];
       pageToken?: string;
-    }): Effect.Effect<LeagueOfLegendsApi.GetSchedule, v.Err, FetchService | EnvService>;
+    }): Effect.Effect<LeagueOfLegendsApi.GetSchedule, v.ValitaError, FetchService | EnvService>;
     getGameWindow(args: {
       gameId: string;
       startingTime?: Date;
-    }): Effect.Effect<LeagueOfLegendsApi.GetGameWindow, v.Err, FetchService | EnvService>;
-    getVersions(): Effect.Effect<LeagueOfLegendsApi.GetVersions, v.Err, FetchService | EnvService>;
+    }): Effect.Effect<LeagueOfLegendsApi.GetGameWindow, v.ValitaError, FetchService | EnvService>;
+    getVersions(): Effect.Effect<
+      LeagueOfLegendsApi.GetVersions,
+      v.ValitaError,
+      FetchService | EnvService
+    >;
     getTournaments(args: {
       leagueIds: string[];
-    }): Effect.Effect<LeagueOfLegendsApi.GetTournaments, v.Err, FetchService | EnvService>;
+    }): Effect.Effect<LeagueOfLegendsApi.GetTournaments, v.ValitaError, FetchService | EnvService>;
     getStandings(args: {
       tournamentId: string;
-    }): Effect.Effect<LeagueOfLegendsApi.GetStandings, v.Err, FetchService | EnvService>;
+    }): Effect.Effect<LeagueOfLegendsApi.GetStandings, v.ValitaError, FetchService | EnvService>;
   }
 >() {}

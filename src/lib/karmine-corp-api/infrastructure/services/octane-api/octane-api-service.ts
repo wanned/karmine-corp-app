@@ -15,9 +15,9 @@ export class OctaneApiService extends Context.Tag(OCTANE_API_SERVICE_TAG)<
       page?: number;
       perPage?: number;
       sort?: string;
-    }): Effect.Effect<OctaneApi.GetMatches, v.Err, FetchService | EnvService>;
+    }): Effect.Effect<OctaneApi.GetMatches, v.ValitaError, FetchService | EnvService>;
     getMatchGames(args: {
       matchId: string;
-    }): Effect.Effect<OctaneApi.GetMatchGames, v.Err, FetchService | EnvService>;
+    }): Effect.Effect<OctaneApi.GetMatchGames, v.ValitaError, FetchService | EnvService>;
   }
 >() {}

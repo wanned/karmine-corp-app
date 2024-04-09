@@ -10,14 +10,14 @@ const KARMINE_API_SERVICE_TAG = 'KarmineApiService';
 export class KarmineApiService extends Context.Tag(KARMINE_API_SERVICE_TAG)<
   KarmineApiService,
   {
-    getEvents(): Effect.Effect<KarmineApi.GetEvents, v.Err, FetchService | EnvService>;
+    getEvents(): Effect.Effect<KarmineApi.GetEvents, v.ValitaError, FetchService | EnvService>;
     getEventsResults(): Effect.Effect<
       KarmineApi.GetEventsResults,
-      v.Err,
+      v.ValitaError,
       FetchService | EnvService
     >;
-    getPlayers(): Effect.Effect<KarmineApi.GetPlayers, v.Err, FetchService | EnvService>;
-    getTwitch(): Effect.Effect<KarmineApi.GetTwitch, v.Err, FetchService | EnvService>;
-    getGames(): Effect.Effect<KarmineApi.GetGames, v.Err, FetchService | EnvService>;
+    getPlayers(): Effect.Effect<KarmineApi.GetPlayers, v.ValitaError, FetchService | EnvService>;
+    getTwitch(): Effect.Effect<KarmineApi.GetTwitch, v.ValitaError, FetchService | EnvService>;
+    getGames(): Effect.Effect<KarmineApi.GetGames, v.ValitaError, FetchService | EnvService>;
   }
 >() {}
