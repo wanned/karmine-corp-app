@@ -9,12 +9,14 @@ export const VlrApiServiceImpl = Layer.succeed(
   VlrApiService.of({
     getMatches: ({ status, teamId, page }) =>
       fetchVlr({
-        url: `matches/${teamId}`,
+        url: `team/matches/${teamId}`,
         query: {
           group: status,
           page,
         },
       }),
+    getMatch: ({ gameId }) => fetchVlr({ url: `${gameId}` }),
+    getPlayer: ({ playerId }) => fetchVlr({ url: `player/${playerId}` }),
   })
 );
 

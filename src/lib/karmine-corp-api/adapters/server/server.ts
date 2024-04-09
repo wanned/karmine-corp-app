@@ -15,6 +15,7 @@ import { LiquipediaParseApiServiceImpl } from '../../infrastructure/services/liq
 import { NotificationFcmServiceImpl } from '../../infrastructure/services/notification-sender/notification-fcm-service-impl';
 import { OctaneApiServiceImpl } from '../../infrastructure/services/octane-api/octane-api-service-impl';
 import { StrafeApiServiceImpl } from '../../infrastructure/services/strafe-api/strafe-api-service-impl';
+import { VlrApiServiceImpl } from '../../infrastructure/services/vlr-api/vlr-api-service-impl';
 
 const app = HttpServer.router.empty.pipe(
   GetScheduleRoute(),
@@ -43,6 +44,7 @@ function getMainLayer() {
     Layer.merge(KarmineApiServiceImpl),
     Layer.merge(StrafeApiServiceImpl),
     Layer.merge(LiquipediaParseApiServiceImpl),
+    Layer.merge(VlrApiServiceImpl),
     Layer.merge(FetchServiceImpl),
     Layer.merge(createBetterSqlite3Impl()),
     Layer.merge(createEnvServiceImpl()),

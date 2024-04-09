@@ -11,6 +11,7 @@ import { KarmineApiService } from '~/lib/karmine-corp-api/infrastructure/service
 import { LeagueOfLegendsApiService } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api-service';
 import { OctaneApiService } from '~/lib/karmine-corp-api/infrastructure/services/octane-api/octane-api-service';
 import { StrafeApiService } from '~/lib/karmine-corp-api/infrastructure/services/strafe-api/strafe-api-service';
+import { VlrApiService } from '~/lib/karmine-corp-api/infrastructure/services/vlr-api/vlr-api-service';
 
 export const GetScheduleRoute = () =>
   HttpServer.router.get(
@@ -51,6 +52,7 @@ export const GetScheduleRoute = () =>
             DatabaseService,
             EnvService,
             GetScheduleParamsState,
+            VlrApiService,
           ]).pipe(
             Effect.map((layers) =>
               schedule.pipe(Stream.provideLayer(layers), Stream.tapError(Console.error))

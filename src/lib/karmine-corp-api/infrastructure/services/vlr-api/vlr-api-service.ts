@@ -19,5 +19,19 @@ export class VlrApiService extends Context.Tag(VLR_API_SERVICE_TAG)<
       never,
       FetchService | EnvService
     >;
+    getMatch(args: { gameId: string }): Effect.Effect<
+      {
+        html: string;
+      },
+      never,
+      FetchService | EnvService
+    >;
+    getPlayer(args: { playerId: string }): Effect.Effect<
+      {
+        html: string;
+      },
+      never,
+      FetchService | EnvService
+    >;
   }
 >() {}
