@@ -14,6 +14,10 @@ export const getSchedule = ({ onlyFromDatabase }: { onlyFromDatabase?: boolean }
     return getScheduleFromDatabase();
   }
 
+  // TODO: Add a `speed` parameter. If `speed` is `fast`, then we use merge (because it runs in parallel), if `speed` is `slow`, then we use concat (because it runs in sequence)
+  // By default, we use `fast` speed.
+  // In React Native adapter, we use `fast` only at the first app open, then, if all matches are already fetched, we use `slow` speed.
+
   const remoteScheduleStream = Stream.merge(
     getOtherSchedule().pipe(
       Stream.filter(

@@ -4,6 +4,7 @@ import { HTMLElement } from 'node-html-parser';
 import { getMatchDetails } from './get-match-details/get-match-details';
 import { getTeams } from './get-teams/get-teams';
 import { getMatchDate as _getMatchDate } from './utils/get-match-date';
+import { getMatchId } from './utils/get-match-id';
 import { CoreData } from '../../../types/core-data';
 
 export function convertToCoreMatch(matchContainerElement: HTMLElement) {
@@ -15,16 +16,6 @@ export function convertToCoreMatch(matchContainerElement: HTMLElement) {
     status: getMatchStatus(matchContainerElement),
     matchDetails: getMatchDetails(matchContainerElement),
   }) satisfies Effect.Effect<CoreData.ValorantMatch, any, any>;
-}
-
-function getMatchId(matchContainerElement: HTMLElement) {
-  return Effect.Do.pipe(
-    Effect.map(() => matchContainerElement.querySelector('[data-match-id]')),
-    Effect.flatMap((_) => Option.fromNullable(_)),
-    Effect.map((element) => element.getAttribute('data-match-id')),
-    Effect.flatMap((_) => Option.fromNullable(_)),
-    Effect.map((id) => `valo:${id}`)
-  );
 }
 
 function getMatchDate(matchElement: HTMLElement) {

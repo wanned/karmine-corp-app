@@ -2,6 +2,7 @@ import { Chunk, Effect, Stream, Option } from 'effect';
 import parseHtml, { HTMLElement } from 'node-html-parser';
 
 import { getMatchDate } from './convert-to-core-match/utils/get-match-date';
+import { getMatchId } from './convert-to-core-match/utils/get-match-id';
 import { karmineCorpTeams } from './karmine-corp-teams';
 import { PaginateChunkEffectPaginatorFormatter } from '../../types/effect-utils';
 import { GetScheduleParamsState } from '../../use-cases/get-schedule/get-schedule-params-state';
@@ -11,14 +12,14 @@ import { VlrApiService } from '~/lib/karmine-corp-api/infrastructure/services/vl
 export function paginateKarmineCorpMatches() {
   return Stream.mergeAll(
     karmineCorpTeams.flatMap((team) =>
-      (['completed', 'upcoming'] as const).map((status) =>
+      (['upcoming', 'completed'] as const).map((status) =>
         Stream.paginateChunkEffect(undefined as HTMLElement | undefined, (lastResponse) =>
           Effect.scoped(getNextMatchesGetter({ status, teamId: team.teamId })(lastResponse))
         )
       )
     ),
     {
-      concurrency: 'unbounded',
+      concurrency: 1,
     }
   );
 }
@@ -89,6 +90,15 @@ function getResultForPaginatorFormatter(): PaginateChunkEffectPaginatorFormatter
         if (!enteredInDateRange) {
           shouldContinuePagination = true;
         }
+      }
+
+      // Filter by ignoreIds
+      const ignoreIds = yield* _(Effect.serviceConstants(GetScheduleParamsState).ignoreIds);
+      if (ignoreIds !== undefined) {
+        karmineMatchElementsChunk = Chunk.filter(
+          karmineMatchElementsChunk,
+          (match) => !ignoreIds.includes(Effect.runSync(getMatchId(match)))
+        );
       }
 
       shouldContinuePagination = shouldContinuePagination && getNextPageNumber(page) !== undefined;
