@@ -1,3 +1,5 @@
+import { Data, Effect } from 'effect';
+
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 interface BracketMatch {
@@ -39,7 +41,7 @@ export interface HomogeneousStanding {
   }[];
 }
 
-type Leaderboard = Record<string, Omit<CoreData.LeaderboardItem, 'logoUrl'>>;
+export type Leaderboard = Record<string, Omit<CoreData.LeaderboardItem, 'logoUrl'>>;
 
 function updateLeaderboard(
   leaderboard: Leaderboard,
@@ -198,26 +200,74 @@ function parseGroup(rankings: GroupRanking[]): Leaderboard {
   );
 }
 
-export function parseLeaderboard(standings: HomogeneousStanding[]): Leaderboard {
-  let leaderboard: Leaderboard = {};
+class UnsupportedMultipleSections extends Data.TaggedError('UnsupportedMultipleSections') {}
+class KarmineNotInLeaderboard extends Data.TaggedError('KarmineNotInLeaderboard') {}
 
-  const stages = standings.at(-1)?.stages ?? [];
+export function parseLeaderboard(
+  standings: HomogeneousStanding[]
+): Effect.Effect<Leaderboard, UnsupportedMultipleSections | KarmineNotInLeaderboard, never> {
+  return Effect.gen(function* (_) {
+    let leaderboard: Leaderboard = {};
 
-  for (const stage of [...stages].reverse()) {
-    if (stage.sections.length > 1) {
-      throw new Error('Unsupported multiple sections');
+    const stages = standings.at(-1)?.stages ?? [];
+
+    for (const stage of [...stages].reverse()) {
+      const section = yield* _(findRelevantSection(stage));
+
+      if (!section) {
+        continue;
+      }
+
+      if (section.type === 'bracket') {
+        leaderboard = mergeLeaderboards(leaderboard, parseBracket(section.columns));
+      }
+
+      if (section.type === 'group') {
+        leaderboard = mergeLeaderboards(leaderboard, parseGroup(section.rankings));
+      }
     }
 
-    const section = stage.sections[0];
+    return yield* _(validateLeaderboard(leaderboard));
+  });
+}
 
-    if (section.type === 'bracket') {
-      leaderboard = mergeLeaderboards(leaderboard, parseBracket(section.columns));
+function findRelevantSection(
+  stage: HomogeneousStanding['stages'][number]
+): Effect.Effect<
+  HomogeneousStanding['stages'][number]['sections'][number] | undefined,
+  UnsupportedMultipleSections,
+  never
+> {
+  return Effect.gen(function* (_) {
+    const sections = stage.sections;
+
+    const isAllSectionsAreGroups = sections.every((section) => section.type === 'group');
+
+    if (isAllSectionsAreGroups) {
+      type GroupSection = Extract<(typeof sections)[number], { type: 'group' }>;
+      return (sections as GroupSection[]).find((section) =>
+        section.rankings.some((ranking) =>
+          ranking.teams.some((team) => team.name.toLowerCase().includes('karmine'))
+        )
+      );
+    } else if (sections.length > 1) {
+      return yield* _(Effect.fail(new UnsupportedMultipleSections()));
+    } else {
+      return sections[0];
+    }
+  });
+}
+
+function validateLeaderboard(
+  leaderboard: Leaderboard
+): Effect.Effect<Leaderboard, KarmineNotInLeaderboard, never> {
+  return Effect.gen(function* (_) {
+    if (
+      !Object.values(leaderboard).some((team) => team.teamName.toLowerCase().includes('karmine'))
+    ) {
+      return yield* _(Effect.fail(new KarmineNotInLeaderboard()));
     }
 
-    if (section.type === 'group') {
-      leaderboard = mergeLeaderboards(leaderboard, parseGroup(section.rankings));
-    }
-  }
-
-  return leaderboard;
+    return leaderboard;
+  });
 }

@@ -1,6 +1,29 @@
 import { Translations } from './Translations';
 
 export const esTranslations: Translations['es'] = {
+  onboarding: {
+    pages: {
+      0: {
+        title: '¡Bienvenido a Karmine Plus!',
+        description: 'Sigue los partidos de Karmine Corp y más.',
+      },
+      1: {
+        title: 'Notificaciones',
+        description: 'Elige los juegos que recibirás notificaciones.',
+      },
+      2: {
+        title: 'Spoiler',
+        description:
+          '¿No quieres saber los resultados? Apaga los spoilers.\nPara revelarlos, simplemente mentenga presionando en un partido.',
+      },
+      3: {
+        title: '¡Vamos!',
+        description: 'Descubre los últimos resultados y los próximos partidos.',
+      },
+    },
+    startButton: 'Comenzar',
+    nextButton: 'Siguiente',
+  },
   home: {
     screenName: 'Inicio',
     nextMatchesTitle: 'Los próximos partidos',

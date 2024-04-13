@@ -10,10 +10,10 @@ import { FetchService } from '../fetch/fetch-service';
 export const OctaneApiServiceImpl = Layer.succeed(
   OctaneApiService,
   OctaneApiService.of({
-    getMatches: ({ page, perPage, teamId }) =>
+    getMatches: ({ page, perPage, teamId, sort }) =>
       fetchOctane({
         url: 'matches',
-        query: { page, perPage, team: teamId },
+        query: { page, perPage, team: teamId, sort },
         schema: octaneApiSchemas.getMatches,
       }),
     getMatchGames: ({ matchId }) =>

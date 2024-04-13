@@ -3,7 +3,13 @@ import { View } from 'react-native';
 import { BaseText } from './base-text';
 import { TypographyProps } from './typography';
 
-export const Body = ({ children, color, maxLines, verticalTrim = false }: TypographyProps) => {
+export const Body = ({
+  children,
+  color,
+  maxLines,
+  verticalTrim = false,
+  textAlign = 'left',
+}: TypographyProps) => {
   return (
     <View
       style={{
@@ -16,8 +22,9 @@ export const Body = ({ children, color, maxLines, verticalTrim = false }: Typogr
           fontSize={12}
           fontWeight="SemiBold"
           lineHeight={verticalTrim ? 16 : undefined}
-          maxLines={maxLines}>
-          {children}
+          maxLines={maxLines}
+          textAlign={textAlign}>
+          {['\u200B', ...(Array.isArray(children) ? children : [children])]}
         </BaseText>
       </View>
     </View>
