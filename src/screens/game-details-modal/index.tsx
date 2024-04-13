@@ -8,6 +8,7 @@ import { LolGames } from './components/lol-games';
 import { Player } from './components/player';
 import { RlGames } from './components/rl-games';
 import { TeamScore } from './components/team-score';
+import { ValoGames } from './components/valo-games';
 import { useGameBackgroundImage } from '../home/hooks/use-game-background-image';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
@@ -230,6 +231,10 @@ function GameDetails({ match }: { match: CoreData.Match }) {
       }
       case CoreData.CompetitionName.RocketLeague: {
         return <RlGames {...(match as CoreData.RocketLeagueMatch)} />;
+      }
+      case CoreData.CompetitionName.ValorantVCT:
+      case CoreData.CompetitionName.ValorantVCTGC: {
+        return <ValoGames {...(match as CoreData.ValorantMatch)} />;
       }
       default: {
         return null;
