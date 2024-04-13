@@ -52,6 +52,7 @@ export const esTranslations: Translations['es'] = {
   settings: {
     screenName: 'Configuración',
     version: 'Versión',
+    notAffiliated: 'No afiliado a Karmine Corp',
     notifications: {
       title: 'Notificaciones',
       description: 'Elija los juegos que recibirá notificaciones.',
