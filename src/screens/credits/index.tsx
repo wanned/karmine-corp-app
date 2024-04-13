@@ -3,17 +3,18 @@ import { View } from 'react-native';
 import { Contributors } from './components/contributors';
 import { CreditsSection } from './components/creditsSection';
 
+import { Spacer } from '~/shared/components/spacer/spacer';
 import { Typographies } from '~/shared/components/typographies';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTranslate } from '~/shared/hooks/use-translate';
-import { DefaultLayout } from '~/shared/layouts/default-layout';
+import { ModalLayout } from '~/shared/layouts/modal-layout';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 export default function CreditsScreen() {
   const styles = useStyles(getStyles);
   const translate = useTranslate();
   return (
-    <DefaultLayout>
+    <ModalLayout>
       <View style={styles.titleContainer}>
         <Typographies.Title1>{translate('credits.screenName')}</Typographies.Title1>
       </View>
@@ -41,13 +42,16 @@ export default function CreditsScreen() {
           <CreditsSection sectionName="libraries" />
         </View>
       </View>
-    </DefaultLayout>
+
+      <Spacer direction="vertical" size={32} />
+    </ModalLayout>
   );
 }
 
 const getStyles = createStylesheet((theme) => ({
   titleContainer: {
     marginBottom: 12,
+    paddingHorizontal: 16,
   },
   sectionDescriptionContainer: {
     opacity: theme.opacities.priority2,
@@ -56,11 +60,6 @@ const getStyles = createStylesheet((theme) => ({
   creditsContainer: {
     flexDirection: 'column',
     gap: 24,
-  },
-  versionContainer: {
-    marginTop: 48,
-    marginBottom: 32,
-    alignItems: 'center',
-    color: theme.colors.subtleForeground,
+    paddingHorizontal: 16,
   },
 }));

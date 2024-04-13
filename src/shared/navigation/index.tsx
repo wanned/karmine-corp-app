@@ -22,7 +22,6 @@ export type PagesParamList = {
   calendar: undefined;
   teams: undefined;
   settings: undefined;
-  credits: undefined;
 };
 
 export type ModalsParamList = {
@@ -32,6 +31,7 @@ export type ModalsParamList = {
   gameDetailsModal: {
     match: CoreData.Match;
   };
+  credits: undefined;
 };
 
 const Modals = createNativeStackNavigator<ModalsParamList>();
@@ -50,6 +50,7 @@ function ModalsNavigator() {
         <Modals.Screen name="nextMatchesModal" component={NextMatchesModal} />
         <Modals.Screen name="lastResultsModal" component={LastResultsModal} />
         <Modals.Screen name="gameDetailsModal" component={GameDetailsModal} />
+        <Modals.Screen name="credits" component={CreditsScreen} />
       </Modals.Navigator>
     </NavigationContainer>
   );
@@ -67,7 +68,6 @@ function PagesNavigator() {
       <Pages.Screen name="calendar" component={CalendarScreen} />
       <Pages.Screen name="teams" component={TeamsScreen} />
       <Pages.Screen name="settings" component={SettingsScreen} />
-      <Pages.Screen name="credits" component={CreditsScreen} />
     </Pages.Navigator>
   );
 }
