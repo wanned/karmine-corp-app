@@ -1,17 +1,17 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-export const parseLiquipediaSchema = z.object({
-  parse: z.object({
-    title: z.string(),
-    pageid: z.number(),
-    text: z.object({
-      '*': z.string(),
+export const parseLiquipediaSchema = v.object({
+  parse: v.object({
+    title: v.string(),
+    pageid: v.number(),
+    text: v.object({
+      '*': v.string(),
     }),
-    links: z.array(
-      z.object({
-        ns: z.number(),
-        exists: z.string().optional(),
-        '*': z.string(),
+    links: v.array(
+      v.object({
+        ns: v.number(),
+        exists: v.string().optional(),
+        '*': v.string(),
       })
     ),
   }),

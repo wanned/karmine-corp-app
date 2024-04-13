@@ -1,20 +1,23 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-export const getVideosSchema = z.object({
-  feed: z.object({
-    entry: z.array(
-      z.object({
-        id: z.string(),
-        'yt:videoId': z.string(),
-        published: z.coerce.date(),
-        'media:group': z.object({
-          'media:title': z.string(),
-          'media:community': z.object({
-            'media:starRating': z.object({
-              '@_count': z.coerce.number(),
+import { vDateString } from '../../../utils/valita-types/date-string';
+import { vNumberString } from '../../../utils/valita-types/number-string';
+
+export const getVideosSchema = v.object({
+  feed: v.object({
+    entry: v.array(
+      v.object({
+        id: v.string(),
+        'yt:videoId': v.string(),
+        published: vDateString,
+        'media:group': v.object({
+          'media:title': v.string(),
+          'media:community': v.object({
+            'media:starRating': v.object({
+              '@_count': vNumberString,
             }),
-            'media:statistics': z.object({
-              '@_views': z.coerce.number(),
+            'media:statistics': v.object({
+              '@_views': vNumberString,
             }),
           }),
         }),

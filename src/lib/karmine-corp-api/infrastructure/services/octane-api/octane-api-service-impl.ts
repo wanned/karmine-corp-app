@@ -1,19 +1,19 @@
+import * as v from '@badrap/valita';
 import { Effect, Layer } from 'effect';
-import { z } from 'zod';
 
 import { OctaneApiService } from './octane-api-service';
 import { octaneApiSchemas } from './schemas/octane-api-schemas';
-import { parseZod } from '../../utils/parse-zod/parse-zod';
+import { parseValita } from '../../utils/parse-valita/parse-valita';
 import { EnvService } from '../env/env-service';
 import { FetchService } from '../fetch/fetch-service';
 
 export const OctaneApiServiceImpl = Layer.succeed(
   OctaneApiService,
   OctaneApiService.of({
-    getMatches: ({ page, perPage, teamId }) =>
+    getMatches: ({ page, perPage, teamId, sort }) =>
       fetchOctane({
         url: 'matches',
-        query: { page, perPage, team: teamId },
+        query: { page, perPage, team: teamId, sort },
         schema: octaneApiSchemas.getMatches,
       }),
     getMatchGames: ({ matchId }) =>
@@ -30,7 +30,7 @@ const getOctaneUrl = ({ url }: { url: string }) =>
     Effect.map((env) => `${env.OCTANE_API_URL}/${url}`)
   );
 
-const fetchOctane = <S extends z.ZodType = z.ZodAny>({
+const fetchOctane = <S extends v.Type = v.Type>({
   url,
   query,
   schema,
@@ -42,13 +42,13 @@ const fetchOctane = <S extends z.ZodType = z.ZodAny>({
   Effect.Do.pipe(
     Effect.flatMap(() => getOctaneUrl({ url })),
     Effect.flatMap((url) =>
-      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+      Effect.serviceFunction(FetchService, (_) => _.fetch<v.Infer<S>>)(url, {
         query,
         parseResponse:
           schema &&
           ((responseText) =>
             Effect.runSync(
-              parseZod(schema, JSON.parse(responseText), JSON.stringify({ url, query }))
+              parseValita(schema, JSON.parse(responseText), JSON.stringify({ url, query }))
             )),
       })
     ),

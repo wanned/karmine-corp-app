@@ -1,5 +1,5 @@
+import * as v from '@badrap/valita';
 import { Context, Effect } from 'effect';
-import { z } from 'zod';
 
 import { OctaneApi } from './octane-api';
 import { EnvService } from '../env/env-service';
@@ -14,9 +14,10 @@ export class OctaneApiService extends Context.Tag(OCTANE_API_SERVICE_TAG)<
       teamId?: string;
       page?: number;
       perPage?: number;
-    }): Effect.Effect<OctaneApi.GetMatches, z.ZodError<any>, FetchService | EnvService>;
+      sort?: string;
+    }): Effect.Effect<OctaneApi.GetMatches, v.Err, FetchService | EnvService>;
     getMatchGames(args: {
       matchId: string;
-    }): Effect.Effect<OctaneApi.GetMatchGames, z.ZodError<any>, FetchService | EnvService>;
+    }): Effect.Effect<OctaneApi.GetMatchGames, v.Err, FetchService | EnvService>;
   }
 >() {}

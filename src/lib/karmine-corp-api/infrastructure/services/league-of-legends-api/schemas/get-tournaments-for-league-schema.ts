@@ -1,15 +1,17 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-export const getTournamentsForLeagueSchema = z.object({
-  data: z.object({
-    leagues: z.array(
-      z.object({
-        tournaments: z.array(
-          z.object({
-            id: z.string(),
-            slug: z.string(),
-            startDate: z.coerce.date(),
-            endDate: z.coerce.date(),
+import { vDateString } from '../../../utils/valita-types/date-string';
+
+export const getTournamentsForLeagueSchema = v.object({
+  data: v.object({
+    leagues: v.array(
+      v.object({
+        tournaments: v.array(
+          v.object({
+            id: v.string(),
+            slug: v.string(),
+            startDate: vDateString,
+            endDate: vDateString,
           })
         ),
       })

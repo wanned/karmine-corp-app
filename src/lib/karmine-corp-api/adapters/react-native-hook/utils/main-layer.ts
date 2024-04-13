@@ -1,6 +1,6 @@
 import { Layer } from 'effect';
 
-import { createOpSqliteImpl } from '~/lib/karmine-corp-api/infrastructure/services/database/op-sqlite-impl';
+import { createOpSqliteImpl } from '~/lib/karmine-corp-api/infrastructure/services/database/op-sqlite-impl/op-sqlite-impl';
 import { EnvRnServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/env/env-rn-service-impl';
 import { FetchServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/fetch/fetch-service-impl';
 import { KarmineApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api-service-impl';

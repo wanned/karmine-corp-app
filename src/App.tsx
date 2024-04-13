@@ -1,19 +1,18 @@
-import './global';
 import 'react-native-gesture-handler';
+import './global';
 
-import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { registerRootComponent } from 'expo';
-import * as FileSystem from 'expo-file-system';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 
 import { useLeaderboards } from './lib/karmine-corp-api/adapters/react-native-hook/use-leaderboards';
 import { useTeams } from './lib/karmine-corp-api/adapters/react-native-hook/use-teams';
 import { useMatches } from './shared/hooks/data/use-matches';
+import { useSplashScreen } from './shared/hooks/use-splash-screen';
 import { useTheme } from './shared/hooks/use-theme';
 import RootNavigator from './shared/navigation';
 import {
@@ -22,6 +21,7 @@ import {
 } from './shared/notifications/add-notification-handlers';
 import { requestNotificationPermission } from './shared/notifications/request-permission';
 import { subscribeToTopic } from './shared/notifications/subscribe-to-topic';
+import { reactQueryStoragePersister } from './shared/utils/react-query-storage-persister';
 
 import { SettingsProvider } from '~/shared/contexts/settings-context';
 import { ThemeContext } from '~/shared/contexts/theme-context';
@@ -35,23 +35,6 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: Infinity,
-    },
-  },
-});
-const asyncStoragePersister = createAsyncStoragePersister({
-  storage: {
-    getItem: async (key: string) => {
-      try {
-        return await FileSystem.readAsStringAsync(FileSystem.documentDirectory + key);
-      } catch {
-        return null;
-      }
-    },
-    setItem: async (key: string, value: string) => {
-      await FileSystem.writeAsStringAsync(FileSystem.documentDirectory + key, value);
-    },
-    removeItem: async (key: string) => {
-      await FileSystem.deleteAsync(FileSystem.documentDirectory + key);
     },
   },
 });
@@ -74,9 +57,13 @@ export default function App() {
     'MonaspaceNeon-SemiBold': require('../assets/fonts/MonaspaceNeon/MonaspaceNeon-SemiBold.otf'),
   });
 
-  const onLayoutRootView = useCallback(async () => {
+  const { createHideSplashScreen } = useSplashScreen();
+  const hideSplashScreenWhenFontsLoaded = useMemo(() => createHideSplashScreen(), []);
+  const hideSplashScreenOnRootViewLayout = useMemo(() => createHideSplashScreen(), []);
+
+  useEffect(() => {
     if (fontsLoaded) {
-      await SplashScreen.hideAsync();
+      hideSplashScreenWhenFontsLoaded();
     }
   }, [fontsLoaded]);
 
@@ -94,13 +81,13 @@ export default function App() {
   return (
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister: asyncStoragePersister, maxAge: Infinity }}>
+      persistOptions={{ persister: reactQueryStoragePersister, maxAge: Infinity }}>
       <SettingsProvider value={{} as any}>
         <ThemeContext.Provider
           value={{
             theme: styleTokens,
           }}>
-          <_App onLayoutRootView={onLayoutRootView} />
+          <_App onLayoutRootView={() => hideSplashScreenOnRootViewLayout()} />
         </ThemeContext.Provider>
       </SettingsProvider>
     </PersistQueryClientProvider>

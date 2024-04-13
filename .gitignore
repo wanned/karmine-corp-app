@@ -346,10 +346,6 @@ render.experimental.xml
 *.jks
 *.keystore
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
-GoogleService-Info.plist
-
 # Android Profiling
 *.hprof
 
@@ -530,3 +526,11 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/reactnative,visualstudiocode,macos,windows,linux,node,jetbrains+all,git
+
+### EASINCLUDE! ###
+### BELOW THIS LINE WILL NOT BE IGNORED BY EAS ###
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+google-service-account.json
+GoogleService-Info.plist

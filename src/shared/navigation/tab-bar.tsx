@@ -1,6 +1,7 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Pressable, View } from 'react-native';
 import { Iconify } from 'react-native-iconify';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PagesParamList } from '.';
 import { Typographies } from '../components/typographies';
@@ -11,10 +12,16 @@ import { assertUnreachable } from '../utils/assert-unreachable';
 
 export function TabBar({ navigation, state }: BottomTabBarProps) {
   const styles = useStyles(getStyles);
+  const safeAreaInsets = useSafeAreaInsets();
 
   return (
     <View
-      style={styles.tabBar}
+      style={[
+        styles.tabBar,
+        {
+          paddingBottom: safeAreaInsets.bottom || undefined,
+        },
+      ]}
       pointerEvents="box-none"
       accessibilityRole="tablist"
       accessibilityLabel="Bottom tab bar">
@@ -41,14 +48,7 @@ function TabBarButton({
   const translate = useTranslate();
 
   return (
-    <Pressable
-      onPress={() => navigation.navigate(name)}
-      style={{
-        height: '100%',
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+    <Pressable onPress={() => navigation.navigate(name)} style={styles.tabBarButton}>
       <TabBarIcon name={name} isActive={isActive} />
       <Typographies.Body
         color={isActive ? styles.tabBarButtonActive.color : styles.tabBarButtonInactive.color}>
@@ -107,9 +107,14 @@ const getStyles = createStylesheet((theme) => ({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    height: 80,
+    paddingVertical: theme.spacing.xlarge,
     borderTopWidth: 1,
     borderTopColor: theme.colors.subtleBackground,
+  },
+  tabBarButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tabBarButtonActive: {
     color: theme.colors.foreground,

@@ -1,11 +1,42 @@
 import { Effect, Stream } from 'effect';
 
 import { CoreData } from '../../types/core-data';
+import { GetScheduleParamsState } from '../../use-cases/get-schedule/get-schedule-params-state';
 
 import { KarmineApi } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api';
 import { KarmineApiService } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api-service';
 
-export const getOtherSchedule = () => Stream.concat(getUpcomingEvents(), getFinishedEvents());
+export const getOtherSchedule = () =>
+  Stream.concat(getUpcomingEvents(), getFinishedEvents()).pipe(Stream.filterEffect(applyFilters));
+
+const applyFilters = (match: CoreData.Match) =>
+  Effect.Do.pipe(
+    Effect.flatMap(() =>
+      Effect.all({
+        dateRange: Effect.serviceConstants(GetScheduleParamsState).dateRange,
+        ignoreIds: Effect.serviceConstants(GetScheduleParamsState).ignoreIds,
+      })
+    ),
+    Effect.map(({ dateRange, ignoreIds }) => {
+      if (dateRange !== undefined) {
+        if (
+          (dateRange.start !== undefined && match.date < dateRange.start) ||
+          (dateRange.end !== undefined && match.date > dateRange.end)
+        ) {
+          return false;
+        }
+      }
+
+      // Filter by ignoreIds
+      if (ignoreIds !== undefined) {
+        if (ignoreIds.includes(match.id)) {
+          return false;
+        }
+      }
+
+      return true;
+    })
+  );
 
 const getUpcomingEvents = () =>
   Stream.fromIterableEffect(

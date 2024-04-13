@@ -12,7 +12,7 @@ import { useGameBackgroundImage } from '../home/hooks/use-game-background-image'
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { Buttons } from '~/shared/components/buttons';
-import { MatchDate } from '~/shared/components/match/match-date';
+import { MatchLabel } from '~/shared/components/match-preview/components/match-label';
 import { Section } from '~/shared/components/section/section';
 import { Typographies } from '~/shared/components/typographies';
 import { useReplay } from '~/shared/hooks/use-replay';
@@ -50,7 +50,12 @@ export const GameDetailsModal = React.memo(
           teamAway={match.teams[1]}
         />
         <View style={styles.date}>
-          <MatchDate date={match.date} />
+          <MatchLabel
+            date={match.date}
+            competitionName={match.matchDetails.competitionName}
+            status={match.status}
+            bo={match.matchDetails.bo}
+          />
         </View>
         <View style={styles.gameDetailsContainer}>
           <GameButtons match={match} isNotified={isNotified} setIsNotified={setIsNotified} />

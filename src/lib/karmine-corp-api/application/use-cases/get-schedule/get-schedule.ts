@@ -8,7 +8,11 @@ import { CoreData } from '../../types/core-data';
 
 import { MatchesRepository } from '~/lib/karmine-corp-api/infrastructure/repositories/matches/matches-repository';
 
-export const getSchedule = () => {
+export const getSchedule = ({ onlyFromDatabase }: { onlyFromDatabase?: boolean } = {}) => {
+  if (onlyFromDatabase) {
+    return getScheduleFromDatabase();
+  }
+
   const remoteScheduleStream = Stream.merge(
     getOtherSchedule().pipe(
       Stream.filter(
@@ -23,18 +27,27 @@ export const getSchedule = () => {
 
   const scheduleStream = Stream.merge(remoteScheduleStream, getScheduleFromDatabase());
 
-  return Stream.merge(
-    scheduleStream,
-    remoteScheduleStream.pipe(
-      Stream.groupedWithin(Infinity, 1_000),
-      Stream.run(
-        // TODO: insertMatches is an Effect, not a Sink
-        Sink.forEach((schedule) =>
-          MatchesRepository.upsertMatches(
-            Chunk.toArray(schedule).map((match) => ({ id: match.id, data: JSON.stringify(match) }))
+  return Stream.Do.pipe(
+    Stream.flatMap(() =>
+      Stream.merge(
+        scheduleStream,
+        remoteScheduleStream.pipe(
+          Stream.groupedWithin(Infinity, 1_000),
+          Stream.run(
+            // TODO: insertMatches is an Effect, not a Sink
+            Sink.forEach((schedule) =>
+              MatchesRepository.upsertMatches(
+                Chunk.toArray(schedule).map((match) => ({
+                  id: match.id,
+                  data: JSON.stringify(match),
+                  timestamp: new Date(match.date).getTime(),
+                }))
+              )
+            )
           )
         )
       )
-    )
+    ),
+    Stream.filter((match): match is Exclude<typeof match, void> => match !== undefined)
   );
 };

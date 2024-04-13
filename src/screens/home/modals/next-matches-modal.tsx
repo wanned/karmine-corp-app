@@ -2,8 +2,7 @@ import React from 'react';
 import { View, VirtualizedList } from 'react-native';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
-import { MatchScore } from '~/shared/components/match/match-score';
-import { MatchTeam } from '~/shared/components/match/match-team';
+import { MatchPreview } from '~/shared/components/match-preview/match-preview';
 import { Typographies } from '~/shared/components/typographies';
 import { useNextMatches } from '~/shared/hooks/data/use-next-matches';
 import { useStyles } from '~/shared/hooks/use-styles';
@@ -38,21 +37,7 @@ export const NextMatchesModal = React.memo(() => {
           keyExtractor={(match) => match.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item: match }) =>
-            match && (
-              <MatchScore key={match.id} match={match}>
-                {match.teams.map(
-                  (team, index: number) =>
-                    team && (
-                      <MatchTeam
-                        key={`${match.id}-${team.name}-${index}`}
-                        logo={team.logoUrl}
-                        name={team.name}
-                        score="-"
-                      />
-                    )
-                )}
-              </MatchScore>
-            )
+            match && <MatchPreview key={match.id} match={match} variant="compact" />
           }
         />
       </View>

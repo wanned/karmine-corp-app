@@ -1,20 +1,29 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-const teamGameSchema = z.object({
-  id: z.string(),
-  side: z.enum(['blue', 'red']),
+const teamGameSchema = v.object({
+  id: v.string(),
+  side: v.union(v.literal('blue'), v.literal('red')),
 });
 
-export const getMatchByIdSchema = z.object({
-  data: z.object({
-    event: z.object({
-      type: z.literal('match'),
-      match: z.object({
-        games: z.array(
-          z.object({
-            number: z.number().int(),
-            id: z.string(),
-            teams: z.array(teamGameSchema),
+const teamSchema = v.object({
+  id: v.string(),
+  name: v.string(),
+  result: v.object({
+    gameWins: v.number(),
+  }),
+});
+
+export const getMatchByIdSchema = v.object({
+  data: v.object({
+    event: v.object({
+      type: v.literal('match'),
+      match: v.object({
+        teams: v.tuple([teamSchema, teamSchema]),
+        games: v.array(
+          v.object({
+            number: v.number(),
+            id: v.string(),
+            teams: v.array(teamGameSchema),
           })
         ),
       }),

@@ -3,4 +3,5 @@ export interface TypographyProps {
   color?: string;
   verticalTrim?: boolean;
   maxLines?: number;
+  textAlign?: 'left' | 'center' | 'right';
 }

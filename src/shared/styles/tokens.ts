@@ -18,13 +18,22 @@ export interface StyleTokens {
     screenHorizontal: number;
     screenVertical: number;
   };
+  spacing: {
+    xsmall: number;
+    small: number;
+    medium: number;
+    large: number;
+    xlarge: number;
+  };
   fonts: {
     default: string;
     number: string;
   };
   roundness: {
+    small: number;
     medium: number;
     large: number;
+    xlarge: number;
   };
 }
 
@@ -35,7 +44,7 @@ export const styleTokens: StyleTokens = {
     accent: '#00CCFF',
     subtleBackground: '#1A2942',
     subtleForeground: '#6E7582',
-    subtleForeground2: '#495364',
+    subtleForeground2: '#3E5670',
     streaming: '#EE5858',
   },
   opacities: {
@@ -46,12 +55,21 @@ export const styleTokens: StyleTokens = {
     screenHorizontal: 16,
     screenVertical: 16,
   },
+  spacing: {
+    xsmall: 2,
+    small: 4,
+    medium: 8,
+    large: 12,
+    xlarge: 16,
+  },
   fonts: {
     default: 'Cairo',
     number: 'MonaspaceNeon',
   },
   roundness: {
+    small: 4,
     medium: 8,
-    large: 16,
+    large: 12,
+    xlarge: 16,
   },
 };

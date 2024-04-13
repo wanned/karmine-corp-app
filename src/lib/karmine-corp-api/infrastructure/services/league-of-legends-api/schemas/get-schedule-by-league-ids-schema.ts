@@ -1,46 +1,55 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-const teamSchema = z.object({
-  name: z.string(),
-  code: z.string(),
-  image: z.string().url(),
-  result: z
+import { vDateString } from '../../../utils/valita-types/date-string';
+
+const teamSchema = v.object({
+  name: v.string(),
+  code: v.string(),
+  image: v.string(),
+  result: v
     .object({
-      outcome: z.enum(['win', 'loss']).nullable(),
-      gameWins: z.number().int(),
+      outcome: v.union(v.literal('win'), v.literal('loss')).nullable(),
+      gameWins: v.number(),
     })
     .nullable(),
 });
 
-export const getScheduleByLeagueIdsSchema = z.object({
-  data: z.object({
-    schedule: z.object({
-      pages: z.object({
-        older: z.string().nullable().optional(),
-        newer: z.string().nullable().optional(),
+export const getScheduleByLeagueIdsSchema = v.object({
+  data: v.object({
+    schedule: v.object({
+      pages: v.object({
+        older: v.string().nullable().optional(),
+        newer: v.string().nullable().optional(),
       }),
-      events: z.preprocess(
-        (data: any) => {
-          return Array.isArray(data) ? data.filter((d: any) => d.type === 'match') : [];
-        },
-        z.array(
-          z.object({
-            startTime: z.coerce.date(),
-            state: z.enum(['unstarted', 'inProgress', 'completed']),
-            league: z.object({
-              slug: z.string(),
-            }),
-            match: z.object({
-              id: z.string(),
-              teams: z.tuple([teamSchema, teamSchema]),
-              strategy: z.object({
-                type: z.literal('bestOf'),
-                count: z.number().int(),
+      events: v
+        .array(
+          v.union(
+            v.object({
+              type: v.literal('match'),
+              startTime: vDateString,
+              state: v.union(
+                v.literal('unstarted'),
+                v.literal('inProgress'),
+                v.literal('completed')
+              ),
+              league: v.object({
+                slug: v.string(),
+              }),
+              match: v.object({
+                id: v.string(),
+                teams: v.tuple([teamSchema, teamSchema]),
+                strategy: v.object({
+                  type: v.literal('bestOf'),
+                  count: v.number(),
+                }),
               }),
             }),
-          })
+            v.unknown().chain(() => v.ok(undefined))
+          )
         )
-      ),
+        .chain((data) =>
+          v.ok(data.filter((d): d is NonNullable<typeof d> => d !== null && d !== undefined))
+        ),
     }),
   }),
 });

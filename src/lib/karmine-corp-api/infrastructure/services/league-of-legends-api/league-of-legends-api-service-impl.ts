@@ -1,10 +1,10 @@
+import * as v from '@badrap/valita';
 import destr from 'destr';
 import { Effect, Layer } from 'effect';
-import { z } from 'zod';
 
 import { LeagueOfLegendsApiService } from './league-of-legends-api-service';
 import { leagueOfLegendsApiSchemas } from './schemas/league-of-legends-api-schemas';
-import { parseZod } from '../../utils/parse-zod/parse-zod';
+import { parseValita } from '../../utils/parse-valita/parse-valita';
 import { EnvService } from '../env/env-service';
 import { FetchService } from '../fetch/fetch-service';
 
@@ -83,7 +83,7 @@ const getLeagueOfLegendsHeaders = () =>
     Effect.map((env) => ({ 'x-api-key': env.LOL_API_KEY }))
   );
 
-const fetchLol = <S extends z.ZodType = z.ZodAny>({
+const fetchLol = <S extends v.Type = v.Type>({
   url,
   type,
   query,
@@ -99,7 +99,7 @@ const fetchLol = <S extends z.ZodType = z.ZodAny>({
     Effect.bind('url', () => getLeagueOfLegendsUrl({ url, type })),
     Effect.bind('headers', () => getLeagueOfLegendsHeaders()),
     Effect.flatMap(({ url, headers }) =>
-      Effect.serviceFunction(FetchService, (_) => _.fetch<z.output<S>>)(url, {
+      Effect.serviceFunction(FetchService, (_) => _.fetch<v.Infer<S>>)(url, {
         query: {
           hl: 'en-US',
           ...query,
@@ -108,7 +108,7 @@ const fetchLol = <S extends z.ZodType = z.ZodAny>({
           schema &&
           ((responseText) =>
             Effect.runSync(
-              parseZod(
+              parseValita(
                 schema,
                 destr(responseText) || undefined,
                 JSON.stringify({ url, type, query })

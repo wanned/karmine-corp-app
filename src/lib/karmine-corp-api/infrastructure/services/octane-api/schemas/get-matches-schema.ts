@@ -1,41 +1,43 @@
-import { z } from 'zod';
+import * as v from '@badrap/valita';
 
-const teamDetailsInMatchSchema = z.object({
-  score: z.number().default(0),
-  winner: z.boolean().default(false),
-  team: z.object({
-    team: z.object({
-      _id: z.string(),
-      name: z.string(),
-      image: z.string().url().optional(),
+import { vDateString } from '../../../utils/valita-types/date-string';
+
+const teamDetailsInMatchSchema = v.object({
+  score: v.number().default(0),
+  winner: v.boolean().default(false),
+  team: v.object({
+    team: v.object({
+      _id: v.string(),
+      name: v.string(),
+      image: v.string().optional(),
     }),
   }),
-  players: z
+  players: v
     .array(
-      z.object({
-        player: z.object({
-          _id: z.string(),
-          tag: z.string(),
+      v.object({
+        player: v.object({
+          _id: v.string(),
+          tag: v.string(),
         }),
       })
     )
     .default([]),
 });
 
-export const getMatchesSchema = z.object({
-  matches: z.array(
-    z.object({
-      _id: z.string(),
-      date: z.coerce.date(),
-      format: z.object({
-        type: z.literal('best'),
-        length: z.number(),
+export const getMatchesSchema = v.object({
+  matches: v.array(
+    v.object({
+      _id: v.string(),
+      date: vDateString,
+      format: v.object({
+        type: v.literal('best'),
+        length: v.number(),
       }),
       blue: teamDetailsInMatchSchema,
       orange: teamDetailsInMatchSchema,
     })
   ),
-  page: z.number(),
-  perPage: z.number(),
-  pageSize: z.number(),
+  page: v.number(),
+  perPage: v.number(),
+  pageSize: v.number(),
 });

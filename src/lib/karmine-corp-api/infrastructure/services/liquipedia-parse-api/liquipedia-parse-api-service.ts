@@ -1,5 +1,5 @@
+import * as v from '@badrap/valita';
 import { Context, Effect } from 'effect';
-import { z } from 'zod';
 
 import { LiquipediaParseApi } from './liquipedia-parse-api';
 import { EnvService } from '../env/env-service';
@@ -13,6 +13,6 @@ export class LiquipediaApiService extends Context.Tag(LIQUIPEDIA_API_SERVICE_TAG
     parse(args: {
       page: string;
       game: string;
-    }): Effect.Effect<LiquipediaParseApi.Parse, z.ZodError<any>, FetchService | EnvService>;
+    }): Effect.Effect<LiquipediaParseApi.Parse, v.Err, FetchService | EnvService>;
   }
 >() {}

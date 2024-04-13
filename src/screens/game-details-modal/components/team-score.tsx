@@ -32,16 +32,11 @@ export const TeamScore = ({ logo, name, score, isWinner, position }: TeamScorePr
         <Typographies.Title3 color={styles.teamNameContainer.color}>{name}</Typographies.Title3>
       </View>
 
-      {isWinner ?
-        <Typographies.Huge color={styles.teamNameContainer.color}>
+      {isWinner || !checkSingleNumber(score) ?
+        <Typographies.Huge color={styles.teamNameContainer.color} verticalTrim>
           {score.toString()}
         </Typographies.Huge>
-      : checkSingleNumber(score) ?
-        <OutlinedNumber size="large">{score}</OutlinedNumber>
-      : <Typographies.Huge color={styles.teamNameContainer.color}>
-          {score.toString()}
-        </Typographies.Huge>
-      }
+      : <OutlinedNumber size="large">{score}</OutlinedNumber>}
     </View>
   );
 };
