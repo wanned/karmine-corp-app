@@ -49,16 +49,16 @@ export const GameDetailsModal = React.memo(
           teamHome={match.teams[0]}
           teamAway={match.teams[1]}
         />
-        <View style={styles.date}>
+        <View style={styles.gameInfosContainer}>
           <MatchLabel
             date={match.date}
             competitionName={match.matchDetails.competitionName}
             status={match.status}
             bo={match.matchDetails.bo}
           />
+          <GameButtons match={match} isNotified={isNotified} setIsNotified={setIsNotified} />
         </View>
         <View style={styles.gameDetailsContainer}>
-          <GameButtons match={match} isNotified={isNotified} setIsNotified={setIsNotified} />
           {gameDetails === null && gamePlayers === null ?
             <View style={styles.noGameDetails}>
               <Typographies.Body>{translate('gameDetails.noGameDetails')}</Typographies.Body>
@@ -305,59 +305,65 @@ function GameDetailsPlayers({ match }: { match: CoreData.Match }) {
   );
 }
 
-const getStyles = createStylesheet((theme) => ({
-  buttonsContainer: {
-    gap: 12,
-  },
-  headerContainer: {
-    height: 280,
-  },
-  headerImage: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-  },
-  headerImageGradient: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: '100%',
-  },
-  headerScoreContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    gap: 40,
-    marginBottom: 60,
-  },
-  gameDetailsContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
-    gap: 48,
-  },
-  date: {
-    flex: 1,
-    paddingHorizontal: 16,
-    marginBottom: 8,
-  },
-  playersContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  playersTeamContainer: {
-    gap: 16,
-  },
-  noGameDetails: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    opacity: theme.opacities.priority2,
-    position: 'relative',
-    top: -70,
-  },
-  titleDate: {
-    color: theme.colors.accent,
-  },
-}));
+const getStyles = createStylesheet((theme) => {
+  const HEADER_HEIGHT = 216;
+  const HEADER_MARGIN_BOTTOM = 48;
+
+  return {
+    buttonsContainer: {
+      gap: 12,
+    },
+    headerContainer: {
+      height: HEADER_HEIGHT + HEADER_MARGIN_BOTTOM,
+    },
+    headerImage: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+    },
+    headerImageGradient: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      height: '100%',
+    },
+    headerScoreContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+      gap: 40,
+      marginBottom: 60, // This value is magic ^^'
+      top: 64 - HEADER_MARGIN_BOTTOM,
+    },
+    gameInfosContainer: {
+      paddingHorizontal: 16,
+      gap: 16,
+    },
+    gameDetailsContainer: {
+      flex: 1,
+      paddingHorizontal: 16,
+      gap: 16,
+      marginTop: 32,
+    },
+    playersContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    playersTeamContainer: {
+      gap: 16,
+    },
+    noGameDetails: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      opacity: theme.opacities.priority2,
+      position: 'relative',
+      top: -70,
+    },
+    titleDate: {
+      color: theme.colors.accent,
+    },
+  };
+});
