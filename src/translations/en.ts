@@ -79,6 +79,21 @@ export const enTranslations: Translations['en'] = {
       },
     },
   },
+  credits: {
+    screenName: 'Credits',
+    contributors: {
+      title: 'Contributors',
+      description: 'Thanks to all the contributors who made this project possible.',
+    },
+    apis: {
+      title: 'APIs',
+      description: 'The data displayed in this app is fetched from the following APIs.',
+    },
+    libraries: {
+      title: 'Libraries',
+      description: 'This app uses the following libraries.',
+    },
+  },
   games: {
     LeagueOfLegendsLFL: 'LFL',
     LeagueOfLegendsLEC: 'LEC',

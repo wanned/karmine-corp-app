@@ -79,6 +79,21 @@ export const frTranslations: Translations['fr'] = {
       },
     },
   },
+  credits: {
+    screenName: 'Crédits',
+    contributors: {
+      title: 'Contributeurs',
+      description: 'Merci à toutes les personnes qui permettent à cette application d’exister.',
+    },
+    apis: {
+      title: 'APIs',
+      description: 'Les données de l’application proviennent des sources suivantes.',
+    },
+    libraries: {
+      title: 'Librairies',
+      description: 'Cette application fonctionne grâce aux librairies suivantes.',
+    },
+  },
   games: {
     LeagueOfLegendsLFL: 'LFL',
     LeagueOfLegendsLEC: 'LEC',

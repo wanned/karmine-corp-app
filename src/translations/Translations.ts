@@ -78,6 +78,21 @@ export type Translations = Record<
         };
       };
     };
+    credits: {
+      screenName: string;
+      contributors: {
+        title: string;
+        description: string;
+      };
+      apis: {
+        title: string;
+        description: string;
+      };
+      libraries: {
+        title: string;
+        description: string;
+      };
+    };
     games: {
       [K in CoreData.CompetitionName]: string;
     };
