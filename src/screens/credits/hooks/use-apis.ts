@@ -2,37 +2,17 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useApis = () => {
   const fetchApis = async () => {
-    const apis = [
-      {
-        title: 'api2.kametotv.fr/karmine',
-      },
-      {
-        title: 'feed.lolesports.com',
-      },
-      {
-        title: 'esports-api.lolesports.com',
-      },
-      {
-        title: 'ddragon.leagueoflegends.com',
-      },
-      {
-        title: 'liquipedia.net',
-      },
-      {
-        title: 'zsr.octane.gg',
-      },
-      {
-        title: 'flask-api.strafe.com',
-      },
-      {
-        title: 'youtube.com',
-      },
-      {
-        title: 'ungh.cc',
-      },
-    ];
-
-    return apis;
+    return [
+      'api2.kametotv.fr/karmine',
+      'feed.lolesports.com',
+      'esports-api.lolesports.com',
+      'ddragon.leagueoflegends.com',
+      'liquipedia.net',
+      'zsr.octane.gg',
+      'flask-api.strafe.com',
+      'youtube.com',
+      'ungh.cc',
+    ].map((api) => ({ title: api }));
   };
 
   return useQuery({

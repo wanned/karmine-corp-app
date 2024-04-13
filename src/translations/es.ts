@@ -60,7 +60,7 @@ export const esTranslations: Translations['es'] = {
     screenName: 'Créditos',
     contributors: {
       title: 'Contribuidores',
-      description: 'Gracias a todas las personas que han contribuido a la aplicación',
+      description: 'Gracias a todas las personas que han contribuido a la aplicación.',
     },
     apis: {
       title: 'APIs',

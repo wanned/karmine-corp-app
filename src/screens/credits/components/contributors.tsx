@@ -6,19 +6,11 @@ import { Buttons } from '~/shared/components/buttons';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
-interface ContributorProps {
-  user: {
-    name: string;
-    username: string;
-    twitter: string;
-  };
-}
-
 export const Contributors = () => {
   const { data: contributors } = useContributors();
   const styles = useStyles(getStyles);
 
-  const redirect = (contributor: ContributorProps) => {
+  const redirect = (contributor: NonNullable<typeof contributors>[number]) => {
     if (contributor.user.twitter) {
       Linking.openURL(`https://x.com/${contributor.user.twitter}`);
     } else {
