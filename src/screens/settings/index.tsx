@@ -72,6 +72,10 @@ export default function SettingsScreen() {
           <Typographies.Label color={styles.versionContainer.color}>
             {translate('settings.version')} {packageJson.version}
           </Typographies.Label>
+
+          <Typographies.Label color={styles.versionContainer.color}>
+            {translate('settings.notAffiliated')}
+          </Typographies.Label>
         </View>
       </View>
     </DefaultLayout>
