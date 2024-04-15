@@ -29,8 +29,8 @@ const TeamContainer = ({ children, title }: TeamContainerProps) => {
 
 const getStyles = createStylesheet((theme) => ({
   container: {
-    marginTop: 12,
-    gap: 8,
+    gap: theme.spacing.large,
+    marginBottom: theme.spacing.xlarge,
   },
 }));
 
