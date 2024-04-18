@@ -8,7 +8,7 @@ import { LeagueOfLegendsApiServiceImpl } from '~/lib/karmine-corp-api/infrastruc
 import { LiquipediaParseApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/liquipedia-parse-api/liquipedia-parse-api-service-impl';
 import { OctaneApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/octane-api/octane-api-service-impl';
 import { StrafeApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/strafe-api/strafe-api-service-impl';
-import { VlrApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/vlr-api/vlr-api-service-impl';
+import { VlrGgApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/vlrGg-api/vlrGg-api-service-impl';
 
 export const mainLayer = Layer.empty.pipe(
   Layer.merge(LeagueOfLegendsApiServiceImpl),
@@ -16,7 +16,7 @@ export const mainLayer = Layer.empty.pipe(
   Layer.merge(KarmineApiServiceImpl),
   Layer.merge(StrafeApiServiceImpl),
   Layer.merge(LiquipediaParseApiServiceImpl),
-  Layer.merge(VlrApiServiceImpl),
+  Layer.merge(VlrGgApiServiceImpl),
   Layer.merge(FetchServiceImpl),
   Layer.merge(createOpSqliteImpl('karmine-corp-api')),
   Layer.merge(EnvRnServiceImpl)

@@ -1,12 +1,14 @@
 import { CoreData } from '../../types/core-data';
 
-export const karmineCorpTeams = [
-  {
-    teamId: '8877',
+export const karmineCorpTeams = {
+  [CoreData.CompetitionName.ValorantVCT]: {
+    vlrGgTeamId: '8877',
+    valorantTeamId: '108241004210065453',
     team: CoreData.CompetitionName.ValorantVCT,
   },
-  {
-    teamId: '12255',
+  [CoreData.CompetitionName.ValorantVCTGC]: {
+    vlrGgTeamId: '12255',
+    valorantTeamId: '110196099498044762',
     team: CoreData.CompetitionName.ValorantVCTGC,
   },
-] as const;
+};

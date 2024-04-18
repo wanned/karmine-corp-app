@@ -7,14 +7,14 @@ import { karmineCorpTeams } from './karmine-corp-teams';
 import { PaginateChunkEffectPaginatorFormatter } from '../../types/effect-utils';
 import { GetScheduleParamsState } from '../../use-cases/get-schedule/get-schedule-params-state';
 
-import { VlrApiService } from '~/lib/karmine-corp-api/infrastructure/services/vlr-api/vlr-api-service';
+import { VlrGgApiService } from '~/lib/karmine-corp-api/infrastructure/services/vlr-gg-api/vlr-gg-api-service';
 
 export function paginateKarmineCorpMatches() {
   return Stream.mergeAll(
-    karmineCorpTeams.flatMap((team) =>
+    Object.values(karmineCorpTeams).flatMap((team) =>
       (['upcoming', 'completed'] as const).map((status) =>
         Stream.paginateChunkEffect(undefined as HTMLElement | undefined, (lastResponse) =>
-          Effect.scoped(getNextMatchesGetter({ status, teamId: team.teamId })(lastResponse))
+          Effect.scoped(getNextMatchesGetter({ status, teamId: team.vlrGgTeamId })(lastResponse))
         )
       )
     ),
@@ -34,7 +34,7 @@ function getNextMatchesGetter({
   return function getNextMatches(lastResponse: HTMLElement | undefined) {
     return Effect.Do.pipe(
       Effect.flatMap(() =>
-        Effect.serviceMembers(VlrApiService).functions.getMatches({
+        Effect.serviceMembers(VlrGgApiService).functions.getMatches({
           status,
           teamId,
           page: getNextPageNumber(lastResponse),

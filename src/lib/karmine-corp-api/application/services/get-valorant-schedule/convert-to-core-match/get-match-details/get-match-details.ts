@@ -5,7 +5,7 @@ import { getGameDetails } from './get-game-details';
 import { getTeamName } from '../get-teams/get-teams';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
-import { VlrApiService } from '~/lib/karmine-corp-api/infrastructure/services/vlr-api/vlr-api-service';
+import { VlrGgApiService } from '~/lib/karmine-corp-api/infrastructure/services/vlr-gg-api/vlr-gg-api-service';
 
 export function getMatchDetails(matchElement: HTMLElement) {
   return Effect.all({
@@ -88,7 +88,7 @@ function getMatchPage(matchElement: HTMLElement) {
     Effect.map((href) => (href.startsWith('/') ? href.slice(1) : href)),
     Effect.flatMap((href) => Option.fromNullable(href.split('/')[0])),
     Effect.flatMap((gameId) =>
-      Effect.serviceMembers(VlrApiService).functions.getMatch({
+      Effect.serviceMembers(VlrGgApiService).functions.getMatch({
         gameId,
       })
     ),
@@ -113,7 +113,7 @@ function getPlayerPage(playerElement: HTMLElement) {
             Option.getOrElse(() =>
               Effect.Do.pipe(
                 Effect.flatMap(() =>
-                  Effect.serviceMembers(VlrApiService).functions.getPlayer({
+                  Effect.serviceMembers(VlrGgApiService).functions.getPlayer({
                     playerId,
                   })
                 ),
