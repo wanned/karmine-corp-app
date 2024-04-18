@@ -7,6 +7,7 @@ interface BracketMatch {
   teams: {
     id: string;
     name: string;
+    image: string;
     result?: { outcome: 'win' | 'loss' | null } | null;
     origin: { type: 'match' | string; structuralId: string };
   }[];
@@ -22,6 +23,7 @@ interface GroupRanking {
   teams: {
     id: string;
     name: string;
+    image: string;
     record: { wins: number; losses: number };
   }[];
 }
@@ -37,15 +39,19 @@ export interface HomogeneousStanding {
           type: 'group';
           rankings: GroupRanking[];
         }
+      | {
+          type: 'crossGroup';
+          rankings: GroupRanking[];
+        }
     )[];
   }[];
 }
 
-export type Leaderboard = Record<string, Omit<CoreData.LeaderboardItem, 'logoUrl'>>;
+export type Leaderboard = Record<string, CoreData.LeaderboardItem>;
 
 function updateLeaderboard(
   leaderboard: Leaderboard,
-  team: { name: string; id: string },
+  team: { name: string; id: string; image: string },
   position: number,
   resultOrRecord: 'win' | 'loss' | { wins: number; looses: number }
 ) {
@@ -54,7 +60,14 @@ function updateLeaderboard(
   }
 
   if (!(team.id in leaderboard)) {
-    leaderboard[team.id] = { position, wins: 0, looses: 0, teamId: team.id, teamName: team.name };
+    leaderboard[team.id] = {
+      position,
+      wins: 0,
+      looses: 0,
+      teamId: team.id,
+      teamName: team.name,
+      logoUrl: team.image,
+    };
   }
 
   if (resultOrRecord === 'win') {
@@ -78,6 +91,7 @@ function mergeLeaderboards(...leaderboards: Leaderboard[]) {
         {
           id: team.teamId,
           name: team.teamName,
+          image: team.logoUrl,
         },
         leaderboard[teamId].position,
         {
@@ -189,6 +203,7 @@ function parseGroup(rankings: GroupRanking[]): Leaderboard {
               {
                 teamId: team.id,
                 teamName: team.name,
+                logoUrl: team.image,
                 position: ranking.ordinal,
                 wins: team.record.wins,
                 looses: team.record.losses,
@@ -206,29 +221,37 @@ class KarmineNotInLeaderboard extends Data.TaggedError('KarmineNotInLeaderboard'
 export function parseLeaderboard(
   standings: HomogeneousStanding[]
 ): Effect.Effect<Leaderboard, UnsupportedMultipleSections | KarmineNotInLeaderboard, never> {
-  return Effect.gen(function* (_) {
-    let leaderboard: Leaderboard = {};
+  return Effect.firstSuccessOf(
+    [...standings].reverse().map((standing, i) =>
+      Effect.gen(function* (_) {
+        let leaderboard: Leaderboard = {};
 
-    const stages = standings.at(-1)?.stages ?? [];
+        const stages = standing.stages;
 
-    for (const stage of [...stages].reverse()) {
-      const section = yield* _(findRelevantSection(stage));
+        for (const stage of [...stages].reverse()) {
+          const section = yield* _(findRelevantSection(stage));
 
-      if (!section) {
-        continue;
-      }
+          if (!section) {
+            continue;
+          }
 
-      if (section.type === 'bracket') {
-        leaderboard = mergeLeaderboards(leaderboard, parseBracket(section.columns));
-      }
+          if (section.type === 'bracket') {
+            leaderboard = mergeLeaderboards(leaderboard, parseBracket(section.columns));
+          }
 
-      if (section.type === 'group') {
-        leaderboard = mergeLeaderboards(leaderboard, parseGroup(section.rankings));
-      }
-    }
+          if (section.type === 'group') {
+            leaderboard = mergeLeaderboards(leaderboard, parseGroup(section.rankings));
+          }
 
-    return yield* _(validateLeaderboard(leaderboard));
-  });
+          if (section.type === 'crossGroup') {
+            leaderboard = mergeLeaderboards(leaderboard, parseGroup(section.rankings));
+          }
+        }
+
+        return yield* _(validateLeaderboard(leaderboard));
+      })
+    )
+  );
 }
 
 function findRelevantSection(
@@ -241,10 +264,12 @@ function findRelevantSection(
   return Effect.gen(function* (_) {
     const sections = stage.sections;
 
-    const isAllSectionsAreGroups = sections.every((section) => section.type === 'group');
+    const isAllSectionsAreGroups = sections.every(
+      (section) => section.type === 'group' || section.type === 'crossGroup'
+    );
 
     if (isAllSectionsAreGroups) {
-      type GroupSection = Extract<(typeof sections)[number], { type: 'group' }>;
+      type GroupSection = Extract<(typeof sections)[number], { type: 'group' | 'crossGroup' }>;
       return (sections as GroupSection[]).find((section) =>
         section.rankings.some((ranking) =>
           ranking.teams.some((team) => team.name.toLowerCase().includes('karmine'))
