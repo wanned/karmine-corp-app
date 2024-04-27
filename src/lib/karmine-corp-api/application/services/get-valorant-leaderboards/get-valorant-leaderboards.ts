@@ -7,18 +7,16 @@ import { ValorantApi } from '~/lib/karmine-corp-api/infrastructure/services/valo
 import { ValorantApiService } from '~/lib/karmine-corp-api/infrastructure/services/valorant-api/valorant-api-service';
 
 export const getValorantLeaderboards = () =>
-  Effect.Do.pipe(
-    Effect.flatMap(() =>
-      Effect.all([
-        getLeaderboardForTeam(CoreData.CompetitionName.ValorantVCT),
-        getLeaderboardForTeam(CoreData.CompetitionName.ValorantVCTGC),
-      ])
+  Effect.all({
+    [CoreData.CompetitionName.ValorantVCT]: getLeaderboardForTeam(
+      CoreData.CompetitionName.ValorantVCT
     ),
-    Effect.map(([ValorantVCT, ValorantVCTGC]) => ({
-      [CoreData.CompetitionName.ValorantVCT]: ValorantVCT,
-      [CoreData.CompetitionName.ValorantVCTGC]: ValorantVCTGC,
-    }))
-  );
+    // [CoreData.CompetitionName.ValorantVCTGC]: getLeaderboardForTeam(
+    //   CoreData.CompetitionName.ValorantVCTGC
+    // ),
+    // Disabled for now because Riot 😡 does not update the division 2 of GC, and there is a lot of chance in the future that we
+    // will not always be in the division 1 (but j'y crois 💙)
+  });
 
 // The leagues come from the League of Legends API
 // https://esports-api.lolesports.com/persisted/gw/getLeagues?hl=en-US
