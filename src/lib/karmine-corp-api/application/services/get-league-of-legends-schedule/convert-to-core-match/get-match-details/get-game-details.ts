@@ -161,13 +161,14 @@ function getTeamPicks({
 let allPlayers: LeagueOfLegendsApi.GetTeams['data']['teams'][0]['players'] | undefined;
 function getAllPlayers() {
   return Effect.if(Effect.succeed(allPlayers !== undefined), {
-    onTrue: Effect.succeed(allPlayers!),
-    onFalse: Effect.serviceMembers(LeagueOfLegendsApiService)
-      .functions.getTeams()
-      .pipe(
-        Effect.tap((teams) => (allPlayers = teams.data.teams.flatMap((team) => team.players))),
-        Effect.map((teams) => teams.data.teams.flatMap((team) => team.players))
-      ),
+    onTrue: () => Effect.succeed(allPlayers!),
+    onFalse: () =>
+      Effect.serviceMembers(LeagueOfLegendsApiService)
+        .functions.getTeams()
+        .pipe(
+          Effect.tap((teams) => (allPlayers = teams.data.teams.flatMap((team) => team.players))),
+          Effect.map((teams) => teams.data.teams.flatMap((team) => team.players))
+        ),
   });
 }
 

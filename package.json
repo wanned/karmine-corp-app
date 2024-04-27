@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@badrap/valita": "^0.3.8",
-    "@effect/platform": "^0.48.15",
-    "@effect/platform-node": "^0.45.17",
+    "@effect/platform": "^0.50.7",
+    "@effect/platform-node": "^0.47.7",
     "@notifee/react-native": "^7.8.2",
     "@op-engineering/op-sqlite": "^3.0.7",
     "@react-native-async-storage/async-storage": "1.21.0",
@@ -37,7 +37,7 @@
     "destr": "^2.0.3",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.6",
-    "effect": "^2.4.1",
+    "effect": "^3.0.7",
     "expo": "^50.0.13",
     "expo-asset": "~9.0.2",
     "expo-build-properties": "~0.11.1",
@@ -74,6 +74,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@effect/vitest": "^0.3.7",
     "@total-typescript/ts-reset": "^0.5.1",
     "@types/react": "~18.2.14",
     "@types/react-native-canvas": "^0.1.13",
