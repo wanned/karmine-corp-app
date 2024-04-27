@@ -23,9 +23,18 @@ export const addPlayer = <E, R>(
         newPlayer: playerEffect,
       })
     ),
-    Effect.map(({ players, newPlayer }) => ({
-      ...players,
-      [team]: [...players[team], newPlayer],
-    })),
+    Effect.map(({ players, newPlayer }) => {
+      if (
+        Object.values(players)
+          .flat()
+          .some((player) => player.name === newPlayer.name)
+      ) {
+        return players;
+      }
+      return {
+        ...players,
+        [team]: [...players[team], newPlayer],
+      };
+    }),
     Effect.flatMap(setPlayers)
   );
