@@ -138,7 +138,7 @@ function getTeamPicks({
                 Effect.map((players) =>
                   players.find((player) => player.id === participant.esportsPlayerId)
                 ),
-                Effect.map((player) => player?.image)
+                Effect.map((player) => player?.image.replace('http:', 'https:'))
               ),
               role: Effect.succeed(participant.role),
             })

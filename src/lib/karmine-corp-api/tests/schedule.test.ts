@@ -52,6 +52,13 @@ describe('schedule', () => {
     }
   });
 
+  it('should not contain any non-https URLs', () => {
+    const urls = JSON.stringify(schedule).matchAll(/https?:\/\/[^"]+/g);
+    for (const url of urls) {
+      expect(url[0]).toMatch(/^https/);
+    }
+  });
+
   describe('league of legends', () => {
     const leagueOfLegendsSchedule = schedule.filter((match) =>
       [
