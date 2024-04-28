@@ -1,4 +1,4 @@
-import { it, describe, beforeAll, expect, afterAll } from '@effect/vitest';
+import { it, describe, beforeAll, expect, afterAll, assert } from '@effect/vitest';
 import { Effect, Layer, Stream, Sink } from 'effect';
 import fs from 'fs';
 
@@ -60,11 +60,23 @@ describe('schedule', () => {
   });
 
   describe('league of legends', () => {
-    const leagueOfLegendsSchedule = schedule.filter((match) =>
-      [
-        CoreData.CompetitionName.LeagueOfLegendsLEC,
-        CoreData.CompetitionName.LeagueOfLegendsLFL,
-      ].includes(match.matchDetails.competitionName)
+    const leagueOfLegendsSchedule = schedule.filter(
+      (
+        match
+      ): match is Extract<
+        typeof match,
+        {
+          matchDetails: {
+            competitionName:
+              | CoreData.CompetitionName.LeagueOfLegendsLEC
+              | CoreData.CompetitionName.LeagueOfLegendsLFL;
+          };
+        }
+      > =>
+        [
+          CoreData.CompetitionName.LeagueOfLegendsLEC,
+          CoreData.CompetitionName.LeagueOfLegendsLFL,
+        ].includes(match.matchDetails.competitionName)
     );
 
     it('should have no duplicated players', () => {
@@ -98,6 +110,19 @@ describe('schedule', () => {
             player.name,
             `Player ${player.name} in match ${match.id} and team ${opponentTeamSide} is not from Karmine Corp`
           ).not.toMatch(/^KCB? /);
+        }
+      }
+    });
+
+    it('should have game details for all matches', () => {
+      for (const match of leagueOfLegendsSchedule) {
+        assert.isNotEmpty(match.matchDetails.games, `Match ${match.id} has no game details`);
+
+        if (match.matchDetails.bo) {
+          expect(match.matchDetails.games.length).toBeLessThanOrEqual(match.matchDetails.bo);
+          expect(match.matchDetails.games.length).toBeGreaterThanOrEqual(
+            (match.matchDetails.bo + 1) / 2
+          );
         }
       }
     });
