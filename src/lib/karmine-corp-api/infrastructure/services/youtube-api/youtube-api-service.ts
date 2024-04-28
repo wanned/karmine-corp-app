@@ -10,6 +10,6 @@ const YOUTUBE_API_SERVICE_TAG = 'YoutubeApiService';
 export class YoutubeApiService extends Context.Tag(YOUTUBE_API_SERVICE_TAG)<
   YoutubeApiService,
   {
-    getVideos(): Effect.Effect<YoutubeApi.GetVideos, v.Err, FetchService | EnvService>;
+    getVideos(): Effect.Effect<YoutubeApi.GetVideos, v.ValitaError, FetchService | EnvService>;
   }
 >() {}

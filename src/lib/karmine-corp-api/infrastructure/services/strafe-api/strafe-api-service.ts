@@ -12,7 +12,7 @@ export class StrafeApiService extends Context.Tag(STRAFE_API_SERVICE_TAG)<
   {
     getCalendar(args: {
       date: Date;
-    }): Effect.Effect<StrafeApi.GetCalendar, v.Err, FetchService | EnvService>;
+    }): Effect.Effect<StrafeApi.GetCalendar, v.ValitaError, FetchService | EnvService>;
     getMatch(args: {
       matchId: number;
     }): Effect.Effect<StrafeApi.GetMatch, never, FetchService | EnvService>;

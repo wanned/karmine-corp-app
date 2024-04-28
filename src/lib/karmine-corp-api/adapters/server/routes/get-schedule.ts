@@ -87,8 +87,8 @@ const GetScheduleParamsStateFromHttpRequestImpl = Layer.effect(
           );
 
       return Option.all({
-        fromDate: getAndParseParam('fromDate', Schema.orUndefined(Schema.Date)),
-        toDate: getAndParseParam('toDate', Schema.orUndefined(Schema.Date)),
+        fromDate: getAndParseParam('fromDate', Schema.UndefinedOr(Schema.Date)),
+        toDate: getAndParseParam('toDate', Schema.UndefinedOr(Schema.Date)),
       });
     }),
     Effect.flatMap(

@@ -60,7 +60,7 @@ export const getSchedule = ({ onlyFromDatabase }: { onlyFromDatabase?: boolean }
                 'https://medias.kametotv.fr/karmine/teams/Karmine-RocketLeague.png'
               : team.logoUrl,
           }
-      ),
+      ) as (typeof match)['teams'],
     }))
   );
 };
