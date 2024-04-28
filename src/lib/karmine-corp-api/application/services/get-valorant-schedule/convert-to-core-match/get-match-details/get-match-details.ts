@@ -8,12 +8,17 @@ import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { VlrGgApiService } from '~/lib/karmine-corp-api/infrastructure/services/vlr-gg-api/vlr-gg-api-service';
 
 export function getMatchDetails(matchElement: HTMLElement) {
-  return Effect.all({
-    competitionName: getCompetitonName(matchElement),
-    games: getGames(matchElement),
-    bo: getBo(matchElement),
-    players: getPlayers(matchElement),
-  }) satisfies Effect.Effect<CoreData.ValorantMatch['matchDetails'], any, any>;
+  return Effect.all(
+    {
+      competitionName: getCompetitonName(matchElement),
+      games: getGames(matchElement),
+      bo: getBo(matchElement),
+      players: getPlayers(matchElement),
+    },
+    {
+      concurrency: 1,
+    }
+  ) satisfies Effect.Effect<CoreData.ValorantMatch['matchDetails'], any, any>;
 }
 
 function getCompetitonName(matchElement: HTMLElement) {
@@ -55,19 +60,29 @@ function getPlayers(matchElement: HTMLElement) {
     Effect.flatMap(() => getMatchPage(matchElement)),
     Effect.map((page) => page.querySelectorAll('.vm-stats-game:first-of-type .mod-player')),
     Effect.flatMap((players) =>
-      Effect.all({
-        home: Effect.forEach(players.slice(0, 5), getPlayerDetails),
-        away: Effect.forEach(players.slice(5), getPlayerDetails),
-      })
+      Effect.all(
+        {
+          home: Effect.forEach(players.slice(0, 5), getPlayerDetails),
+          away: Effect.forEach(players.slice(5), getPlayerDetails),
+        },
+        {
+          concurrency: 1,
+        }
+      )
     )
   );
 }
 
 function getPlayerDetails(playerElement: HTMLElement) {
-  return Effect.all({
-    name: Option.fromNullable(playerElement.querySelector('a div:first-of-type')?.text.trim()),
-    imageUrl: getPlayerImageUrl(playerElement),
-  });
+  return Effect.all(
+    {
+      name: Option.fromNullable(playerElement.querySelector('a div:first-of-type')?.text.trim()),
+      imageUrl: getPlayerImageUrl(playerElement),
+    },
+    {
+      concurrency: 1,
+    }
+  );
 }
 
 function getPlayerImageUrl(playerElement: HTMLElement) {

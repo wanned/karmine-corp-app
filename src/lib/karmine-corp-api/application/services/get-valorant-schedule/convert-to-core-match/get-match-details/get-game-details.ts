@@ -7,10 +7,15 @@ export function getGameDetails(mapElement: HTMLElement) {
   return Effect.all({
     mapName: getMapName(mapElement),
     score: getScore(mapElement),
-    composition: Effect.all({
-      home: getComposition(mapElement, 'home'),
-      away: getComposition(mapElement, 'away'),
-    }),
+    composition: Effect.all(
+      {
+        home: getComposition(mapElement, 'home'),
+        away: getComposition(mapElement, 'away'),
+      },
+      {
+        concurrency: 1,
+      }
+    ),
   }) satisfies Effect.Effect<CoreData.ValorantGame, any, any>;
 }
 
@@ -48,10 +53,15 @@ function getComposition(mapElement: HTMLElement, side: 'home' | 'away') {
 
 function getCharacterDetails(characterElement: HTMLElement) {
   return Effect.map(
-    Effect.all({
-      name: getCharacterName(characterElement),
-      imageUrl: getCharacterImageUrl(characterElement),
-    }),
+    Effect.all(
+      {
+        name: getCharacterName(characterElement),
+        imageUrl: getCharacterImageUrl(characterElement),
+      },
+      {
+        concurrency: 1,
+      }
+    ),
     (character) => ({ agent: character })
   );
 }
