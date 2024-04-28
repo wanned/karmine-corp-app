@@ -11,6 +11,7 @@ interface SecondaryProps {
   onPress: () => void;
   fillWidth?: boolean;
   withArrow?: boolean;
+  forceAlignLeft?: boolean;
 }
 
 export const Secondary = ({
@@ -18,15 +19,17 @@ export const Secondary = ({
   onPress,
   fillWidth = false,
   withArrow = false,
+  forceAlignLeft = false,
 }: SecondaryProps) => {
   const styles = useStyles(getStyles);
 
   return (
     <TouchableOpacity
-      style={StyleSheet.compose(
+      style={StyleSheet.flatten([
         StyleSheet.compose(styles.button, fillWidth ? styles.fillWidth : undefined),
-        withArrow ? styles.buttonWithArrow : undefined
-      )}
+        withArrow ? styles.buttonWithArrow : undefined,
+        forceAlignLeft ? styles.forceAlignLeft : undefined,
+      ])}
       onPress={onPress}>
       <Typographies.Body color={styles.button.color} verticalTrim>
         {text}
@@ -56,6 +59,9 @@ const getStyles = createStylesheet((theme) => ({
   },
   buttonWithArrow: {
     justifyContent: 'space-between',
+  },
+  forceAlignLeft: {
+    justifyContent: 'flex-start',
   },
   fillWidth: {
     width: '100%',

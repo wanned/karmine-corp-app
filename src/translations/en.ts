@@ -52,6 +52,7 @@ export const enTranslations: Translations['en'] = {
   settings: {
     screenName: 'Settings',
     version: 'Version',
+    notAffiliated: 'Not affiliated with Karmine Corp',
     notifications: {
       title: 'Notifications',
       description: 'Choose the games you will receive notifications for.',
@@ -77,6 +78,21 @@ export const enTranslations: Translations['en'] = {
         karmineCorpTwitter: "Visit Karmine Corp's X",
         credits: 'Credits',
       },
+    },
+  },
+  credits: {
+    screenName: 'Credits',
+    contributors: {
+      title: 'Contributors',
+      description: 'Thanks to all the contributors who made this project possible.',
+    },
+    apis: {
+      title: 'APIs',
+      description: 'The data displayed in this app is fetched from the following APIs.',
+    },
+    libraries: {
+      title: 'Libraries',
+      description: 'This app uses the following libraries.',
     },
   },
   games: {

@@ -138,7 +138,7 @@ function getTeamPicks({
                 Effect.map((players) =>
                   players.find((player) => player.id === participant.esportsPlayerId)
                 ),
-                Effect.map((player) => player?.image)
+                Effect.map((player) => player?.image.replace('http:', 'https:'))
               ),
               role: Effect.succeed(participant.role),
             })
@@ -161,13 +161,14 @@ function getTeamPicks({
 let allPlayers: LeagueOfLegendsApi.GetTeams['data']['teams'][0]['players'] | undefined;
 function getAllPlayers() {
   return Effect.if(Effect.succeed(allPlayers !== undefined), {
-    onTrue: Effect.succeed(allPlayers!),
-    onFalse: Effect.serviceMembers(LeagueOfLegendsApiService)
-      .functions.getTeams()
-      .pipe(
-        Effect.tap((teams) => (allPlayers = teams.data.teams.flatMap((team) => team.players))),
-        Effect.map((teams) => teams.data.teams.flatMap((team) => team.players))
-      ),
+    onTrue: () => Effect.succeed(allPlayers!),
+    onFalse: () =>
+      Effect.serviceMembers(LeagueOfLegendsApiService)
+        .functions.getTeams()
+        .pipe(
+          Effect.tap((teams) => (allPlayers = teams.data.teams.flatMap((team) => team.players))),
+          Effect.map((teams) => teams.data.teams.flatMap((team) => team.players))
+        ),
   });
 }
 

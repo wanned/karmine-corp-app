@@ -52,6 +52,7 @@ export const esTranslations: Translations['es'] = {
   settings: {
     screenName: 'Configuración',
     version: 'Versión',
+    notAffiliated: 'No afiliado a Karmine Corp',
     notifications: {
       title: 'Notificaciones',
       description: 'Elija los juegos que recibirá notificaciones.',
@@ -77,6 +78,21 @@ export const esTranslations: Translations['es'] = {
         karmineCorpTwitter: 'Visitar el X de Karmine Corp',
         credits: 'Créditos',
       },
+    },
+  },
+  credits: {
+    screenName: 'Créditos',
+    contributors: {
+      title: 'Contribuidores',
+      description: 'Gracias a todas las personas que han contribuido a la aplicación.',
+    },
+    apis: {
+      title: 'APIs',
+      description: 'Los datos de la aplicación proceden de las siguientes fuentes.',
+    },
+    libraries: {
+      title: 'Librerías',
+      description: 'La aplicación utiliza las siguientes librerías.',
     },
   },
   games: {

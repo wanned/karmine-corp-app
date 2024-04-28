@@ -33,8 +33,7 @@ export const OtherSettings = () => {
     },
     {
       title: translate('settings.other.buttonTitles.credits'),
-      // TODO: Add credits screen redirect
-      redirectTo: 'home',
+      redirectTo: 'credits',
     },
   ];
 

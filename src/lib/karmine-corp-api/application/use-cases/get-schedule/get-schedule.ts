@@ -58,6 +58,19 @@ export const getSchedule = ({ onlyFromDatabase }: { onlyFromDatabase?: boolean }
         )
       )
     ),
-    Stream.filter((match): match is Exclude<typeof match, void> => match !== undefined)
+    Stream.filter((match): match is Exclude<typeof match, void> => match !== undefined),
+    Stream.map((match) => ({
+      ...match,
+      teams: match.teams.map(
+        (team) =>
+          team && {
+            ...team,
+            logoUrl:
+              team.name.toLowerCase().includes('karmine') ?
+                'https://medias.kametotv.fr/karmine/teams/Karmine-RocketLeague.png'
+              : team.logoUrl,
+          }
+      ) as (typeof match)['teams'],
+    }))
   );
 };

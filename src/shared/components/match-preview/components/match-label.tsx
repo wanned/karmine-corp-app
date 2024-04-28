@@ -97,7 +97,7 @@ const MatchDate = React.memo(
       : isSameDay(date, dayUtils.tomorrow) ? translate('home.tomorrow')
       : formatDate(date);
 
-    const formattedTime = formatTime(date);
+    const formattedTime = formatTime(date, "HH'h'mm");
 
     return (
       <Typographies.Label color={styles.date.color} verticalTrim>

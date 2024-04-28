@@ -55,6 +55,7 @@ export type Translations = Record<
     settings: {
       screenName: string;
       version: string;
+      notAffiliated: string;
       notifications: {
         title: string;
         description: string;
@@ -76,6 +77,21 @@ export type Translations = Record<
           karmineCorpTwitter: string;
           credits: string;
         };
+      };
+    };
+    credits: {
+      screenName: string;
+      contributors: {
+        title: string;
+        description: string;
+      };
+      apis: {
+        title: string;
+        description: string;
+      };
+      libraries: {
+        title: string;
+        description: string;
       };
     };
     games: {
