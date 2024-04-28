@@ -15,6 +15,8 @@ import { LiquipediaParseApiServiceImpl } from '../infrastructure/services/liquip
 import { NotificationFcmServiceImpl } from '../infrastructure/services/notification-sender/notification-fcm-service-impl';
 import { OctaneApiServiceImpl } from '../infrastructure/services/octane-api/octane-api-service-impl';
 import { StrafeApiServiceImpl } from '../infrastructure/services/strafe-api/strafe-api-service-impl';
+import { ValorantApiServiceImpl } from '../infrastructure/services/valorant-api/valorant-api-impl';
+import { VlrGgApiServiceImpl } from '../infrastructure/services/vlr-gg-api/vlr-gg-api-service-impl';
 
 describe('schedule', () => {
   const schedule: CoreData.Match[] = [];
@@ -137,6 +139,8 @@ function getMainLayer() {
     Layer.merge(StrafeApiServiceImpl),
     Layer.merge(LiquipediaParseApiServiceImpl),
     Layer.merge(FetchServiceImpl),
+    Layer.merge(VlrGgApiServiceImpl),
+    Layer.merge(ValorantApiServiceImpl),
     Layer.merge(
       Layer.provideMerge(
         Layer.effectDiscard(

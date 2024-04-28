@@ -14,6 +14,7 @@ import { NotificationFcmServiceImpl } from '../../infrastructure/services/notifi
 import { NotificationSenderService } from '../../infrastructure/services/notification-sender/notification-sender-service';
 import { OctaneApiServiceImpl } from '../../infrastructure/services/octane-api/octane-api-service-impl';
 import { StrafeApiServiceImpl } from '../../infrastructure/services/strafe-api/strafe-api-service-impl';
+import { VlrGgApiServiceImpl } from '../../infrastructure/services/vlr-gg-api/vlr-gg-api-service-impl';
 
 import { IsoDate } from '~/shared/types/IsoDate';
 
@@ -129,6 +130,7 @@ const getMainLayer = () =>
     Layer.merge(OctaneApiServiceImpl),
     Layer.merge(KarmineApiServiceImpl),
     Layer.merge(StrafeApiServiceImpl),
+    Layer.merge(VlrGgApiServiceImpl),
     Layer.merge(FetchServiceImpl),
     Layer.merge(createBetterSqlite3Impl()),
     Layer.merge(createEnvServiceImpl({ firebaseEnvShouldBeDefined: true })),

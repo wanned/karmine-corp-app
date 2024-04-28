@@ -8,6 +8,7 @@ import { CoreData } from '../../application/types/core-data';
 import { getSchedule } from '../../application/use-cases/get-schedule/get-schedule';
 import { createGetScheduleParamsStateImpl } from '../../application/use-cases/get-schedule/get-schedule-params-state';
 import { DatabaseService } from '../../infrastructure/services/database/database-service';
+import { concatLazyStream } from '../../infrastructure/utils/effect/concat-lazy-stream';
 import { delayedStream } from '../../infrastructure/utils/effect/delayed-stream';
 
 import { IsoDate } from '~/shared/types/IsoDate';
@@ -146,11 +147,11 @@ const _getSchedule = () =>
       Effect.serviceFunctionEffect(DatabaseService, (_) => _.initializeTables)()
     ),
     Effect.map(() =>
-      Stream.concatAll(
-        Chunk.make(
-          getCachedSchedule(),
-          getLiveSchedule(),
-          getFutureSchedule(),
+      concatLazyStream(
+        () => getCachedSchedule(),
+        () => getLiveSchedule(),
+        () => getFutureSchedule(),
+        () =>
           Stream.mergeAll(
             [
               getRemainingSchedule(),
@@ -167,7 +168,6 @@ const _getSchedule = () =>
               concurrency: 'unbounded',
             }
           )
-        )
       ).pipe(Stream.provideSomeLayer(mainLayer), Stream.groupedWithin(100, 1_000))
     ),
     Effect.provide(mainLayer)

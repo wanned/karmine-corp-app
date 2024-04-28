@@ -45,9 +45,10 @@ export namespace CoreData {
     matchDetails: MD;
   }
 
-  export type Match = LeagueOfLegendsMatch | RocketLeagueMatch | BaseMatch;
+  export type Match = LeagueOfLegendsMatch | RocketLeagueMatch | ValorantMatch | BaseMatch;
   export type LeagueOfLegendsMatch = BaseMatch<LeagueOfLegendsMatchDetails>;
   export type RocketLeagueMatch = BaseMatch<RocketLeagueMatchDetails>;
+  export type ValorantMatch = BaseMatch<ValorantMatchDetails>;
 
   interface LeagueOfLegendsMatchDetails extends BaseMatchDetails {
     competitionName: CompetitionName.LeagueOfLegendsLFL | CompetitionName.LeagueOfLegendsLEC;
@@ -86,6 +87,25 @@ export namespace CoreData {
         stops: number;
         totalPoints: number;
       }
+    >;
+  }
+
+  interface ValorantMatchDetails extends BaseMatchDetails {
+    competitionName: CompetitionName.ValorantVCT | CompetitionName.ValorantVCTGC;
+    games: ValorantGame[];
+  }
+
+  export interface ValorantGame {
+    mapName: string;
+    score: Record<'home' | 'away', number>;
+    composition: Record<
+      'home' | 'away',
+      {
+        agent: {
+          name: string;
+          imageUrl: string;
+        };
+      }[]
     >;
   }
 

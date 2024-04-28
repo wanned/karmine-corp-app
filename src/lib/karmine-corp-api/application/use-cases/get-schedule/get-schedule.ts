@@ -4,6 +4,7 @@ import { getLeagueOfLegendsSchedule } from '../../services/get-league-of-legends
 import { getOtherSchedule } from '../../services/get-other-schedule/get-other-schedule';
 import { getRocketLeagueSchedule } from '../../services/get-rocket-league-schedule/get-rocket-league-schedule';
 import { getScheduleFromDatabase } from '../../services/get-schedule-from-database/get-schedule-from-database';
+import { getValorantSchedule } from '../../services/get-valorant-schedule/get-valorant-schedule';
 import { CoreData } from '../../types/core-data';
 
 import { MatchesRepository } from '~/lib/karmine-corp-api/infrastructure/repositories/matches/matches-repository';
@@ -13,16 +14,26 @@ export const getSchedule = ({ onlyFromDatabase }: { onlyFromDatabase?: boolean }
     return getScheduleFromDatabase();
   }
 
-  const remoteScheduleStream = Stream.merge(
-    getOtherSchedule().pipe(
-      Stream.filter(
-        (match) =>
-          match.matchDetails.competitionName !== CoreData.CompetitionName.LeagueOfLegendsLEC &&
-          match.matchDetails.competitionName !== CoreData.CompetitionName.LeagueOfLegendsLFL &&
-          match.matchDetails.competitionName !== CoreData.CompetitionName.RocketLeague
+  // TODO: Add a `speed` parameter. If `speed` is `fast`, then we use merge (because it runs in parallel), if `speed` is `slow`, then we use concat (because it runs in sequence)
+  // By default, we use `fast` speed.
+  // In React Native adapter, we use `fast` only at the first app open, then, if all matches are already fetched, we use `slow` speed.
+
+  const remoteScheduleStream = Stream.empty.pipe(
+    Stream.merge(
+      getOtherSchedule().pipe(
+        Stream.filter(
+          (match) =>
+            match.matchDetails.competitionName !== CoreData.CompetitionName.LeagueOfLegendsLEC &&
+            match.matchDetails.competitionName !== CoreData.CompetitionName.LeagueOfLegendsLFL &&
+            match.matchDetails.competitionName !== CoreData.CompetitionName.RocketLeague &&
+            match.matchDetails.competitionName !== CoreData.CompetitionName.ValorantVCT &&
+            match.matchDetails.competitionName !== CoreData.CompetitionName.ValorantVCTGC
+        )
       )
     ),
-    Stream.merge(getRocketLeagueSchedule(), getLeagueOfLegendsSchedule())
+    Stream.merge(getRocketLeagueSchedule()),
+    Stream.merge(getLeagueOfLegendsSchedule()),
+    Stream.merge(getValorantSchedule())
   );
 
   const scheduleStream = Stream.merge(remoteScheduleStream, getScheduleFromDatabase());
