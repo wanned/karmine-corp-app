@@ -17,7 +17,7 @@ export const CardsSlot = React.memo(({ style }: { style?: View['props']['style']
 
   return (
     <View style={style}>
-      <CardWrapper height={160} cardsData={[...lastYoutubeVideoCardData, ...liveMatchesCardData]} />
+      <CardWrapper height={160} cardsData={[...liveMatchesCardData, ...lastYoutubeVideoCardData]} />
     </View>
   );
 });
