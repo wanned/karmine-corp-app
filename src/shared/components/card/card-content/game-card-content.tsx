@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { LivePill } from '../../live-pill/live-pill';
 import { Typographies } from '../../typographies';
@@ -21,32 +21,36 @@ interface GameCardContentProps {
   teamLeft: TeamProps;
   teamRight?: TeamProps;
   showLivePill?: boolean;
+  onPress?: () => void;
 }
 
 export const GameCardContent = ({
   teamLeft,
   teamRight,
   showLivePill = false,
+  onPress,
 }: GameCardContentProps) => {
   const styles = useStyles(getStyles);
 
   return (
-    <View>
-      <View style={styles.header}>
-        <Typographies.Label color={styles.header.color} verticalTrim>
-          17 SEPT. 2023 · LEC · BO5
-        </Typographies.Label>
-        {showLivePill && (
-          <View style={styles.livePill}>
-            <LivePill />
-          </View>
-        )}
+    <Pressable onPress={onPress}>
+      <View>
+        <View style={styles.header}>
+          <Typographies.Label color={styles.header.color} verticalTrim>
+            17 SEPT. 2023 · LEC · BO5
+          </Typographies.Label>
+          {showLivePill && (
+            <View style={styles.livePill}>
+              <LivePill />
+            </View>
+          )}
+        </View>
+        <View style={styles.teamsContainer}>
+          <TeamScore {...teamLeft} position="left" />
+          {teamRight && <TeamScore {...teamRight} position="right" />}
+        </View>
       </View>
-      <View style={styles.teamsContainer}>
-        <TeamScore {...teamLeft} position="left" />
-        {teamRight && <TeamScore {...teamRight} position="right" />}
-      </View>
-    </View>
+    </Pressable>
   );
 };
 
