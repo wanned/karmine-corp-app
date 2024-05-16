@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import {
   matchesAtom,
   useMatches,
-} from '~/lib/karmine-corp-api/adapters/react-native-hook/use-matches';
+} from '~/lib/karmine-corp-api/adapters/react-native/use-matches';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 const nextMatchesAtom = atom((get) => {

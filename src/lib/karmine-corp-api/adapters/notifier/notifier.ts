@@ -38,26 +38,16 @@ const notifier = () =>
         Stream.filterMap<CoreData.Match, CoreData.Notifications.Notification>((match) => {
           const savedMatch = savedMatches.get(match.id);
 
-          if (!savedMatch) {
-            return Option.none();
-          }
-
-          // We want to create a notification for matches that changed status
-          if (savedMatch.status !== 'finished' && match.status === 'finished') {
-            return Option.some({
-              type: 'matchFinished',
-              match: {
-                id: match.id,
-                teams: match.teams
-                  .filter((team): team is Exclude<typeof team, null> => team !== null)
-                  .map((team) => ({ name: team.name, score: team.score })),
-                matchDetails: {
-                  competitionName: match.matchDetails.competitionName,
-                },
-              },
-              createdAt: new Date().toISOString() as IsoDate,
-            } satisfies CoreData.Notifications.MatchFinishedNotification);
-          }
+          const getBaseMatch = (match: CoreData.Match): CoreData.BaseMatch => ({
+            id: match.id,
+            teams: match.teams,
+            matchDetails: {
+              competitionName: match.matchDetails.competitionName,
+            },
+            date: match.date,
+            streamLink: match.streamLink,
+            status: match.status,
+          });
 
           // We want to create a notification for matches that are upcoming in less than 15 minutes
           if (
@@ -66,17 +56,27 @@ const notifier = () =>
           ) {
             return Option.some({
               type: 'matchStarting',
-              match: {
-                id: match.id,
-                teams: match.teams
-                  .filter((team): team is Exclude<typeof team, null> => team !== null)
-                  .map((team) => ({ name: team.name, score: team.score })),
-                matchDetails: {
-                  competitionName: match.matchDetails.competitionName,
-                },
-              },
+              match: getBaseMatch(match),
               createdAt: new Date().toISOString() as IsoDate,
             } satisfies CoreData.Notifications.MatchStartingSoonNotification);
+          }
+
+          // We want to create a notification for new matches
+          if (!savedMatch) {
+            return Option.some({
+              type: 'newMatchEntry',
+              match: getBaseMatch(match),
+              createdAt: new Date().toISOString() as IsoDate,
+            });
+          }
+
+          // We want to create a notification for matches that changed status
+          if (savedMatch.status !== 'finished' && match.status === 'finished') {
+            return Option.some({
+              type: 'matchFinished',
+              match: getBaseMatch(match),
+              createdAt: new Date().toISOString() as IsoDate,
+            } satisfies CoreData.Notifications.MatchFinishedNotification);
           }
 
           // We want to create a notification for matches that are live and have a new score
@@ -87,24 +87,8 @@ const notifier = () =>
           ) {
             return Option.some({
               type: 'matchScoreUpdated',
-              match: {
-                id: match.id,
-                teams: match.teams
-                  .filter((team): team is Exclude<typeof team, null> => team !== null)
-                  .map((team) => ({ name: team.name, score: team.score })),
-                matchDetails: {
-                  competitionName: match.matchDetails.competitionName,
-                },
-              },
-              oldMatch: {
-                id: savedMatch.id,
-                teams: savedMatch.teams
-                  .filter((team): team is Exclude<typeof team, null> => team !== null)
-                  .map((team) => ({ name: team.name, score: team.score })),
-                matchDetails: {
-                  competitionName: savedMatch.matchDetails.competitionName,
-                },
-              },
+              match: getBaseMatch(match),
+              oldMatch: getBaseMatch(savedMatch),
               createdAt: new Date().toISOString() as IsoDate,
             } satisfies CoreData.Notifications.MatchScoreUpdatedNotification);
           }
