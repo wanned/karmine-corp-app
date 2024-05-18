@@ -66,7 +66,7 @@
       "sha1": "39fd67af723647ac4947475d36c9c5a7c62200ec"
     },
     {
-      "path": "assets/icons/adaptive-icon.png",
+      "path": "assets/icons/adaptive_icon.png",
       "sha1": "57073bd944d32be1c5526b16cd564f8850dd2304"
     },
     {
@@ -83,10 +83,14 @@
     },
     {
       "path": "assets/matches-dump.db",
-      "sha1": "48fad1d1f3ec930f972c57d094a651e710df65a8"
+      "sha1": "0217aa540ac352a2e258a55cf1fae2d3004458b6"
     },
     {
-      "path": "assets/misc/anonymous-kc-player.png",
+      "path": "assets/matches-dump.json",
+      "sha1": "8fa6714e763887a34e3a20de56e3f4a8ea91710f"
+    },
+    {
+      "path": "assets/misc/anonymous_kc_player.png",
       "sha1": "902cff1360f9380f348db5e554047d88dddd8ee7"
     }
   ]

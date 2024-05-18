@@ -14,11 +14,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		16F557856BE247B99874DF87 /* MonaspaceNeon-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F727C6A4B9FA4846ADC8D43D /* MonaspaceNeon-Regular.otf */; };
-		20D0F751E7A9484281A29918 /* anonymous-kc-player.png in Resources */ = {isa = PBXBuildFile; fileRef = 35AC1AADF1E34300ACE415CD /* anonymous-kc-player.png */; };
 		20E726F33F1946C8AD886422 /* notification.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F0788B863B44A8895D9E8E0 /* notification.png */; };
-		2388B28894B2450DBA63007D /* matches-dump.db in Resources */ = {isa = PBXBuildFile; fileRef = 29722BB815254F94AAE983EE /* matches-dump.db */; };
 		2487D546AFE544548EDE6331 /* lol.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F0C3F8F2B06409685E50A3F /* lol.png */; };
-		3D5B752CA1BF4FAEBE53FF4A /* adaptive-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 129A781668C3444CBD9527B6 /* adaptive-icon.png */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		5DF9163398944902B52550EC /* MonaspaceNeon-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 047085DCE7844193AA101B6C /* MonaspaceNeon-ExtraLight.otf */; };
 		6C3AD42933EF4EE79B253B7D /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 180FD3FFFDA841E9908D4611 /* splash.png */; };
@@ -38,12 +35,15 @@
 		E626101FE1BE44D8A155C1DB /* MonaspaceNeon-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = D30DBF54927F400CA54EA19D /* MonaspaceNeon-Light.otf */; };
 		F24946FAF1C543648FADECE8 /* Cairo-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C244F028FD6E45EBA02BA240 /* Cairo-Bold.ttf */; };
 		F35C7C3404944B1F8D71C38A /* Cairo-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 579CE5B959A947BB8794176D /* Cairo-Black.ttf */; };
+		83DAFC62046642D49418696B /* matches-dump.db in Resources */ = {isa = PBXBuildFile; fileRef = 9B79566C7F1445AEAB14C260 /* matches-dump.db */; };
+		6544493B153A4CAD90F52031 /* matches-dump.json in Resources */ = {isa = PBXBuildFile; fileRef = 87E4155EC7FD4484824607BF /* matches-dump.json */; };
+		570D061E28B0473D95EA0BAC /* anonymous_kc_player.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB05E4D31664EDABCF6A3B1 /* anonymous_kc_player.png */; };
+		C8940A6154234BA98237D2A4 /* adaptive_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AFF6BE1826E455DBFEEDEBE /* adaptive_icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		047085DCE7844193AA101B6C /* MonaspaceNeon-ExtraLight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MonaspaceNeon-ExtraLight.otf"; path = "../assets/fonts/MonaspaceNeon/MonaspaceNeon-ExtraLight.otf"; sourceTree = "<group>"; };
 		0F0788B863B44A8895D9E8E0 /* notification.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = notification.png; path = ../assets/icons/notification.png; sourceTree = "<group>"; };
-		129A781668C3444CBD9527B6 /* adaptive-icon.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "adaptive-icon.png"; path = "../assets/icons/adaptive-icon.png"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* KarminePlus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KarminePlus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = KarminePlus/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = KarminePlus/AppDelegate.mm; sourceTree = "<group>"; };
@@ -53,9 +53,7 @@
 		180FD3FFFDA841E9908D4611 /* splash.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = splash.png; path = ../assets/icons/splash.png; sourceTree = "<group>"; };
 		1FA5207193DB4F76A294167F /* KarminePlus-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "KarminePlus-Bridging-Header.h"; path = "KarminePlus/KarminePlus-Bridging-Header.h"; sourceTree = "<group>"; };
 		2229974FB75E43C081A5A8E6 /* Cairo-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-Medium.ttf"; path = "../assets/fonts/Cairo/Cairo-Medium.ttf"; sourceTree = "<group>"; };
-		29722BB815254F94AAE983EE /* matches-dump.db */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "matches-dump.db"; path = "../assets/matches-dump.db"; sourceTree = "<group>"; };
 		305F07B83A844B4299C9322B /* MonaspaceNeon-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MonaspaceNeon-Medium.otf"; path = "../assets/fonts/MonaspaceNeon/MonaspaceNeon-Medium.otf"; sourceTree = "<group>"; };
-		35AC1AADF1E34300ACE415CD /* anonymous-kc-player.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "anonymous-kc-player.png"; path = "../assets/misc/anonymous-kc-player.png"; sourceTree = "<group>"; };
 		579CE5B959A947BB8794176D /* Cairo-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-Black.ttf"; path = "../assets/fonts/Cairo/Cairo-Black.ttf"; sourceTree = "<group>"; };
 		579EA17127AA436C8C54E2E7 /* icon.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = icon.png; path = ../assets/icons/icon.png; sourceTree = "<group>"; };
 		5F0C3F8F2B06409685E50A3F /* lol.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = lol.png; path = "../assets/game-images/lol.png"; sourceTree = "<group>"; };
@@ -79,6 +77,10 @@
 		F727C6A4B9FA4846ADC8D43D /* MonaspaceNeon-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MonaspaceNeon-Regular.otf"; path = "../assets/fonts/MonaspaceNeon/MonaspaceNeon-Regular.otf"; sourceTree = "<group>"; };
 		FA17BC24EB024B2297809B26 /* MonaspaceNeon-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MonaspaceNeon-SemiBold.otf"; path = "../assets/fonts/MonaspaceNeon/MonaspaceNeon-SemiBold.otf"; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-KarminePlus/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		9B79566C7F1445AEAB14C260 /* matches-dump.db */ = {isa = PBXFileReference; name = "matches-dump.db"; path = "../assets/matches-dump.db"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		87E4155EC7FD4484824607BF /* matches-dump.json */ = {isa = PBXFileReference; name = "matches-dump.json"; path = "../assets/matches-dump.json"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1FB05E4D31664EDABCF6A3B1 /* anonymous_kc_player.png */ = {isa = PBXFileReference; name = "anonymous_kc_player.png"; path = "../assets/misc/anonymous_kc_player.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8AFF6BE1826E455DBFEEDEBE /* adaptive_icon.png */ = {isa = PBXFileReference; name = "adaptive_icon.png"; path = "../assets/icons/adaptive_icon.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,12 +140,13 @@
 				7CE650EEF3A0495FBE9C4DAF /* rl.png */,
 				BA07D1BF7C58423C9CFE4CE1 /* tft.png */,
 				E6E19F2BC9D14246B6A871B9 /* valorant.png */,
-				129A781668C3444CBD9527B6 /* adaptive-icon.png */,
 				579EA17127AA436C8C54E2E7 /* icon.png */,
 				0F0788B863B44A8895D9E8E0 /* notification.png */,
 				180FD3FFFDA841E9908D4611 /* splash.png */,
-				29722BB815254F94AAE983EE /* matches-dump.db */,
-				35AC1AADF1E34300ACE415CD /* anonymous-kc-player.png */,
+				9B79566C7F1445AEAB14C260 /* matches-dump.db */,
+				87E4155EC7FD4484824607BF /* matches-dump.json */,
+				1FB05E4D31664EDABCF6A3B1 /* anonymous_kc_player.png */,
+				8AFF6BE1826E455DBFEEDEBE /* adaptive_icon.png */,
 			);
 			name = Resources;
 			path = "";
@@ -296,12 +299,13 @@
 				84A4407458CA4DAAAA244FC3 /* rl.png in Resources */,
 				A3CA0AD6ADC149FF90967037 /* tft.png in Resources */,
 				92C8D8E6161A4D1C907A3DB5 /* valorant.png in Resources */,
-				3D5B752CA1BF4FAEBE53FF4A /* adaptive-icon.png in Resources */,
 				135DDB537C62446387B74A79 /* icon.png in Resources */,
 				20E726F33F1946C8AD886422 /* notification.png in Resources */,
 				6C3AD42933EF4EE79B253B7D /* splash.png in Resources */,
-				2388B28894B2450DBA63007D /* matches-dump.db in Resources */,
-				20D0F751E7A9484281A29918 /* anonymous-kc-player.png in Resources */,
+				83DAFC62046642D49418696B /* matches-dump.db in Resources */,
+				6544493B153A4CAD90F52031 /* matches-dump.json in Resources */,
+				570D061E28B0473D95EA0BAC /* anonymous_kc_player.png in Resources */,
+				C8940A6154234BA98237D2A4 /* adaptive_icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
