@@ -1,8 +1,10 @@
 import { useStore } from '@nanostores/react';
 import { subHours, addHours } from 'date-fns';
 import { Chunk, Effect, Schedule, Stream } from 'effect';
+import * as BackgroundFetch from 'expo-background-fetch';
+import * as TaskManager from 'expo-task-manager';
 import { atom } from 'nanostores';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { mainLayer } from './utils/main-layer';
 import matchesDump from '../../../../../assets/matches-dump.json';
@@ -22,73 +24,90 @@ type GroupedMatches = {
 export const matchesAtom = atom<GroupedMatches>(matchesDump as unknown as GroupedMatches);
 const matchesFetchingStatusAtom = atom<'idle' | 'loading' | 'initialized' | 'error'>('idle');
 
+const addMatches = (matches: CoreData.Match[]) => {
+  matchesFetchingStatusAtom.set('initialized');
+  matchesAtom.set(
+    (() => {
+      const prev = matchesAtom.get();
+      const next = { ...prev };
+
+      matches.forEach((match) => {
+        const matchDate = new Date(match.date);
+        const matchDay = new Date(
+          matchDate.getFullYear(),
+          matchDate.getMonth(),
+          matchDate.getDate()
+        );
+        const matchDayIso = matchDay.toISOString() as IsoDate;
+
+        if (!next[matchDayIso]) {
+          next[matchDayIso] = [];
+        }
+
+        const matchIndex = next[matchDayIso].findIndex((m) => m.id === match.id);
+        if (matchIndex === -1) {
+          next[matchDayIso].push(match);
+        } else {
+          next[matchDayIso][matchIndex] = match;
+        }
+      });
+
+      return next;
+    })()
+  );
+};
+
+const fetchMatches = async () => {
+  await Effect.runPromise(
+    Effect.Do.pipe(
+      _getSchedule,
+      Effect.flatMap(
+        Stream.runForEach((matches) =>
+          Effect.Do.pipe(
+            Effect.map(() => matches),
+            Effect.map(Chunk.toArray),
+            Effect.map(addMatches)
+          )
+        )
+      )
+    )
+  ).catch((error) => {
+    console.error(error);
+    matchesFetchingStatusAtom.set('error');
+  });
+};
+
+const BACKGROUND_FETCH_MATCHES_TASK = 'BACKGROUND_FETCH_MATCHES_TASK';
+TaskManager.defineTask(BACKGROUND_FETCH_MATCHES_TASK, async () => {
+  await fetchMatches();
+  return BackgroundFetch.BackgroundFetchResult.NewData;
+});
+
 export const useMatches = () => {
   const [matchesFetchingStatus] = useStore(matchesFetchingStatusAtom);
-
-  const addMatches = useCallback((matches: CoreData.Match[]) => {
-    matchesFetchingStatusAtom.set('initialized');
-    matchesAtom.set(
-      (() => {
-        const prev = matchesAtom.get();
-        const next = { ...prev };
-
-        matches.forEach((match) => {
-          const matchDate = new Date(match.date);
-          const matchDay = new Date(
-            matchDate.getFullYear(),
-            matchDate.getMonth(),
-            matchDate.getDate()
-          );
-          const matchDayIso = matchDay.toISOString() as IsoDate;
-
-          if (!next[matchDayIso]) {
-            next[matchDayIso] = [];
-          }
-
-          const matchIndex = next[matchDayIso].findIndex((m) => m.id === match.id);
-          if (matchIndex === -1) {
-            next[matchDayIso].push(match);
-          } else {
-            next[matchDayIso][matchIndex] = match;
-          }
-        });
-
-        return next;
-      })()
-    );
-  }, []);
 
   useEffect(() => {
     if (matchesFetchingStatusAtom.get() !== 'idle') {
       return;
     }
     matchesFetchingStatusAtom.set('loading');
+    fetchMatches();
+  }, []);
 
-    const abortController = new AbortController();
+  useEffect(() => {
+    // Instantly run the task if it's not running
+    (async () => {
+      const status = await BackgroundFetch.getStatusAsync();
+      if (status !== BackgroundFetch.BackgroundFetchStatus.Available) {
+        return;
+      }
 
-    Effect.runPromise(
-      Effect.Do.pipe(
-        _getSchedule,
-        Effect.flatMap(
-          Stream.runForEach((matches) =>
-            Effect.Do.pipe(
-              Effect.map(() => matches),
-              Effect.map(Chunk.toArray),
-              Effect.map(addMatches)
-            )
-          )
-        )
-      ),
-      { signal: abortController.signal }
-    ).catch((error) => {
-      console.error(error);
-      matchesFetchingStatusAtom.set('error');
-    });
-
-    return () => {
-      abortController.abort();
-    };
-  }, [addMatches]);
+      await BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_MATCHES_TASK, {
+        minimumInterval: Infinity, // Run only once
+        // TODO: Check that setting minimumInterval to Infinity is correct
+      });
+    })();
+  }, []);
 
   return {
     matchesFetchingStatus,

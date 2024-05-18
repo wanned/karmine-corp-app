@@ -31,7 +31,8 @@
     },
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
-      "bundleIdentifier": "plus.karmine.karmineplus"
+      "bundleIdentifier": "plus.karmine.karmineplus",
+      "UIBackgroundModes": ["fetch", "remote-notification"]
     },
     "plugins": [
       "expo-localization",
