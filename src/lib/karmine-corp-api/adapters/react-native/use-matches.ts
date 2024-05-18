@@ -1,6 +1,7 @@
+import { useStore } from '@nanostores/react';
 import { subHours, addHours } from 'date-fns';
 import { Chunk, Effect, Schedule, Stream } from 'effect';
-import { atom, useAtom, useStore } from 'jotai';
+import { atom } from 'nanostores';
 import { useCallback, useEffect } from 'react';
 
 import { mainLayer } from './utils/main-layer';
@@ -22,46 +23,46 @@ export const matchesAtom = atom<GroupedMatches>(matchesDump as unknown as Groupe
 const matchesFetchingStatusAtom = atom<'idle' | 'loading' | 'initialized' | 'error'>('idle');
 
 export const useMatches = () => {
-  const [matches, setMatches] = useAtom(matchesAtom);
-  const [matchesFetchingStatus] = useAtom(matchesFetchingStatusAtom);
-
-  const store = useStore();
+  const [matchesFetchingStatus] = useStore(matchesFetchingStatusAtom);
 
   const addMatches = useCallback((matches: CoreData.Match[]) => {
-    store.set(matchesFetchingStatusAtom, 'initialized');
-    setMatches((prev) => {
-      const next = { ...prev };
+    matchesFetchingStatusAtom.set('initialized');
+    matchesAtom.set(
+      (() => {
+        const prev = matchesAtom.get();
+        const next = { ...prev };
 
-      matches.forEach((match) => {
-        const matchDate = new Date(match.date);
-        const matchDay = new Date(
-          matchDate.getFullYear(),
-          matchDate.getMonth(),
-          matchDate.getDate()
-        );
-        const matchDayIso = matchDay.toISOString() as IsoDate;
+        matches.forEach((match) => {
+          const matchDate = new Date(match.date);
+          const matchDay = new Date(
+            matchDate.getFullYear(),
+            matchDate.getMonth(),
+            matchDate.getDate()
+          );
+          const matchDayIso = matchDay.toISOString() as IsoDate;
 
-        if (!next[matchDayIso]) {
-          next[matchDayIso] = [];
-        }
+          if (!next[matchDayIso]) {
+            next[matchDayIso] = [];
+          }
 
-        const matchIndex = next[matchDayIso].findIndex((m) => m.id === match.id);
-        if (matchIndex === -1) {
-          next[matchDayIso].push(match);
-        } else {
-          next[matchDayIso][matchIndex] = match;
-        }
-      });
+          const matchIndex = next[matchDayIso].findIndex((m) => m.id === match.id);
+          if (matchIndex === -1) {
+            next[matchDayIso].push(match);
+          } else {
+            next[matchDayIso][matchIndex] = match;
+          }
+        });
 
-      return next;
-    });
+        return next;
+      })()
+    );
   }, []);
 
   useEffect(() => {
-    if (store.get(matchesFetchingStatusAtom) !== 'idle') {
+    if (matchesFetchingStatusAtom.get() !== 'idle') {
       return;
     }
-    store.set(matchesFetchingStatusAtom, 'loading');
+    matchesFetchingStatusAtom.set('loading');
 
     const abortController = new AbortController();
 
@@ -81,16 +82,15 @@ export const useMatches = () => {
       { signal: abortController.signal }
     ).catch((error) => {
       console.error(error);
-      store.set(matchesFetchingStatusAtom, 'error');
+      matchesFetchingStatusAtom.set('error');
     });
 
     return () => {
       abortController.abort();
     };
-  }, [addMatches, store]);
+  }, [addMatches]);
 
   return {
-    matches,
     matchesFetchingStatus,
   };
 };

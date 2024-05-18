@@ -1,16 +1,11 @@
-import { atom, useAtomValue } from 'jotai';
-import { selectAtom } from 'jotai/utils';
-import { useCallback } from 'react';
+import { useStore } from '@nanostores/react';
+import { computed } from 'nanostores';
+import { useMemo } from 'react';
 
-import {
-  matchesAtom,
-  useMatches,
-} from '~/lib/karmine-corp-api/adapters/react-native/use-matches';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
+import { matchesAtom, useMatches } from '~/lib/karmine-corp-api/adapters/react-native/use-matches';
+import { selectAtom } from '~/shared/utils/select-atom';
 
-const nextMatchesAtom = atom((get) => {
-  const matches = get(matchesAtom);
-
+const nextMatchesAtom = computed(matchesAtom, (matches) => {
   const nextMatches = Object.values(matches)
     .flatMap((matches) => matches.filter((match) => match.status === 'upcoming'))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -21,21 +16,23 @@ const nextMatchesAtom = atom((get) => {
 export const useNextMatches = (n?: number) => {
   useMatches(); // Ensure the matches are being fetched.
 
-  return useAtomValue(
-    selectAtom(
-      nextMatchesAtom,
-      useCallback((nextMatches) => (n === undefined ? nextMatches : nextMatches.slice(0, n)), [n]),
-      useCallback(
-        (a: CoreData.Match[], b: CoreData.Match[]) => {
-          if (n === undefined) return Object.is(a, b);
+  return useStore(
+    useMemo(
+      () =>
+        selectAtom(
+          computed(nextMatchesAtom, (nextMatches) => {
+            return n === undefined ? nextMatches : nextMatches.slice(0, n);
+          }),
+          (a, b) => {
+            if (n === undefined) return Object.is(a, b);
 
-          for (let i = 0; i < n; i++) {
-            if (a[i] !== b[i]) return false;
+            for (let i = 0; i < n; i++) {
+              if (a[i] !== b[i]) return false;
+            }
+            return true;
           }
-          return true;
-        },
-        [n]
-      )
+        ),
+      [n]
     )
   );
 };

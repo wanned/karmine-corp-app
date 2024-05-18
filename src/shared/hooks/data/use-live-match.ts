@@ -1,16 +1,9 @@
-import { atom, useAtomValue } from 'jotai';
-import { selectAtom } from 'jotai/utils';
-import { useCallback } from 'react';
+import { useStore } from '@nanostores/react';
+import { computed } from 'nanostores';
 
-import {
-  matchesAtom,
-  useMatches,
-} from '~/lib/karmine-corp-api/adapters/react-native/use-matches';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
+import { matchesAtom, useMatches } from '~/lib/karmine-corp-api/adapters/react-native/use-matches';
 
-const liveMatchesAtom = atom((get) => {
-  const matches = get(matchesAtom);
-
+const liveMatchesAtom = computed(matchesAtom, (matches) => {
   const liveMatches = Object.values(matches)
     .flatMap((matches) => matches.filter((match) => match.status === 'live'))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -20,17 +13,5 @@ const liveMatchesAtom = atom((get) => {
 
 export const useLiveMatches = () => {
   useMatches(); // Ensure the matches are being fetched.
-
-  return useAtomValue(
-    selectAtom(
-      liveMatchesAtom,
-      useCallback((liveMatches) => liveMatches, []),
-      useCallback((a: CoreData.Match[], b: CoreData.Match[]) => {
-        for (let i = 0; i < Math.max(a.length, b.length); i++) {
-          if (a[i] !== b[i]) return false;
-        }
-        return true;
-      }, [])
-    )
-  );
+  return useStore(liveMatchesAtom);
 };
