@@ -4,6 +4,7 @@ import { atom, useAtom, useStore } from 'jotai';
 import { useCallback, useEffect } from 'react';
 
 import { mainLayer } from './utils/main-layer';
+import matchesDump from '../../../../../assets/matches-dump.json';
 import { CoreData } from '../../application/types/core-data';
 import { getSchedule } from '../../application/use-cases/get-schedule/get-schedule';
 import { createGetScheduleParamsStateImpl } from '../../application/use-cases/get-schedule/get-schedule-params-state';
@@ -17,7 +18,7 @@ type GroupedMatches = {
   [date: IsoDate]: CoreData.Match[];
 };
 
-export const matchesAtom = atom<GroupedMatches>({});
+export const matchesAtom = atom<GroupedMatches>(matchesDump as unknown as GroupedMatches);
 const matchesFetchingStatusAtom = atom<'idle' | 'loading' | 'initialized' | 'error'>('idle');
 
 export const useMatches = () => {

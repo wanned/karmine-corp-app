@@ -31,7 +31,7 @@ export const createBetterSqlite3WithDrizzleImpl = (databasePath: string = ':memo
             initializeTables: () =>
               Effect.sync(() =>
                 migrate(drizzle(database), {
-                  migrationsFolder: path.join(__dirname, '..', 'op-sqlite-impl', 'migrations'),
+                  migrationsFolder: path.join(__dirname, 'op-sqlite-impl', 'migrations'),
                 })
               ),
           })

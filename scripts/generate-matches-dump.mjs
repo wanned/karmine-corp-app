@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process';
+import fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -10,9 +11,15 @@ const dumpCreatorPath = path.resolve(
   '../src/lib/karmine-corp-api/adapters/dump-creator/dump-creator.ts'
 );
 
+fs.readdirSync(path.resolve(__dirname, '../assets')).forEach((file) => {
+  if (file.startsWith('matches-dump')) {
+    fs.unlinkSync(path.resolve(__dirname, '../assets', file));
+  }
+});
+
 const child = spawn(
   `node`,
-  ['--import', 'tsx', dumpCreatorPath, '--dump-path', '../assets/matches-dump.db'],
+  ['--import', 'tsx', dumpCreatorPath, '--dump-path', '../assets/matches-dump'],
   {
     cwd: __dirname,
   }
