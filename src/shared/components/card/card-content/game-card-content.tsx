@@ -1,8 +1,9 @@
 import { Image } from 'expo-image';
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { LivePill } from '../../live-pill/live-pill';
+import { TouchableScale } from '../../touchable-scale/touchable-scale';
 import { Typographies } from '../../typographies';
 import { checkSingleNumber } from '../utils/check-single-number';
 
@@ -21,7 +22,7 @@ interface GameCardContentProps {
   teamLeft: TeamProps;
   teamRight?: TeamProps;
   showLivePill?: boolean;
-  onPress?: () => void;
+  onPress: () => void;
 }
 
 export const GameCardContent = ({
@@ -33,7 +34,7 @@ export const GameCardContent = ({
   const styles = useStyles(getStyles);
 
   return (
-    <Pressable onPress={onPress}>
+    <TouchableScale onPress={onPress}>
       <View>
         <View style={styles.header}>
           <Typographies.Label color={styles.header.color} verticalTrim>
@@ -50,7 +51,7 @@ export const GameCardContent = ({
           {teamRight && <TeamScore {...teamRight} position="right" />}
         </View>
       </View>
-    </Pressable>
+    </TouchableScale>
   );
 };
 
