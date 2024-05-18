@@ -1,6 +1,6 @@
 import { Layer } from 'effect';
 
-import { createOpSqliteImpl } from '~/lib/karmine-corp-api/infrastructure/services/database/op-sqlite-impl/op-sqlite-impl';
+import { createOpSqliteWithDumpImpl } from '~/lib/karmine-corp-api/infrastructure/services/database/op-sqlite-with-dump-impl';
 import { EnvRnServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/env/env-rn-service-impl';
 import { FetchServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/fetch/fetch-service-impl';
 import { KarmineApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api-service-impl';
@@ -20,6 +20,6 @@ export const mainLayer = Layer.empty.pipe(
   Layer.merge(VlrGgApiServiceImpl),
   Layer.merge(ValorantApiServiceImpl),
   Layer.merge(FetchServiceImpl),
-  Layer.merge(createOpSqliteImpl('karmine-corp-api')),
+  Layer.merge(createOpSqliteWithDumpImpl('/assets/matches-dump.db')),
   Layer.merge(EnvRnServiceImpl)
 );

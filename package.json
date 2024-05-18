@@ -10,6 +10,7 @@
     "build": "eas build --platform all --local",
     "build:android": "eas build --platform android --local",
     "build:ios": "eas build --platform ios --local",
+    "link-assets": "react-native-asset",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -18,7 +19,7 @@
     "@effect/platform": "^0.50.7",
     "@effect/platform-node": "^0.47.7",
     "@notifee/react-native": "^7.8.2",
-    "@op-engineering/op-sqlite": "^3.0.7",
+    "@op-engineering/op-sqlite": "^6.0.1",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-firebase/app": "^19.1.0",
     "@react-native-firebase/messaging": "^19.1.0",
@@ -87,6 +88,8 @@
     "eslint": "^8.50.0",
     "eslint-config-universe": "^12.0.0",
     "prettier": "^3.0.3",
+    "react-native-asset": "^2.1.1",
+    "tsx": "^4.10.3",
     "type-fest": "^4.17.0",
     "typescript": "^5.1.3",
     "vitest": "^1.5.2"
