@@ -105,6 +105,7 @@ export const esTranslations: Translations['es'] = {
     TrackMania: 'Trackmania',
     ValorantVCT: 'Valorant',
     ValorantVCT_GC: 'Valorant Femenino',
+    Fortnite: 'Fortnite',
   },
   gameDetails: {
     gamesTitle: 'Games',

@@ -22,6 +22,7 @@ const defaultSettings: Settings = {
     TrackMania: true,
     ValorantVCT: true,
     ValorantVCT_GC: true,
+    Fortnite: true
   },
 };
 
