@@ -12,8 +12,7 @@ export const createOpSqliteImpl = (databaseName: string) => {
   return Layer.succeed(
     DatabaseService,
     DatabaseService.of({
-      initializeTables: () =>
-        Effect.promise(async () => await migrate(drizzle(database), migrations)),
+      initializeTables: () => Effect.promise(() => migrate(drizzle(database), migrations)),
       executeQuery: (query: string, params: string[] = []) => {
         return Effect.promise(() => database.executeAsync(query, params));
       },

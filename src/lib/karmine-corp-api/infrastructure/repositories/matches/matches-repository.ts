@@ -32,6 +32,18 @@ export const MatchesRepository = {
       (_) => _.executeReturningQuery<DatabaseSchema.Match>
     )(query, filterValues);
   },
+  getMatch: ({ id }: { id: string }) =>
+    Effect.Do.pipe(
+      Effect.flatMap(() =>
+        Effect.flatMap(DatabaseService, (_) =>
+          _.executeReturningQuery<DatabaseSchema.Match | undefined>(
+            'SELECT * FROM matches WHERE id = ?',
+            [id]
+          )
+        )
+      ),
+      Effect.map((matches) => matches[0])
+    ),
   upsertMatches: <T>(matches: Exact<T, DatabaseSchema.Match>[]) =>
     Effect.serviceFunctionEffect(DatabaseService, (_) => _.executeQuery)(
       `INSERT OR REPLACE INTO matches (id, data, timestamp)

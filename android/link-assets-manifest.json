@@ -1,0 +1,97 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Cairo/Cairo-Black.ttf",
+      "sha1": "51d87902ff56b2e8987f7f06ef49e8d351fe0022"
+    },
+    {
+      "path": "assets/fonts/Cairo/Cairo-Bold.ttf",
+      "sha1": "5a7b0543c6c62843900f5d5a049ebc32b5434f5d"
+    },
+    {
+      "path": "assets/fonts/Cairo/Cairo-ExtraBold.ttf",
+      "sha1": "2e48992cc4ffd7333cdc9eb4aa2ba883c4c74f1a"
+    },
+    {
+      "path": "assets/fonts/Cairo/Cairo-Medium.ttf",
+      "sha1": "fd8e2d03679d461b556bb4cc464811310c12ed24"
+    },
+    {
+      "path": "assets/fonts/Cairo/Cairo-Regular.ttf",
+      "sha1": "c40cd69d854d12c818b30c86668a45305b531c5d"
+    },
+    {
+      "path": "assets/fonts/Cairo/Cairo-SemiBold.ttf",
+      "sha1": "62ebd95c7f440e03311188c9eed02aae313045c5"
+    },
+    {
+      "path": "assets/fonts/MonaspaceNeon/MonaspaceNeon-Bold.otf",
+      "sha1": "46e02ac76e73267164608eb899076e9954f09efa"
+    },
+    {
+      "path": "assets/fonts/MonaspaceNeon/MonaspaceNeon-ExtraLight.otf",
+      "sha1": "26335b53edc712f5e0109a966fe31cc44098fa7b"
+    },
+    {
+      "path": "assets/fonts/MonaspaceNeon/MonaspaceNeon-Light.otf",
+      "sha1": "d9606458a2f92749746ade4c19dd4665960bb2f1"
+    },
+    {
+      "path": "assets/fonts/MonaspaceNeon/MonaspaceNeon-Medium.otf",
+      "sha1": "0c31e4be4c034dc338ff8fff857430231705f1db"
+    },
+    {
+      "path": "assets/fonts/MonaspaceNeon/MonaspaceNeon-Regular.otf",
+      "sha1": "fbede302d26cec201f6727c69cef68eb33d6843a"
+    },
+    {
+      "path": "assets/fonts/MonaspaceNeon/MonaspaceNeon-SemiBold.otf",
+      "sha1": "969e6e2730398d85ce1b93d5f85e287ba35bb458"
+    },
+    {
+      "path": "assets/game-images/lol.png",
+      "sha1": "39755efe3cf007d34668422fe3827a98f1b1998d"
+    },
+    {
+      "path": "assets/game-images/rl.png",
+      "sha1": "113381b09e62d605f41c357a44d2a5b8c167cc47"
+    },
+    {
+      "path": "assets/game-images/tft.png",
+      "sha1": "d6cf13f4ee5511180f7a82f209445b89bd968a99"
+    },
+    {
+      "path": "assets/game-images/valorant.png",
+      "sha1": "39fd67af723647ac4947475d36c9c5a7c62200ec"
+    },
+    {
+      "path": "assets/icons/adaptive_icon.png",
+      "sha1": "57073bd944d32be1c5526b16cd564f8850dd2304"
+    },
+    {
+      "path": "assets/icons/icon.png",
+      "sha1": "a818b31347456e7eeaf129c89db53f709d339a59"
+    },
+    {
+      "path": "assets/icons/notification.png",
+      "sha1": "732dc6c37f2eaf2fe272579980c9101ad935322e"
+    },
+    {
+      "path": "assets/icons/splash.png",
+      "sha1": "bd0c1cafe039be64a1c66f7f674c5836d13382de"
+    },
+    {
+      "path": "assets/matches-dump.db",
+      "sha1": "0217aa540ac352a2e258a55cf1fae2d3004458b6"
+    },
+    {
+      "path": "assets/matches-dump.json",
+      "sha1": "8fa6714e763887a34e3a20de56e3f4a8ea91710f"
+    },
+    {
+      "path": "assets/misc/anonymous_kc_player.png",
+      "sha1": "902cff1360f9380f348db5e554047d88dddd8ee7"
+    }
+  ]
+}

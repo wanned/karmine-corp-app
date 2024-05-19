@@ -1,7 +1,7 @@
 import { Team } from './components/team';
 
-import { useLeaderboards } from '~/lib/karmine-corp-api/adapters/react-native-hook/use-leaderboards';
-import { useTeams } from '~/lib/karmine-corp-api/adapters/react-native-hook/use-teams';
+import { useLeaderboards } from '~/lib/karmine-corp-api/adapters/react-native/use-leaderboards';
+import { useTeams } from '~/lib/karmine-corp-api/adapters/react-native/use-teams';
 import { DefaultLayout } from '~/shared/layouts/default-layout';
 
 export default function TeamsScreen() {

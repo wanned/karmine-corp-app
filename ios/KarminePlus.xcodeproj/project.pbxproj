@@ -7,34 +7,80 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0490D28544F84F2888857DF8 /* Cairo-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8253216C8A024A05AD0531D0 /* Cairo-SemiBold.ttf */; };
+		08B0931EB7A94FAF82B653BE /* MonaspaceNeon-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DF6EC0E45BC947D6816F6A87 /* MonaspaceNeon-Bold.otf */; };
+		135DDB537C62446387B74A79 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 579EA17127AA436C8C54E2E7 /* icon.png */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		16F557856BE247B99874DF87 /* MonaspaceNeon-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F727C6A4B9FA4846ADC8D43D /* MonaspaceNeon-Regular.otf */; };
+		20E726F33F1946C8AD886422 /* notification.png in Resources */ = {isa = PBXBuildFile; fileRef = 0F0788B863B44A8895D9E8E0 /* notification.png */; };
+		2487D546AFE544548EDE6331 /* lol.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F0C3F8F2B06409685E50A3F /* lol.png */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
+		5DF9163398944902B52550EC /* MonaspaceNeon-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 047085DCE7844193AA101B6C /* MonaspaceNeon-ExtraLight.otf */; };
+		6C3AD42933EF4EE79B253B7D /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 180FD3FFFDA841E9908D4611 /* splash.png */; };
+		71411DB4F8CE48F6A1CCA460 /* Cairo-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98C89D8A39424BA69562FFC6 /* Cairo-ExtraBold.ttf */; };
+		84A4407458CA4DAAAA244FC3 /* rl.png in Resources */ = {isa = PBXBuildFile; fileRef = 7CE650EEF3A0495FBE9C4DAF /* rl.png */; };
 		8BA7B8761DF5CE5B5BD1F636 /* Pods_KarminePlus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75B64817B9A6F4F2EE3F552B /* Pods_KarminePlus.framework */; };
 		8F6448B5D6754FBB8F66368A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5F5D57A15160496A9386582B /* GoogleService-Info.plist */; };
+		92C8D8E6161A4D1C907A3DB5 /* valorant.png in Resources */ = {isa = PBXBuildFile; fileRef = E6E19F2BC9D14246B6A871B9 /* valorant.png */; };
+		A3CA0AD6ADC149FF90967037 /* tft.png in Resources */ = {isa = PBXBuildFile; fileRef = BA07D1BF7C58423C9CFE4CE1 /* tft.png */; };
+		AB3343EED0C640298650D948 /* Cairo-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2229974FB75E43C081A5A8E6 /* Cairo-Medium.ttf */; };
+		B0E94634E46D436BBB537562 /* MonaspaceNeon-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = FA17BC24EB024B2297809B26 /* MonaspaceNeon-SemiBold.otf */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		C084375515E44FC8BE0742AD /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8DDF956B3BD47D7B16A749E /* noop-file.swift */; };
+		C6A7488B4E4D4E6FB78061EC /* Cairo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2AB4E85336C4EDF99122FC8 /* Cairo-Regular.ttf */; };
+		D84996CC98814096A8A04F14 /* MonaspaceNeon-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 305F07B83A844B4299C9322B /* MonaspaceNeon-Medium.otf */; };
+		E626101FE1BE44D8A155C1DB /* MonaspaceNeon-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = D30DBF54927F400CA54EA19D /* MonaspaceNeon-Light.otf */; };
+		F24946FAF1C543648FADECE8 /* Cairo-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C244F028FD6E45EBA02BA240 /* Cairo-Bold.ttf */; };
+		F35C7C3404944B1F8D71C38A /* Cairo-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 579CE5B959A947BB8794176D /* Cairo-Black.ttf */; };
+		83DAFC62046642D49418696B /* matches-dump.db in Resources */ = {isa = PBXBuildFile; fileRef = 9B79566C7F1445AEAB14C260 /* matches-dump.db */; };
+		6544493B153A4CAD90F52031 /* matches-dump.json in Resources */ = {isa = PBXBuildFile; fileRef = 87E4155EC7FD4484824607BF /* matches-dump.json */; };
+		570D061E28B0473D95EA0BAC /* anonymous_kc_player.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB05E4D31664EDABCF6A3B1 /* anonymous_kc_player.png */; };
+		C8940A6154234BA98237D2A4 /* adaptive_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AFF6BE1826E455DBFEEDEBE /* adaptive_icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		047085DCE7844193AA101B6C /* MonaspaceNeon-ExtraLight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MonaspaceNeon-ExtraLight.otf"; path = "../assets/fonts/MonaspaceNeon/MonaspaceNeon-ExtraLight.otf"; sourceTree = "<group>"; };
+		0F0788B863B44A8895D9E8E0 /* notification.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = notification.png; path = ../assets/icons/notification.png; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* KarminePlus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KarminePlus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = KarminePlus/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = KarminePlus/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = KarminePlus/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = KarminePlus/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = KarminePlus/main.m; sourceTree = "<group>"; };
+		180FD3FFFDA841E9908D4611 /* splash.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = splash.png; path = ../assets/icons/splash.png; sourceTree = "<group>"; };
 		1FA5207193DB4F76A294167F /* KarminePlus-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "KarminePlus-Bridging-Header.h"; path = "KarminePlus/KarminePlus-Bridging-Header.h"; sourceTree = "<group>"; };
+		2229974FB75E43C081A5A8E6 /* Cairo-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-Medium.ttf"; path = "../assets/fonts/Cairo/Cairo-Medium.ttf"; sourceTree = "<group>"; };
+		305F07B83A844B4299C9322B /* MonaspaceNeon-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MonaspaceNeon-Medium.otf"; path = "../assets/fonts/MonaspaceNeon/MonaspaceNeon-Medium.otf"; sourceTree = "<group>"; };
+		579CE5B959A947BB8794176D /* Cairo-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-Black.ttf"; path = "../assets/fonts/Cairo/Cairo-Black.ttf"; sourceTree = "<group>"; };
+		579EA17127AA436C8C54E2E7 /* icon.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = icon.png; path = ../assets/icons/icon.png; sourceTree = "<group>"; };
+		5F0C3F8F2B06409685E50A3F /* lol.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = lol.png; path = "../assets/game-images/lol.png"; sourceTree = "<group>"; };
 		5F5D57A15160496A9386582B /* GoogleService-Info.plist */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "KarminePlus/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6C2E3173556A471DD304B334 /* Pods-KarminePlus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KarminePlus.debug.xcconfig"; path = "Target Support Files/Pods-KarminePlus/Pods-KarminePlus.debug.xcconfig"; sourceTree = "<group>"; };
 		75B64817B9A6F4F2EE3F552B /* Pods_KarminePlus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KarminePlus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A4D352CD337FB3A3BF06240 /* Pods-KarminePlus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KarminePlus.release.xcconfig"; path = "Target Support Files/Pods-KarminePlus/Pods-KarminePlus.release.xcconfig"; sourceTree = "<group>"; };
+		7CE650EEF3A0495FBE9C4DAF /* rl.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = rl.png; path = "../assets/game-images/rl.png"; sourceTree = "<group>"; };
+		8253216C8A024A05AD0531D0 /* Cairo-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-SemiBold.ttf"; path = "../assets/fonts/Cairo/Cairo-SemiBold.ttf"; sourceTree = "<group>"; };
+		98C89D8A39424BA69562FFC6 /* Cairo-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-ExtraBold.ttf"; path = "../assets/fonts/Cairo/Cairo-ExtraBold.ttf"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = KarminePlus/SplashScreen.storyboard; sourceTree = "<group>"; };
 		B8DDF956B3BD47D7B16A749E /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "KarminePlus/noop-file.swift"; sourceTree = "<group>"; };
+		BA07D1BF7C58423C9CFE4CE1 /* tft.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = tft.png; path = "../assets/game-images/tft.png"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		C244F028FD6E45EBA02BA240 /* Cairo-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-Bold.ttf"; path = "../assets/fonts/Cairo/Cairo-Bold.ttf"; sourceTree = "<group>"; };
+		C2AB4E85336C4EDF99122FC8 /* Cairo-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Cairo-Regular.ttf"; path = "../assets/fonts/Cairo/Cairo-Regular.ttf"; sourceTree = "<group>"; };
+		D30DBF54927F400CA54EA19D /* MonaspaceNeon-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MonaspaceNeon-Light.otf"; path = "../assets/fonts/MonaspaceNeon/MonaspaceNeon-Light.otf"; sourceTree = "<group>"; };
+		DF6EC0E45BC947D6816F6A87 /* MonaspaceNeon-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MonaspaceNeon-Bold.otf"; path = "../assets/fonts/MonaspaceNeon/MonaspaceNeon-Bold.otf"; sourceTree = "<group>"; };
+		E6E19F2BC9D14246B6A871B9 /* valorant.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = valorant.png; path = "../assets/game-images/valorant.png"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F727C6A4B9FA4846ADC8D43D /* MonaspaceNeon-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MonaspaceNeon-Regular.otf"; path = "../assets/fonts/MonaspaceNeon/MonaspaceNeon-Regular.otf"; sourceTree = "<group>"; };
+		FA17BC24EB024B2297809B26 /* MonaspaceNeon-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "MonaspaceNeon-SemiBold.otf"; path = "../assets/fonts/MonaspaceNeon/MonaspaceNeon-SemiBold.otf"; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-KarminePlus/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		9B79566C7F1445AEAB14C260 /* matches-dump.db */ = {isa = PBXFileReference; name = "matches-dump.db"; path = "../assets/matches-dump.db"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		87E4155EC7FD4484824607BF /* matches-dump.json */ = {isa = PBXFileReference; name = "matches-dump.json"; path = "../assets/matches-dump.json"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1FB05E4D31664EDABCF6A3B1 /* anonymous_kc_player.png */ = {isa = PBXFileReference; name = "anonymous_kc_player.png"; path = "../assets/misc/anonymous_kc_player.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8AFF6BE1826E455DBFEEDEBE /* adaptive_icon.png */ = {isa = PBXFileReference; name = "adaptive_icon.png"; path = "../assets/icons/adaptive_icon.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +121,37 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3E33EC22A7F54624B917B829 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DF6EC0E45BC947D6816F6A87 /* MonaspaceNeon-Bold.otf */,
+				047085DCE7844193AA101B6C /* MonaspaceNeon-ExtraLight.otf */,
+				D30DBF54927F400CA54EA19D /* MonaspaceNeon-Light.otf */,
+				305F07B83A844B4299C9322B /* MonaspaceNeon-Medium.otf */,
+				F727C6A4B9FA4846ADC8D43D /* MonaspaceNeon-Regular.otf */,
+				FA17BC24EB024B2297809B26 /* MonaspaceNeon-SemiBold.otf */,
+				579CE5B959A947BB8794176D /* Cairo-Black.ttf */,
+				C244F028FD6E45EBA02BA240 /* Cairo-Bold.ttf */,
+				98C89D8A39424BA69562FFC6 /* Cairo-ExtraBold.ttf */,
+				2229974FB75E43C081A5A8E6 /* Cairo-Medium.ttf */,
+				C2AB4E85336C4EDF99122FC8 /* Cairo-Regular.ttf */,
+				8253216C8A024A05AD0531D0 /* Cairo-SemiBold.ttf */,
+				5F0C3F8F2B06409685E50A3F /* lol.png */,
+				7CE650EEF3A0495FBE9C4DAF /* rl.png */,
+				BA07D1BF7C58423C9CFE4CE1 /* tft.png */,
+				E6E19F2BC9D14246B6A871B9 /* valorant.png */,
+				579EA17127AA436C8C54E2E7 /* icon.png */,
+				0F0788B863B44A8895D9E8E0 /* notification.png */,
+				180FD3FFFDA841E9908D4611 /* splash.png */,
+				9B79566C7F1445AEAB14C260 /* matches-dump.db */,
+				87E4155EC7FD4484824607BF /* matches-dump.json */,
+				1FB05E4D31664EDABCF6A3B1 /* anonymous_kc_player.png */,
+				8AFF6BE1826E455DBFEEDEBE /* adaptive_icon.png */,
+			);
+			name = Resources;
+			path = "";
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -91,6 +168,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
 				D7E4C46ADA2E9064B798F356 /* ExpoModulesProviders */,
+				3E33EC22A7F54624B917B829 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -205,6 +283,29 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
 				8F6448B5D6754FBB8F66368A /* GoogleService-Info.plist in Resources */,
+				08B0931EB7A94FAF82B653BE /* MonaspaceNeon-Bold.otf in Resources */,
+				5DF9163398944902B52550EC /* MonaspaceNeon-ExtraLight.otf in Resources */,
+				E626101FE1BE44D8A155C1DB /* MonaspaceNeon-Light.otf in Resources */,
+				D84996CC98814096A8A04F14 /* MonaspaceNeon-Medium.otf in Resources */,
+				16F557856BE247B99874DF87 /* MonaspaceNeon-Regular.otf in Resources */,
+				B0E94634E46D436BBB537562 /* MonaspaceNeon-SemiBold.otf in Resources */,
+				F35C7C3404944B1F8D71C38A /* Cairo-Black.ttf in Resources */,
+				F24946FAF1C543648FADECE8 /* Cairo-Bold.ttf in Resources */,
+				71411DB4F8CE48F6A1CCA460 /* Cairo-ExtraBold.ttf in Resources */,
+				AB3343EED0C640298650D948 /* Cairo-Medium.ttf in Resources */,
+				C6A7488B4E4D4E6FB78061EC /* Cairo-Regular.ttf in Resources */,
+				0490D28544F84F2888857DF8 /* Cairo-SemiBold.ttf in Resources */,
+				2487D546AFE544548EDE6331 /* lol.png in Resources */,
+				84A4407458CA4DAAAA244FC3 /* rl.png in Resources */,
+				A3CA0AD6ADC149FF90967037 /* tft.png in Resources */,
+				92C8D8E6161A4D1C907A3DB5 /* valorant.png in Resources */,
+				135DDB537C62446387B74A79 /* icon.png in Resources */,
+				20E726F33F1946C8AD886422 /* notification.png in Resources */,
+				6C3AD42933EF4EE79B253B7D /* splash.png in Resources */,
+				83DAFC62046642D49418696B /* matches-dump.db in Resources */,
+				6544493B153A4CAD90F52031 /* matches-dump.json in Resources */,
+				570D061E28B0473D95EA0BAC /* anonymous_kc_player.png in Resources */,
+				C8940A6154234BA98237D2A4 /* adaptive_icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,6 +370,8 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-KarminePlus/Pods-KarminePlus-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/ExpoConstants_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXTaskManager/ExpoTaskManager_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore_Privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreExtension/FirebaseCoreExtension_Privacy.bundle",
@@ -284,6 +387,8 @@
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoConstants_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoTaskManager_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ExpoFileSystem_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseCore_Privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseCoreExtension_Privacy.bundle",

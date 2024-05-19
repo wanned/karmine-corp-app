@@ -6,6 +6,7 @@ import defu from 'defu';
 import { getSettings } from '../utils/settings';
 import { translate } from '../utils/translate';
 
+import { upsertMatchInDatabase } from '~/lib/karmine-corp-api/adapters/react-native/upsert-match-in-database';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export const addBackgroundNotificationHandlers = () => {
@@ -47,6 +48,8 @@ const notificationHandlers: {
       body,
     });
     await notifee.displayNotification(notification);
+
+    await upsertMatchInDatabase(notificationData.match);
   },
   matchScoreUpdated: async (notificationData) => {
     const settings = await getSettings();
@@ -65,6 +68,8 @@ const notificationHandlers: {
       body,
     });
     await notifee.displayNotification(notification);
+
+    await upsertMatchInDatabase(notificationData.match);
   },
   matchFinished: async (notificationData) => {
     const { language, showResults, notifications: notificationsSettings } = await getSettings();
@@ -84,6 +89,13 @@ const notificationHandlers: {
       body,
     });
     await notifee.displayNotification(notification);
+
+    await upsertMatchInDatabase(notificationData.match);
+  },
+
+  newMatchEntry: async (notificationData) => {
+    // This notification is silent. It is only used to update the local cache.
+    await upsertMatchInDatabase(notificationData.match);
   },
 };
 

@@ -9,8 +9,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 
-import { useLeaderboards } from './lib/karmine-corp-api/adapters/react-native-hook/use-leaderboards';
-import { useTeams } from './lib/karmine-corp-api/adapters/react-native-hook/use-teams';
+import { useLeaderboards } from './lib/karmine-corp-api/adapters/react-native/use-leaderboards';
+import { useTeams } from './lib/karmine-corp-api/adapters/react-native/use-teams';
 import { useMatches } from './shared/hooks/data/use-matches';
 import { useSplashScreen } from './shared/hooks/use-splash-screen';
 import { useTheme } from './shared/hooks/use-theme';
