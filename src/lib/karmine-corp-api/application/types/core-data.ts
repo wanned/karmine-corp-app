@@ -28,6 +28,7 @@ export namespace CoreData {
     TrackMania = 'TrackMania',
     ValorantVCT = 'ValorantVCT',
     ValorantVCTGC = 'ValorantVCT_GC',
+    Fortnite = 'Fortnite',
   }
 
   interface BaseMatchDetails {
