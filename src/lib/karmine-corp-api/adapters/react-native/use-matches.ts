@@ -1,6 +1,6 @@
 import { useStore } from '@nanostores/react';
 import { subHours, addHours } from 'date-fns';
-import { Chunk, Effect, Schedule, Stream } from 'effect';
+import { Chunk, Effect, Schedule, Sink, Stream } from 'effect';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import { atom } from 'nanostores';
@@ -14,6 +14,7 @@ import { createGetScheduleParamsStateImpl } from '../../application/use-cases/ge
 import { DatabaseService } from '../../infrastructure/services/database/database-service';
 import { concatLazyStream } from '../../infrastructure/utils/effect/concat-lazy-stream';
 import { delayedStream } from '../../infrastructure/utils/effect/delayed-stream';
+import { InferStream } from '../../infrastructure/utils/effect/infer-stream';
 
 import { IsoDate } from '~/shared/types/IsoDate';
 
@@ -58,20 +59,7 @@ const addMatches = (matches: CoreData.Match[]) => {
 };
 
 const fetchMatches = async () => {
-  await Effect.runPromise(
-    Effect.Do.pipe(
-      _getSchedule,
-      Effect.flatMap(
-        Stream.runForEach((matches) =>
-          Effect.Do.pipe(
-            Effect.map(() => matches),
-            Effect.map(Chunk.toArray),
-            Effect.map(addMatches)
-          )
-        )
-      )
-    )
-  ).catch((error) => {
+  await Effect.runPromise(_getSchedule().pipe(Effect.flatMap(Stream.runDrain))).catch((error) => {
     console.error(error);
     matchesFetchingStatusAtom.set('error');
   });
@@ -143,14 +131,15 @@ const getFutureSchedule = () =>
     )
   );
 
-const getRemainingSchedule = () =>
+const getRemainingPastSchedule = () =>
   getCachedSchedule().pipe(
     Stream.runCollect,
-    Stream.flatMap((matches) =>
+    Stream.flatMap((cachedMatches) =>
       Stream.provideSomeLayer(
         getSchedule(),
         createGetScheduleParamsStateImpl({
-          ignoreIds: matches.pipe(
+          // Ignore matches that are finished and are already in the database
+          ignoreIds: cachedMatches.pipe(
             Chunk.filter((match) => match.status === 'finished'),
             Chunk.map((match) => match.id),
             Chunk.toArray
@@ -158,7 +147,8 @@ const getRemainingSchedule = () =>
         })
       )
     ),
-    Stream.provideSomeLayer(createGetScheduleParamsStateImpl({}))
+    Stream.provideSomeLayer(createGetScheduleParamsStateImpl({})),
+    Stream.filter((match) => match.status === 'finished')
   );
 
 const _getSchedule = () =>
@@ -170,11 +160,39 @@ const _getSchedule = () =>
       concatLazyStream(
         () => getCachedSchedule(),
         () => getLiveSchedule(),
-        () => getFutureSchedule(),
+        () =>
+          getFutureSchedule().pipe((_) =>
+            Stream.tapSink(
+              _,
+              Sink.collectAll<InferStream<typeof _>['A']>().pipe(
+                Sink.map((futureMatchesChunk) => {
+                  matchesAtom.set(
+                    (() => {
+                      const prev = matchesAtom.get();
+                      const next = { ...prev };
+
+                      (Object.keys(next) as (keyof typeof next)[]).forEach((date) => {
+                        next[date] = next[date].filter(
+                          (match) =>
+                            match.status !== 'upcoming' ||
+                            Chunk.some(
+                              futureMatchesChunk,
+                              (futureMatch) => futureMatch.id === match.id
+                            )
+                        );
+                      });
+
+                      return next;
+                    })()
+                  );
+                })
+              )
+            )
+          ),
         () =>
           Stream.mergeAll(
             [
-              getRemainingSchedule(),
+              getRemainingPastSchedule(),
               delayedStream(
                 Stream.repeat(getLiveSchedule(), Schedule.spaced('1 minute')),
                 '1 minute'
@@ -188,7 +206,11 @@ const _getSchedule = () =>
               concurrency: 'unbounded',
             }
           )
-      ).pipe(Stream.provideSomeLayer(mainLayer), Stream.groupedWithin(100, 1_000))
+      ).pipe(
+        Stream.provideSomeLayer(mainLayer),
+        Stream.groupedWithin(100, 1_000),
+        Stream.tap((matches) => Effect.sync(() => addMatches(Chunk.toArray(matches))))
+      )
     ),
     Effect.provide(mainLayer)
   );

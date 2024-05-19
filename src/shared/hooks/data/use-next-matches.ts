@@ -1,4 +1,5 @@
 import { useStore } from '@nanostores/react';
+import { subHours } from 'date-fns';
 import { computed } from 'nanostores';
 import { useMemo } from 'react';
 
@@ -7,7 +8,11 @@ import { selectAtom } from '~/shared/utils/select-atom';
 
 const nextMatchesAtom = computed(matchesAtom, (matches) => {
   const nextMatches = Object.values(matches)
-    .flatMap((matches) => matches.filter((match) => match.status === 'upcoming'))
+    .flatMap((matches) =>
+      matches.filter(
+        (match) => match.status === 'upcoming' && match.date >= subHours(new Date(), 12)
+      )
+    )
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return nextMatches;
