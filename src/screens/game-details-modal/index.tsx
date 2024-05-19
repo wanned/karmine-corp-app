@@ -152,6 +152,7 @@ const GameButtons = ({
   if (match.status === 'upcoming') {
     buttons.push(
       <GameDetailsNotificationButton
+        key="notification"
         match={match}
         isNotified={isNotified}
         setIsNotified={setIsNotified}
@@ -160,10 +161,11 @@ const GameButtons = ({
   }
 
   if (match.status === 'live') {
-    buttons.push(<GameDetailsStreamButton match={match} />);
+    buttons.push(<GameDetailsStreamButton match={match} key="stream" />);
   }
+
   if (match.status === 'finished') {
-    buttons.push(<GameDetailsReplayButton match={match} />);
+    buttons.push(<GameDetailsReplayButton match={match} key="replay" />);
   }
 
   return buttons;
