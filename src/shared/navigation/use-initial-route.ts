@@ -27,9 +27,23 @@ export const useInitialModalRoute = () => {
           | undefined;
 
         if (notificationData?.type === 'match') {
-          const match = Object.values(matchesAtom.get())
-            .flat()
-            .find((m) => m.id === notificationData.matchId);
+          const searchingMatch = async (maxAttempts: number) => {
+            const match = Object.values(matchesAtom.get())
+              .flat()
+              .find((m) => m.id === notificationData.matchId);
+
+            if (match !== undefined) {
+              return match;
+            }
+
+            if (maxAttempts === 0) {
+              return undefined;
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          };
+
+          const match = await searchingMatch(100); // Try to find the match 100 times means 10 seconds because each attempt is 100ms
 
           if (match !== undefined) {
             setInitialRouteName('gameDetailsModal');
