@@ -3,11 +3,10 @@ import {
   useNavigation as _useNavigation,
   StackActionHelpers,
 } from '@react-navigation/native';
-import { useEffect } from 'react';
 
 import { ModalsParamList, PagesParamList } from '../navigation';
 
-export type RootParamList = Omit<PagesParamList & ModalsParamList, 'root'>;
+export type RootParamList = PagesParamList & ModalsParamList;
 
 export const useNavigation = () => {
   const navigation = _useNavigation<
