@@ -186,5 +186,7 @@ function getGameAbbreviation(game: CoreData.CompetitionName) {
       return 'VCT';
     case CoreData.CompetitionName.ValorantVCTGC:
       return 'VCTGC';
+    case CoreData.CompetitionName.Fortnite:
+      return 'FN';
   }
 }
