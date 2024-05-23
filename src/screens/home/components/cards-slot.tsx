@@ -65,31 +65,7 @@ const useLiveMatchesCardData = (): CardsData => {
       liveMatches.map<CardsData[number]>((liveMatch) => ({
         id: liveMatch.id,
         image: gameImageAssets?.[liveMatch.matchDetails.competitionName] ?? { uri: '' },
-        content: (
-          <GameCardContent
-            showLivePill
-            teamLeft={{
-              logo: liveMatch.teams[0].logoUrl,
-              name: liveMatch.teams[0].name,
-              ...(liveMatch.teams[0].score !== undefined && {
-                score: liveMatch.teams[0].score.score,
-                isWinner: liveMatch.teams[0].score.isWinner,
-              }),
-            }}
-            teamRight={
-              liveMatch.teams[1] === null ?
-                undefined
-              : {
-                  logo: liveMatch.teams[1].logoUrl,
-                  name: liveMatch.teams[1].name,
-                  ...(liveMatch.teams[1].score !== undefined && {
-                    score: liveMatch.teams[1].score.score,
-                    isWinner: liveMatch.teams[1].score.isWinner,
-                  }),
-                }
-            }
-          />
-        ),
+        content: <GameCardContent showLivePill match={liveMatch} />,
       })),
     [liveMatches]
   );
