@@ -120,6 +120,7 @@ function PagesNavigator() {
       initialRouteName="home"
       screenOptions={{
         headerShown: false,
+        lazy: true,
       }}
       tabBar={(props) => <TabBar {...props} />}>
       <Pages.Screen name="home" component={HomeScreen} />
