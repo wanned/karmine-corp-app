@@ -8,6 +8,7 @@ import { MediaCardContent } from '~/shared/components/card/card-content/media-ca
 import { CardWrapper } from '~/shared/components/card-wrapper/card-wrapper';
 import { useLiveMatches } from '~/shared/hooks/data/use-live-match';
 import { useYoutubeVideos } from '~/shared/hooks/data/use-youtube-videos';
+import { useNavigation } from '~/shared/hooks/use-navigation';
 
 type CardsData = Parameters<typeof CardWrapper>[0]['cardsData'];
 
@@ -59,13 +60,20 @@ const useLastYoutubeVideoCardData = (): CardsData => {
 const useLiveMatchesCardData = (): CardsData => {
   const liveMatches = useLiveMatches();
   const gameImageAssets = useGameBackgroundImage();
+  const navigation = useNavigation();
 
   return useMemo(
     () =>
       liveMatches.map<CardsData[number]>((liveMatch) => ({
         id: liveMatch.id,
         image: gameImageAssets?.[liveMatch.matchDetails.competitionName] ?? { uri: '' },
-        content: <GameCardContent showLivePill match={liveMatch} />,
+        content: (
+          <GameCardContent
+            showLivePill
+            match={liveMatch}
+            onPress={() => navigation.navigate('gameDetailsModal', { match: liveMatch })}
+          />
+        ),
       })),
     [liveMatches]
   );

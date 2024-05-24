@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { LivePill } from '../../live-pill/live-pill';
 import { MatchLabel } from '../../match-preview/components/match-label';
+import { TouchableScale } from '../../touchable-scale/touchable-scale';
 import { Typographies } from '../../typographies';
 import { checkSingleNumber } from '../utils/check-single-number';
 
@@ -15,35 +16,38 @@ import { createStylesheet } from '~/shared/styles/create-stylesheet';
 interface GameCardContentProps {
   match: CoreData.Match;
   showLivePill?: boolean;
+  onPress: () => void;
 }
 
-export const GameCardContent = ({ match, showLivePill = false }: GameCardContentProps) => {
+export const GameCardContent = ({ match, showLivePill = false, onPress }: GameCardContentProps) => {
   const styles = useStyles(getStyles);
 
   const teamLeft = match.teams[0];
   const teamRight = match.teams[1];
 
   return (
-    <View>
-      <View style={styles.header}>
-        <MatchLabel
-          competitionName={match.matchDetails.competitionName}
-          status={match.status}
-          bo={match.matchDetails.bo}
-          subtleColor={false}
-          showLivePill={false}
-        />
-        {showLivePill && (
-          <View style={styles.livePill}>
-            <LivePill />
-          </View>
-        )}
+    <TouchableScale onPress={onPress}>
+      <View>
+        <View style={styles.header}>
+          <MatchLabel
+            competitionName={match.matchDetails.competitionName}
+            status={match.status}
+            bo={match.matchDetails.bo}
+            subtleColor={false}
+            showLivePill={false}
+          />
+          {showLivePill && (
+            <View style={styles.livePill}>
+              <LivePill />
+            </View>
+          )}
+        </View>
+        <View style={styles.teamsContainer}>
+          <TeamScore {...teamLeft} position="left" />
+          {teamRight && <TeamScore {...teamRight} position="right" />}
+        </View>
       </View>
-      <View style={styles.teamsContainer}>
-        <TeamScore {...teamLeft} position="left" />
-        {teamRight && <TeamScore {...teamRight} position="right" />}
-      </View>
-    </View>
+    </TouchableScale>
   );
 };
 

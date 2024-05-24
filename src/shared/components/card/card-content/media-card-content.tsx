@@ -1,6 +1,7 @@
 import React from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
+import { TouchableScale } from '../../touchable-scale/touchable-scale';
 import { Typographies } from '../../typographies';
 
 import { useStyles } from '~/shared/hooks/use-styles';
@@ -12,7 +13,7 @@ interface MediaCardContentProps {
   date: string;
   likes: number;
   views: number;
-  onPress?: () => void;
+  onPress: () => void;
 }
 
 export const MediaCardContent = ({ title, date, likes, views, onPress }: MediaCardContentProps) => {
@@ -30,7 +31,7 @@ export const MediaCardContent = ({ title, date, likes, views, onPress }: MediaCa
   }
 
   return (
-    <Pressable onPress={onPress}>
+    <TouchableScale onPress={onPress}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Typographies.Title1 color={styles.title.color} maxLines={2}>
@@ -55,7 +56,7 @@ export const MediaCardContent = ({ title, date, likes, views, onPress }: MediaCa
           youtube.com
         </Typographies.Body>
       </View>
-    </Pressable>
+    </TouchableScale>
   );
 };
 
