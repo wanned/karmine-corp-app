@@ -31,6 +31,7 @@ export const GameCardContent = ({ match, showLivePill = false }: GameCardContent
           status={match.status}
           bo={match.matchDetails.bo}
           subtleColor={false}
+          showLivePill={false}
         />
         {showLivePill && (
           <View style={styles.livePill}>
