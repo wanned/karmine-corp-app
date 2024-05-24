@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { useAnonymousKcPlayerImage } from '../hooks/use-anonymous-kc-player-image';
+import { useGlanceImage } from '../hooks/use-glance-image';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { LivePill } from '~/shared/components/live-pill/live-pill';
@@ -58,6 +59,14 @@ const Player = ({ name, imageUrl, streamLink, isStreaming = false }: PlayerProps
   const styles = useStyles(getStyles);
 
   const anonymousKcPlayerImage = useAnonymousKcPlayerImage();
+
+  const isGlance = name.toLocaleLowerCase().includes('glance');
+
+  const glanceImage = useGlanceImage();
+
+  if (isGlance) {
+    imageUrl = glanceImage;
+  }
 
   return (
     <TouchableOpacity
