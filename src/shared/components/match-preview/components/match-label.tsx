@@ -18,10 +18,18 @@ interface MatchLabelProps {
   status: CoreData.Match['status'];
   bo: CoreData.Match['matchDetails']['bo'];
   subtleColor?: boolean;
+  showLivePill?: boolean;
 }
 
 export const MatchLabel = React.memo(
-  ({ date, competitionName, bo, status, subtleColor = true }: MatchLabelProps) => {
+  ({
+    date,
+    competitionName,
+    bo,
+    status,
+    subtleColor = true,
+    showLivePill = true,
+  }: MatchLabelProps) => {
     const styles = getStyles(styleTokens);
 
     return (
@@ -35,7 +43,7 @@ export const MatchLabel = React.memo(
         />
         <MatchBo key="bo" bo={bo} subtleColor={subtleColor} />
 
-        {status === 'live' && (
+        {status === 'live' && showLivePill && (
           <View style={styles.livePillWrapper}>
             <LivePill />
           </View>
