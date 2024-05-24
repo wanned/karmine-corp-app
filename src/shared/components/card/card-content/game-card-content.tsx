@@ -3,43 +3,39 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { LivePill } from '../../live-pill/live-pill';
+import { MatchLabel } from '../../match-preview/components/match-label';
 import { TouchableScale } from '../../touchable-scale/touchable-scale';
 import { Typographies } from '../../typographies';
 import { checkSingleNumber } from '../utils/check-single-number';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { OutlinedNumber } from '~/shared/components/card/card-content/outlined-numbers';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
-interface TeamProps {
-  logo: string;
-  name: string;
-  score?: string | number;
-  isWinner?: boolean;
-}
-
 interface GameCardContentProps {
-  teamLeft: TeamProps;
-  teamRight?: TeamProps;
+  match: CoreData.Match;
   showLivePill?: boolean;
   onPress: () => void;
 }
 
-export const GameCardContent = ({
-  teamLeft,
-  teamRight,
-  showLivePill = false,
-  onPress,
-}: GameCardContentProps) => {
+export const GameCardContent = ({ match, showLivePill = false, onPress }: GameCardContentProps) => {
   const styles = useStyles(getStyles);
+
+  const teamLeft = match.teams[0];
+  const teamRight = match.teams[1];
 
   return (
     <TouchableScale onPress={onPress}>
       <View>
         <View style={styles.header}>
-          <Typographies.Label color={styles.header.color} verticalTrim>
-            17 SEPT. 2023 · LEC · BO5
-          </Typographies.Label>
+          <MatchLabel
+            competitionName={match.matchDetails.competitionName}
+            status={match.status}
+            bo={match.matchDetails.bo}
+            subtleColor={false}
+            showLivePill={false}
+          />
           {showLivePill && (
             <View style={styles.livePill}>
               <LivePill />
@@ -78,11 +74,11 @@ const getStyles = createStylesheet((theme) => ({
   },
 }));
 
-interface TeamScoreProps extends TeamProps {
+type TeamScoreProps = {
   position: 'left' | 'right';
-}
+} & CoreData.Match['teams'][number];
 
-const TeamScore = ({ logo, name, score, isWinner, position }: TeamScoreProps) => {
+const TeamScore = ({ logoUrl, name, score, position }: TeamScoreProps) => {
   const styles = useStyles(getTeamsScoreStyles);
 
   return (
@@ -92,18 +88,23 @@ const TeamScore = ({ logo, name, score, isWinner, position }: TeamScoreProps) =>
         position === 'left' ? styles.teamContainerLeft : styles.teamContainerRight
       )}>
       <View style={styles.teamNameContainer}>
-        <Image source={{ uri: logo }} cachePolicy="memory-disk" style={{ width: 70, height: 70 }} />
+        <Image
+          source={{ uri: logoUrl }}
+          cachePolicy="memory-disk"
+          style={{ width: 70, height: 70 }}
+        />
         <Typographies.Title3 color={styles.teamNameContainer.color}>{name}</Typographies.Title3>
       </View>
 
       {score !== undefined &&
-        (isWinner ?
+        (score.isWinner ?
           <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
-            {score.toString()}
+            {score.score.toString()}
           </Typographies.VeryBig>
-        : checkSingleNumber(score) ? <OutlinedNumber size="small">{score}</OutlinedNumber>
+        : checkSingleNumber(score.score) ?
+          <OutlinedNumber size="small">{score.score}</OutlinedNumber>
         : <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
-            {score.toString()}
+            {score.score.toString()}
           </Typographies.VeryBig>)}
     </View>
   );

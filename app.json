@@ -22,16 +22,17 @@
     ],
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/adaptive-icon.png",
+        "foregroundImage": "./assets/icons/adaptive_icon.png",
         "backgroundColor": "#101E35",
-        "monochromeImage": "./assets/icons/adaptive-icon.png"
+        "monochromeImage": "./assets/icons/adaptive_icon.png"
       },
       "googleServicesFile": "./google-services.json",
       "package": "plus.karmine.karmineplus"
     },
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
-      "bundleIdentifier": "plus.karmine.karmineplus"
+      "bundleIdentifier": "plus.karmine.karmineplus",
+      "UIBackgroundModes": ["fetch", "remote-notification"]
     },
     "plugins": [
       "expo-localization",

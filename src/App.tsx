@@ -8,9 +8,10 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
+import regeneratorRuntime from 'regenerator-runtime';
 
-import { useLeaderboards } from './lib/karmine-corp-api/adapters/react-native-hook/use-leaderboards';
-import { useTeams } from './lib/karmine-corp-api/adapters/react-native-hook/use-teams';
+import { useLeaderboards } from './lib/karmine-corp-api/adapters/react-native/use-leaderboards';
+import { useTeams } from './lib/karmine-corp-api/adapters/react-native/use-teams';
 import { useMatches } from './shared/hooks/data/use-matches';
 import { useSplashScreen } from './shared/hooks/use-splash-screen';
 import { useTheme } from './shared/hooks/use-theme';
@@ -26,6 +27,9 @@ import { reactQueryStoragePersister } from './shared/utils/react-query-storage-p
 import { SettingsProvider } from '~/shared/contexts/settings-context';
 import { ThemeContext } from '~/shared/contexts/theme-context';
 import { styleTokens } from '~/shared/styles/tokens';
+
+// @ts-ignore
+global.regeneratorRuntime = regeneratorRuntime;
 
 addBackgroundNotificationHandlers();
 

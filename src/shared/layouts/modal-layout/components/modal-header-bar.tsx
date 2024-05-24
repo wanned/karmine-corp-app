@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCallback, useEffect, useState } from 'react';
 import { NativeScrollEvent, NativeSyntheticEvent, TouchableOpacity, View } from 'react-native';
@@ -6,6 +5,7 @@ import { Iconify } from 'react-native-iconify';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useNavigation } from '~/shared/hooks/use-navigation';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
@@ -42,7 +42,9 @@ export const ModalHeaderBar = ({ opacifyOnScroll, setHandleScroll }: ModalHeader
       </Animated.View>
       <View style={styles.header}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() =>
+            navigation.canGoBack() ? navigation.goBack() : navigation.replace('root')
+          }
           style={{ marginTop: safeAreaInsets.top }}>
           <Iconify icon="solar:arrow-left-linear" size={28} color={styles.icon.color} />
         </TouchableOpacity>

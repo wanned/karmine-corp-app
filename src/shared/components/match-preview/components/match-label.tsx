@@ -13,44 +13,64 @@ import { styleTokens } from '~/shared/styles/tokens';
 import { dayUtils } from '~/shared/utils/days';
 
 interface MatchLabelProps {
-  date: CoreData.Match['date'];
+  date?: CoreData.Match['date'];
   competitionName: CoreData.CompetitionName;
   status: CoreData.Match['status'];
   bo: CoreData.Match['matchDetails']['bo'];
+  subtleColor?: boolean;
+  showLivePill?: boolean;
 }
 
-export const MatchLabel = React.memo(({ date, competitionName, bo, status }: MatchLabelProps) => {
-  const styles = getStyles(styleTokens);
+export const MatchLabel = React.memo(
+  ({
+    date,
+    competitionName,
+    bo,
+    status,
+    subtleColor = true,
+    showLivePill = true,
+  }: MatchLabelProps) => {
+    const styles = getStyles(styleTokens);
 
-  return (
-    <View style={styles.header}>
-      <MatchDate key="date" date={date} />
-      <MatchGame key="game" competitionName={competitionName} />
-      <MatchBo key="bo" bo={bo} />
+    return (
+      <View style={styles.header}>
+        {date !== undefined && <MatchDate key="date" date={date} />}
+        <MatchGame
+          key="game"
+          competitionName={competitionName}
+          first={date === undefined}
+          subtleColor={subtleColor}
+        />
+        <MatchBo key="bo" bo={bo} subtleColor={subtleColor} />
 
-      {status === 'live' && (
-        <View style={styles.livePillWrapper}>
-          <LivePill />
-        </View>
-      )}
-    </View>
-  );
-});
+        {status === 'live' && showLivePill && (
+          <View style={styles.livePillWrapper}>
+            <LivePill />
+          </View>
+        )}
+      </View>
+    );
+  }
+);
 
 interface MatchGameProps {
   competitionName: CoreData.CompetitionName;
+  first?: boolean;
+  subtleColor: boolean;
 }
 
-const MatchGame = React.memo(({ competitionName }: MatchGameProps) => {
+const MatchGame = React.memo(({ competitionName, first, subtleColor }: MatchGameProps) => {
   const styles = getStyles(styleTokens);
   const translate = useTranslate();
 
   return (
     <>
-      <Typographies.Label color={styles.game.color} verticalTrim>
-        {' · '}
-      </Typographies.Label>
-      <Typographies.Label color={styles.game.color} verticalTrim>
+      {!first && (
+        <Typographies.Label color={styles[subtleColor ? 'subtleGame' : 'game'].color} verticalTrim>
+          {' · '}
+        </Typographies.Label>
+      )}
+      <Typographies.Label color={styles[subtleColor ? 'subtleGame' : 'game'].color} verticalTrim>
         {translate(`games.${competitionName}`)}
       </Typographies.Label>
     </>
@@ -59,9 +79,10 @@ const MatchGame = React.memo(({ competitionName }: MatchGameProps) => {
 
 interface MatchBoProps {
   bo: CoreData.Match['matchDetails']['bo'];
+  subtleColor: boolean;
 }
 
-export const MatchBo = React.memo(({ bo }: MatchBoProps) => {
+export const MatchBo = React.memo(({ bo, subtleColor }: MatchBoProps) => {
   const styles = getStyles(styleTokens);
 
   if (bo === undefined) {
@@ -70,10 +91,10 @@ export const MatchBo = React.memo(({ bo }: MatchBoProps) => {
 
   return (
     <>
-      <Typographies.Label color={styles.game.color} verticalTrim>
+      <Typographies.Label color={styles[subtleColor ? 'subtleGame' : 'game'].color} verticalTrim>
         {' · '}
       </Typographies.Label>
-      <Typographies.Label color={styles.game.color} verticalTrim>
+      <Typographies.Label color={styles[subtleColor ? 'subtleGame' : 'game'].color} verticalTrim>
         BO{bo.toString()}
       </Typographies.Label>
     </>
@@ -117,6 +138,9 @@ const getStyles = createStylesheet((theme) => ({
     color: theme.colors.accent,
   },
   game: {
+    color: theme.colors.foreground,
+  },
+  subtleGame: {
     color: theme.colors.subtleForeground,
   },
   livePillWrapper: {

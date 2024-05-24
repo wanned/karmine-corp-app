@@ -18,7 +18,7 @@ export const CardsSlot = React.memo(({ style }: { style?: View['props']['style']
 
   return (
     <View style={style}>
-      <CardWrapper height={160} cardsData={[...lastYoutubeVideoCardData, ...liveMatchesCardData]} />
+      <CardWrapper height={160} cardsData={[...liveMatchesCardData, ...lastYoutubeVideoCardData]} />
     </View>
   );
 });
@@ -70,26 +70,7 @@ const useLiveMatchesCardData = (): CardsData => {
         content: (
           <GameCardContent
             showLivePill
-            teamLeft={{
-              logo: liveMatch.teams[0].logoUrl,
-              name: liveMatch.teams[0].name,
-              ...(liveMatch.teams[0].score !== undefined && {
-                score: liveMatch.teams[0].score.score,
-                isWinner: liveMatch.teams[0].score.isWinner,
-              }),
-            }}
-            teamRight={
-              liveMatch.teams[1] === null ?
-                undefined
-              : {
-                  logo: liveMatch.teams[1].logoUrl,
-                  name: liveMatch.teams[1].name,
-                  ...(liveMatch.teams[1].score !== undefined && {
-                    score: liveMatch.teams[1].score.score,
-                    isWinner: liveMatch.teams[1].score.isWinner,
-                  }),
-                }
-            }
+            match={liveMatch}
             onPress={() => navigation.navigate('gameDetailsModal', { match: liveMatch })}
           />
         ),

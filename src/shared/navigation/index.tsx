@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { InteractionManager } from 'react-native';
 
 import { TabBar } from './tab-bar';
+import { useInitialModalRoute } from './use-initial-route';
 import { RootParamList } from '../hooks/use-navigation';
 import { useSplashScreen } from '../hooks/use-splash-screen';
 
@@ -59,8 +60,6 @@ const RootNavigator = () => {
 
       if (value === null) {
         navigation.navigate('onboardingModal');
-      } else {
-        navigation.navigate('home');
       }
 
       InteractionManager.runAfterInteractions(() => {
@@ -77,17 +76,32 @@ const RootNavigator = () => {
 };
 
 function ModalsNavigator() {
+  const { initialRouteName, initialParams, loaded } = useInitialModalRoute();
+
+  if (!loaded) return null;
+
   return (
     <Modals.Navigator
-      initialRouteName="root"
+      initialRouteName={initialRouteName}
       screenOptions={{
         headerShown: false,
         presentation: 'fullScreenModal',
       }}>
-      <Modals.Screen name="root" component={PagesNavigator} options={{ headerShown: false }} />
+      <Modals.Screen
+        name="root"
+        component={PagesNavigator}
+        options={{
+          headerShown: false,
+          animation: 'none',
+        }}
+      />
       <Modals.Screen name="nextMatchesModal" component={NextMatchesModal} />
       <Modals.Screen name="lastResultsModal" component={LastResultsModal} />
-      <Modals.Screen name="gameDetailsModal" component={GameDetailsModal} />
+      <Modals.Screen
+        name="gameDetailsModal"
+        component={GameDetailsModal}
+        initialParams={initialParams?.gameDetailsModal}
+      />
       <Modals.Screen
         name="onboardingModal"
         component={OnboardingModal}
@@ -106,6 +120,7 @@ function PagesNavigator() {
       initialRouteName="home"
       screenOptions={{
         headerShown: false,
+        lazy: true,
       }}
       tabBar={(props) => <TabBar {...props} />}>
       <Pages.Screen name="home" component={HomeScreen} />

@@ -8,6 +8,7 @@ export const useGameBackgroundImage = () => {
     require('~/../assets/game-images/rl.png'),
     require('~/../assets/game-images/valorant.png'),
     require('~/../assets/game-images/tft.png'),
+    require('~/../assets/game-images/fortnite.png'),
   ]);
 
   if (gameImageAssets === undefined) {
@@ -21,6 +22,7 @@ export const useGameBackgroundImage = () => {
     [CoreData.CompetitionName.ValorantVCT]: gameImageAssets[2],
     [CoreData.CompetitionName.ValorantVCTGC]: gameImageAssets[2],
     [CoreData.CompetitionName.TeamfightTacticsGSC]: gameImageAssets[3],
+    [CoreData.CompetitionName.Fortnite]: gameImageAssets[4],
   };
 
   return images;

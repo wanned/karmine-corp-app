@@ -1,11 +1,12 @@
 import notifee from '@notifee/react-native';
 import type * as Notifee from '@notifee/react-native';
 import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
-import defu from 'defu';
 
+import { NotificationData } from '../types/NotificationData';
 import { getSettings } from '../utils/settings';
 import { translate } from '../utils/translate';
 
+import { upsertMatchInDatabase } from '~/lib/karmine-corp-api/adapters/react-native/upsert-match-in-database';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export const addBackgroundNotificationHandlers = () => {
@@ -41,12 +42,14 @@ const notificationHandlers: {
 
     const { title, body } = translate('notifications.matchStarting', language)[0](matchInfos);
 
-    const notification = await getNotification({
-      id: notificationData.match.id,
+    const notification = await getMatchNotification({
+      matchId: notificationData.match.id,
       title,
       body,
     });
     await notifee.displayNotification(notification);
+
+    await upsertMatchInDatabase(notificationData.match);
   },
   matchScoreUpdated: async (notificationData) => {
     const settings = await getSettings();
@@ -59,12 +62,14 @@ const notificationHandlers: {
 
     const { title, body } = translate('notifications.matchScoreUpdated', language)[0](matchInfos);
 
-    const notification = await getNotification({
-      id: notificationData.match.id,
+    const notification = await getMatchNotification({
+      matchId: notificationData.match.id,
       title,
       body,
     });
     await notifee.displayNotification(notification);
+
+    await upsertMatchInDatabase(notificationData.match);
   },
   matchFinished: async (notificationData) => {
     const { language, showResults, notifications: notificationsSettings } = await getSettings();
@@ -78,12 +83,19 @@ const notificationHandlers: {
       showResults,
     });
 
-    const notification = await getNotification({
-      id: notificationData.match.id,
+    const notification = await getMatchNotification({
+      matchId: notificationData.match.id,
       title,
       body,
     });
     await notifee.displayNotification(notification);
+
+    await upsertMatchInDatabase(notificationData.match);
+  },
+
+  newMatchEntry: async (notificationData) => {
+    // This notification is silent. It is only used to update the local cache.
+    await upsertMatchInDatabase(notificationData.match);
   },
 };
 
@@ -96,18 +108,26 @@ async function runPrerequisites() {
   return { channelId };
 }
 
-async function getNotification(notification: { id: string; title: string; body: string }) {
+async function getMatchNotification(notification: {
+  matchId: string;
+  title: string;
+  body: string;
+}) {
   const { channelId } = await runPrerequisites();
 
-  return defu<Notifee.Notification, [typeof notification]>(
-    {
+  return {
+    id: notification.matchId,
+    title: notification.title,
+    body: notification.body,
+    data: {
+      type: 'match',
+      matchId: notification.matchId,
+    } satisfies NotificationData,
       android: {
         channelId,
         smallIcon: 'notification_icon',
       },
-    },
-    notification
-  );
+  } satisfies Notifee.Notification;
 }
 
 function getMatchInfosForNotification({
@@ -166,5 +186,7 @@ function getGameAbbreviation(game: CoreData.CompetitionName) {
       return 'VCT';
     case CoreData.CompetitionName.ValorantVCTGC:
       return 'VCTGC';
+    case CoreData.CompetitionName.Fortnite:
+      return 'FN';
   }
 }
