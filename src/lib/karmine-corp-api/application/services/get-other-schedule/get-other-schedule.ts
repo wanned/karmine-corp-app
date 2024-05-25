@@ -94,7 +94,10 @@ const getTeamsFromEvent = (
     if (teamNames.length === 1) {
       return [
         {
-          name: event.player ?? 'KC',
+          name:
+            event.player?.trim().toLowerCase() === 'kc merstach kc malibuca' ?
+              'KC Merstach & KC Malibuca'
+            : event.player ?? 'KC',
           logoUrl: KARMINE_LOGO_URL,
           score: yield* _(getTeamScore(event, 'domicile')),
         },
