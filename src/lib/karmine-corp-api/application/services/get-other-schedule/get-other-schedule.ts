@@ -20,8 +20,8 @@ const applyFilters = (match: CoreData.Match) =>
     Effect.map(({ dateRange, ignoreIds }) => {
       if (dateRange !== undefined) {
         if (
-          (dateRange.start !== undefined && match.date < dateRange.start) ||
-          (dateRange.end !== undefined && match.date > dateRange.end)
+          (dateRange.start !== undefined && new Date(match.date) < dateRange.start) ||
+          (dateRange.end !== undefined && new Date(match.date) > dateRange.end)
         ) {
           return false;
         }

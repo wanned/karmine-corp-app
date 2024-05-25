@@ -10,7 +10,7 @@ const nextMatchesAtom = computed(matchesAtom, (matches) => {
   const nextMatches = Object.values(matches)
     .flatMap((matches) =>
       matches.filter(
-        (match) => match.status === 'upcoming' && match.date >= subHours(new Date(), 12)
+        (match) => match.status === 'upcoming' && new Date(match.date) >= subHours(new Date(), 12)
       )
     )
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
