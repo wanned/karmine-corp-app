@@ -5,7 +5,8 @@ export const frTranslations: Translations['fr'] = {
     pages: {
       0: {
         title: 'Bienvenue sur Karmine Plus !',
-        description: 'Suivez les matchs de Karmine Corp et plus encore.',
+        description:
+          'Karmine Plus est une application non-officielle. Suivez les matchs de Karmine Corp et plus encore.',
       },
       1: {
         title: 'Notifications',
