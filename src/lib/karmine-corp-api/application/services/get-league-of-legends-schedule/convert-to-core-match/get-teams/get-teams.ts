@@ -8,17 +8,20 @@ type LeagueOfLegendsMatch = LeagueOfLegendsApi.GetSchedule['data']['schedule']['
 
 export function getTeams(match: LeagueOfLegendsMatch) {
   return Effect.all([
-    getTeam(match.match.teams[0]),
-    getTeam(match.match.teams[1]),
+    getTeam(match.match.teams[0], match.state),
+    getTeam(match.match.teams[1], match.state),
   ]) satisfies Effect.Effect<CoreData.LeagueOfLegendsMatch['teams'], any, any>;
 }
 
-function getTeam(team: LeagueOfLegendsMatch['match']['teams'][number]) {
+function getTeam(
+  team: LeagueOfLegendsMatch['match']['teams'][number],
+  state: LeagueOfLegendsMatch['state']
+) {
   return Effect.succeed({
     name: team.name,
     logoUrl: team.image.replace('http:', 'https:'),
     score:
-      team.result !== null ?
+      team.result !== null && state !== 'unstarted' ?
         {
           score: team.result.gameWins,
           scoreType: 'gameWins' as const,
