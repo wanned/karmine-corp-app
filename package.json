@@ -1,6 +1,6 @@
 {
   "name": "karmine-plus",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "scripts": {
     "android": "expo run:android",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
@@ -8,8 +8,12 @@
     "web": "expo start --web",
     "prebuild": "node ./scripts/prebuild.mjs",
     "build": "eas build --platform all --local",
-    "build:android": "eas build --platform android --local",
-    "build:ios": "eas build --platform ios --local",
+    "build:android": "npm run prebuild && eas build --platform android --local",
+    "build:ios": "npm run prebuild && eas build --platform ios --local",
+    "prepublish": "npm run prebuild && expo prebuild",
+    "publish": "eas build --platform all --auto-submit",
+    "publish:android": "npm run prepublish && eas build --platform android --auto-submit",
+    "publish:ios": "npm run prepublish && eas build --platform ios --auto-submit",
     "link-assets": "react-native-asset",
     "test": "vitest run",
     "test:watch": "vitest"
