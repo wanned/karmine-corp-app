@@ -119,7 +119,7 @@ function GameDetailsHeader({
       <View style={styles.headerScoreContainer}>
         <TeamScore
           logo={teamHome.logoUrl}
-          score={teamHome.score?.score ?? '-'}
+          score={teamHome.score}
           name={teamHome.name}
           position="left"
           isWinner={teamHome.score?.isWinner}
@@ -127,7 +127,7 @@ function GameDetailsHeader({
         {teamAway && (
           <TeamScore
             logo={teamAway.logoUrl}
-            score={teamAway.score?.score ?? '-'}
+            score={teamAway.score}
             name={teamAway.name}
             position="right"
             isWinner={teamAway.score?.isWinner}

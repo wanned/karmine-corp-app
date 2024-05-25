@@ -10,7 +10,7 @@ export const VeryBig = ({ children, color, maxLines, verticalTrim = false }: Typ
         height: verticalTrim ? 32 : undefined,
         justifyContent: 'flex-end',
       }}>
-      <View style={{ position: 'relative', top: verticalTrim ? 4 : undefined }}>
+      <View style={{ position: 'relative', top: verticalTrim ? -1 : undefined }}>
         <BaseText
           color={color}
           fontSize={44.5}

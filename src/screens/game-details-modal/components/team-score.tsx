@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { OutlinedNumber } from '~/shared/components/card/card-content/outlined-numbers';
 import { checkSingleNumber } from '~/shared/components/card/utils/check-single-number';
 import { Typographies } from '~/shared/components/typographies';
@@ -10,7 +11,7 @@ import { createStylesheet } from '~/shared/styles/create-stylesheet';
 interface TeamProps {
   logo: string;
   name: string;
-  score: string | number;
+  score: CoreData.Score | undefined;
   isWinner?: boolean;
 }
 
@@ -29,14 +30,24 @@ export const TeamScore = ({ logo, name, score, isWinner, position }: TeamScorePr
       )}>
       <View style={styles.teamNameContainer}>
         <Image source={{ uri: logo }} cachePolicy="memory-disk" style={{ width: 70, height: 70 }} />
-        <Typographies.Title3 color={styles.teamNameContainer.color}>{name}</Typographies.Title3>
+        <Typographies.Title3 color={styles.teamNameContainer.color}>
+          {name.replaceAll(' & ', '\n')}
+        </Typographies.Title3>
       </View>
 
-      {isWinner || !checkSingleNumber(score) ?
+      {score === undefined ?
         <Typographies.Huge color={styles.teamNameContainer.color} verticalTrim>
-          {score.toString()}
+          -
         </Typographies.Huge>
-      : <OutlinedNumber size="large">{score}</OutlinedNumber>}
+      : score.scoreType === 'top' ?
+        <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
+          Top {score.score.toString()}
+        </Typographies.VeryBig>
+      : isWinner || !checkSingleNumber(score.score) ?
+        <Typographies.Huge color={styles.teamNameContainer.color} verticalTrim>
+          {score.score.toString()}
+        </Typographies.Huge>
+      : <OutlinedNumber size="large">{score.score}</OutlinedNumber>}
     </View>
   );
 };
