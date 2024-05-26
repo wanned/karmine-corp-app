@@ -7,7 +7,7 @@ import { KarmineApi } from '~/lib/karmine-corp-api/infrastructure/services/karmi
 import { KarmineApiService } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api-service';
 
 export const getOtherSchedule = () =>
-  Stream.concat(getUpcomingEvents(), getFinishedEvents()).pipe(Stream.filterEffect(applyFilters));
+  Stream.filterEffect(Stream.concat(getUpcomingEvents(), getFinishedEvents()), applyFilters);
 
 const applyFilters = (match: CoreData.Match) =>
   Effect.Do.pipe(

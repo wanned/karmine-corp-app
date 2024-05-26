@@ -1,24 +1,31 @@
-import { Chunk, Stream } from 'effect';
+import { Effect, Stream } from 'effect';
 
 import { CoreData } from '../../types/core-data';
 import { getOtherSchedule } from '../get-other-schedule/get-other-schedule';
 
-import { isSameDay } from '~/shared/utils/is-same-day';
-
-// TODO: This function seems to be heavy and drops the JS thread to ~0 FPS for few milliseconds. We need to optimize it.
 export function getUnlistedMatches<E, R>(matchesStream: Stream.Stream<CoreData.Match, E, R>) {
-  return Stream.Do.pipe(
+  return Effect.Do.pipe(
     () => matchesStream,
     Stream.runCollect,
-    Stream.flatMap((listedMatches) =>
-      getOtherSchedule().pipe(
+    Effect.let('listedDates', (listedMatches) => {
+      const listedDates = new Set<`${number}-${number}-${number}`>();
+      for (const listedMatch of listedMatches) {
+        const date = new Date(listedMatch.date);
+        listedDates.add(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
+      }
+      return listedDates;
+    }),
+    Effect.map(({ listedDates }) =>
+      Stream.Do.pipe(
+        () => getOtherSchedule(),
         Stream.filter(
           (unlistedMatch) =>
-            unlistedMatch.matchDetails.competitionName === CoreData.CompetitionName.RocketLeague &&
-            !Chunk.some(listedMatches, (listedMatch) =>
-              isSameDay(new Date(listedMatch.date), new Date(unlistedMatch.date))
-            )
+            unlistedMatch.matchDetails.competitionName === CoreData.CompetitionName.RocketLeague
         ),
+        Stream.filter((unlistedMatch) => {
+          const date = new Date(unlistedMatch.date);
+          return !listedDates.has(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
+        }),
         Stream.map((unlistedMatch) => ({
           ...unlistedMatch,
           id: `rl:${unlistedMatch.id}`,
@@ -33,6 +40,8 @@ export function getUnlistedMatches<E, R>(matchesStream: Stream.Stream<CoreData.M
           },
         }))
       )
-    )
+    ),
+    (_) => Stream.fromEffect(_),
+    (_) => Stream.flatten(_)
   );
 }
