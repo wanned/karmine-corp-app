@@ -47,10 +47,10 @@ const useLastYoutubeVideoCardData = (): CardsData => {
             date={new Date(lastVideo.publishedAt).toLocaleDateString()}
             likes={lastVideo.likes}
             views={lastVideo.views}
-            onPress={() => Linking.openURL(lastVideo.url)}
           />
         ),
         image: { uri: lastVideo.thumbnailUrl },
+        onPress: () => Linking.openURL(lastVideo.url),
       },
     ],
     [lastVideo]
@@ -67,13 +67,8 @@ const useLiveMatchesCardData = (): CardsData => {
       liveMatches.map<CardsData[number]>((liveMatch) => ({
         id: liveMatch.id,
         image: gameImageAssets?.[liveMatch.matchDetails.competitionName] ?? { uri: '' },
-        content: (
-          <GameCardContent
-            showLivePill
-            match={liveMatch}
-            onPress={() => navigation.navigate('gameDetailsModal', { match: liveMatch })}
-          />
-        ),
+        content: <GameCardContent showLivePill match={liveMatch} />,
+        onPress: () => navigation.navigate('gameDetailsModal', { match: liveMatch }),
       })),
     [liveMatches]
   );

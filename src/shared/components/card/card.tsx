@@ -2,23 +2,26 @@ import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { View } from 'react-native';
 
+import { TouchableScale } from '../touchable-scale/touchable-scale';
+
 import { useStyles } from '~/shared/hooks/use-styles';
 import { useTheme } from '~/shared/hooks/use-theme';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
 interface CardProps {
   image: { uri: string };
+  onPress?: () => void;
   children: React.ReactNode;
 }
 
-export const Card = ({ image, children }: CardProps) => {
+export const Card = ({ image, children, onPress }: CardProps) => {
   const theme = useTheme();
   const gradientColor = theme.colors.subtleBackground;
 
   const styles = useStyles(getStyles);
 
   return (
-    <View style={styles.card}>
+    <TouchableScale onPress={onPress ?? (() => {})} style={styles.card}>
       <Image style={styles.cardImage} source={image} cachePolicy="memory-disk" />
       <LinearGradient
         style={styles.cardGradient}
@@ -36,7 +39,7 @@ export const Card = ({ image, children }: CardProps) => {
         locations={[0, 0.33, 0.48, 1]}
       />
       <View style={styles.childrenContainer}>{children}</View>
-    </View>
+    </TouchableScale>
   );
 };
 

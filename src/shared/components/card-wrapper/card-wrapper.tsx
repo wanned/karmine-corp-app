@@ -13,6 +13,7 @@ interface CardWrapperProps {
         id: string;
         content: React.ReactNode;
         image: { uri: string };
+        onPress?: () => void;
       }
     | undefined
   )[];
@@ -44,7 +45,9 @@ export const CardWrapper = ({ cardsData, height }: CardWrapperProps) => {
         }}>
         {definedCardsData.map((card) => (
           <View style={{ marginHorizontal: 16 }} key={card.id}>
-            <Card image={card.image}>{card.content}</Card>
+            <Card image={card.image} onPress={card.onPress}>
+              {card.content}
+            </Card>
           </View>
         ))}
       </PagerView>
