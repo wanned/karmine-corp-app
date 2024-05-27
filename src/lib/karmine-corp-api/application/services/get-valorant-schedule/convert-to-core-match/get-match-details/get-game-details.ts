@@ -4,19 +4,24 @@ import { HTMLElement } from 'node-html-parser';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export function getGameDetails(mapElement: HTMLElement) {
-  return Effect.all({
-    mapName: getMapName(mapElement),
-    score: getScore(mapElement),
-    composition: Effect.all(
-      {
-        home: getComposition(mapElement, 'home'),
-        away: getComposition(mapElement, 'away'),
-      },
-      {
-        concurrency: 1,
-      }
-    ),
-  }) satisfies Effect.Effect<CoreData.ValorantGame, any, any>;
+  return Effect.all(
+    {
+      mapName: getMapName(mapElement),
+      score: getScore(mapElement),
+      composition: Effect.all(
+        {
+          home: getComposition(mapElement, 'home'),
+          away: getComposition(mapElement, 'away'),
+        },
+        {
+          concurrency: 1,
+        }
+      ),
+    },
+    {
+      concurrency: 1,
+    }
+  ) satisfies Effect.Effect<CoreData.ValorantGame, any, any>;
 }
 
 function getMapName(mapElement: HTMLElement) {

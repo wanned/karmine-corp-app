@@ -8,18 +8,23 @@ import { getMatchId } from './utils/get-match-id';
 import { CoreData } from '../../../types/core-data';
 
 export function convertToCoreMatch(matchContainerElement: HTMLElement) {
-  return Effect.all(
-    {
-      id: getMatchId(matchContainerElement),
-      teams: getTeams(matchContainerElement),
-      date: getMatchDate(matchContainerElement),
-      streamLink: Effect.succeed('kamet0'), // TODO
-      status: getMatchStatus(matchContainerElement),
-      matchDetails: getMatchDetails(matchContainerElement),
-    },
-    {
-      concurrency: 1,
-    }
+  return Effect.Do.pipe(
+    Effect.flatMap(() =>
+      Effect.all({
+        id: getMatchId(matchContainerElement),
+        teams: getTeams(matchContainerElement),
+        date: getMatchDate(matchContainerElement),
+        streamLink: Effect.succeed('kamet0'), // TODO
+        status: getMatchStatus(matchContainerElement),
+      })
+    ),
+    Effect.bind('matchDetails', ({ status, teams }) =>
+      getMatchDetails({
+        matchElement: matchContainerElement,
+        status,
+        teams,
+      })
+    )
   ) satisfies Effect.Effect<CoreData.ValorantMatch, any, any>;
 }
 

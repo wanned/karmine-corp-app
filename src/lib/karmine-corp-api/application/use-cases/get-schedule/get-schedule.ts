@@ -20,16 +20,15 @@ export const getSchedule = ({ onlyFromDatabase }: { onlyFromDatabase?: boolean }
 
   const remoteScheduleStream = Stream.empty.pipe(
     Stream.merge(
-      getOtherSchedule().pipe(
-        Stream.filter(
-          (match) =>
-            match.matchDetails.competitionName !== CoreData.CompetitionName.LeagueOfLegendsLEC &&
-            match.matchDetails.competitionName !== CoreData.CompetitionName.LeagueOfLegendsLFL &&
-            match.matchDetails.competitionName !== CoreData.CompetitionName.RocketLeague &&
-            match.matchDetails.competitionName !== CoreData.CompetitionName.ValorantVCT &&
-            match.matchDetails.competitionName !== CoreData.CompetitionName.ValorantVCTGC
-        )
-      )
+      getOtherSchedule({
+        ignoreGames: [
+          CoreData.CompetitionName.LeagueOfLegendsLEC,
+          CoreData.CompetitionName.LeagueOfLegendsLFL,
+          CoreData.CompetitionName.RocketLeague,
+          CoreData.CompetitionName.ValorantVCT,
+          CoreData.CompetitionName.ValorantVCTGC,
+        ],
+      })
     ),
     Stream.merge(getRocketLeagueSchedule()),
     Stream.merge(getLeagueOfLegendsSchedule()),

@@ -3,6 +3,7 @@ import { Layer } from 'effect';
 import { createOpSqliteWithDumpImpl } from '~/lib/karmine-corp-api/infrastructure/services/database/op-sqlite-with-dump-impl';
 import { EnvRnServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/env/env-rn-service-impl';
 import { FetchServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/fetch/fetch-service-impl';
+import { HtmlToJsonServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/html-to-json/html-to-json-service-impl';
 import { KarmineApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api-service-impl';
 import { LeagueOfLegendsApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/league-of-legends-api/league-of-legends-api-service-impl';
 import { LiquipediaParseApiServiceImpl } from '~/lib/karmine-corp-api/infrastructure/services/liquipedia-parse-api/liquipedia-parse-api-service-impl';
@@ -20,6 +21,7 @@ export const mainLayer = Layer.empty.pipe(
   Layer.merge(VlrGgApiServiceImpl),
   Layer.merge(ValorantApiServiceImpl),
   Layer.merge(FetchServiceImpl),
+  Layer.merge(HtmlToJsonServiceImpl),
   Layer.merge(createOpSqliteWithDumpImpl('/assets/matches-dump.db')),
   Layer.merge(EnvRnServiceImpl)
 );
