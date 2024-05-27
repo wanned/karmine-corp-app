@@ -105,7 +105,6 @@ export type Translations = Record<
       goalsText: string;
       stopsText: string;
       totalText: string;
-      beNotifiedButtonText: string;
       cancelNotificationButtonText: string;
       watchStreamButtonText: string;
       shareStreamButtonText: string;
