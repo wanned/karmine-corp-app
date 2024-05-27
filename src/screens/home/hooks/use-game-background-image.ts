@@ -22,6 +22,7 @@ export const useGameBackgroundImage = () => {
     [CoreData.CompetitionName.ValorantVCT]: gameImageAssets[2],
     [CoreData.CompetitionName.ValorantVCTGC]: gameImageAssets[2],
     [CoreData.CompetitionName.TeamfightTacticsGSC]: gameImageAssets[3],
+    [CoreData.CompetitionName.TFT]: gameImageAssets[3],
     [CoreData.CompetitionName.Fortnite]: gameImageAssets[4],
   };
 
