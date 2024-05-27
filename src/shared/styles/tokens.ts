@@ -8,6 +8,7 @@ export interface StyleTokens {
     subtleBackground: ColorString;
     subtleForeground: ColorString;
     subtleForeground2: ColorString;
+    shadowOnBackground: ColorString;
     streaming: ColorString;
   };
   opacities: {
@@ -45,6 +46,7 @@ export const styleTokens: StyleTokens = {
     subtleBackground: '#1A2942',
     subtleForeground: '#6E7582',
     subtleForeground2: '#3E5670',
+    shadowOnBackground: '#000000',
     streaming: '#EE5858',
   },
   opacities: {
