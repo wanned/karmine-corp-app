@@ -10,8 +10,24 @@ import { CoreData } from '../../types/core-data';
 import { MatchesRepository } from '~/lib/karmine-corp-api/infrastructure/repositories/matches/matches-repository';
 
 export const getSchedule = ({ onlyFromDatabase }: { onlyFromDatabase?: boolean } = {}) => {
+  function fixKarmineLogo(match: CoreData.Match) {
+    return {
+      ...match,
+      teams: match.teams.map(
+        (team) =>
+          team && {
+            ...team,
+            logoUrl:
+              team.name.toLowerCase().includes('karmine') ?
+                'https://medias.kametotv.fr/karmine/teams/Karmine-RocketLeague.png'
+              : team.logoUrl,
+          }
+      ) as (typeof match)['teams'],
+    };
+  }
+
   if (onlyFromDatabase) {
-    return getScheduleFromDatabase();
+    return getScheduleFromDatabase().pipe(Stream.map(fixKarmineLogo));
   }
 
   // TODO: Add a `speed` parameter. If `speed` is `fast`, then we use merge (because it runs in parallel), if `speed` is `slow`, then we use concat (because it runs in sequence)
@@ -59,18 +75,6 @@ export const getSchedule = ({ onlyFromDatabase }: { onlyFromDatabase?: boolean }
       )
     ),
     Stream.filter((match): match is Exclude<typeof match, void> => match !== undefined),
-    Stream.map((match) => ({
-      ...match,
-      teams: match.teams.map(
-        (team) =>
-          team && {
-            ...team,
-            logoUrl:
-              team.name.toLowerCase().includes('karmine') ?
-                'https://medias.kametotv.fr/karmine/teams/Karmine-RocketLeague.png'
-              : team.logoUrl,
-          }
-      ) as (typeof match)['teams'],
-    }))
+    Stream.map(fixKarmineLogo)
   );
 };
