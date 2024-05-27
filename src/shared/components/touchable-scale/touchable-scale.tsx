@@ -1,6 +1,6 @@
 import * as Haptics from 'expo-haptics';
 import React, { useCallback, useRef } from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -15,6 +15,7 @@ interface TouchableScaleProps {
   animationDuration?: number;
   hapticFeedback?: boolean;
   children: React.ReactNode;
+  style?: View['props']['style'];
 }
 
 export const TouchableScale = React.memo(
@@ -25,6 +26,7 @@ export const TouchableScale = React.memo(
     animationDuration = 200,
     hapticFeedback = true,
     children,
+    style: _style,
   }: TouchableScaleProps) => {
     const scale = useSharedValue(0);
     const pressed = useRef(false);
@@ -66,7 +68,7 @@ export const TouchableScale = React.memo(
     }, [animate]);
 
     return (
-      <Animated.View style={style}>
+      <Animated.View style={[_style, style]}>
         <Pressable
           onPress={onPress}
           onLongPress={onLongPress}

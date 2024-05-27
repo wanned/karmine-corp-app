@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import { TouchableScale } from '../../touchable-scale/touchable-scale';
 import { Typographies } from '../../typographies';
 
 import { useStyles } from '~/shared/hooks/use-styles';
@@ -13,10 +12,9 @@ interface MediaCardContentProps {
   date: string;
   likes: number;
   views: number;
-  onPress: () => void;
 }
 
-export const MediaCardContent = ({ title, date, likes, views, onPress }: MediaCardContentProps) => {
+export const MediaCardContent = ({ title, date, likes, views }: MediaCardContentProps) => {
   const styles = useStyles(getStyles);
   const translate = useTranslate();
 
@@ -31,32 +29,30 @@ export const MediaCardContent = ({ title, date, likes, views, onPress }: MediaCa
   }
 
   return (
-    <TouchableScale onPress={onPress}>
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Typographies.Title1 color={styles.title.color} maxLines={2}>
-            {title}
-          </Typographies.Title1>
-        </View>
-        <View style={styles.stats}>
-          <Typographies.Label color={styles.date.color} verticalTrim>
-            {date}
-          </Typographies.Label>
-          <Typographies.Body color={styles.views.color} verticalTrim>
-            {' '}
-            ·{' '}
-          </Typographies.Body>
-          <Typographies.Body color={styles.views.color} verticalTrim>
-            {formatNumber(views)} {translate('home.views')} · {formatNumber(likes)}{' '}
-            {translate('home.likes')}
-          </Typographies.Body>
-        </View>
-        <View style={{ flex: 1 }} />
-        <Typographies.Body color={styles.plateform.color} verticalTrim>
-          youtube.com
+    <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Typographies.Title1 color={styles.title.color} maxLines={2}>
+          {title}
+        </Typographies.Title1>
+      </View>
+      <View style={styles.stats}>
+        <Typographies.Label color={styles.date.color} verticalTrim>
+          {date}
+        </Typographies.Label>
+        <Typographies.Body color={styles.views.color} verticalTrim>
+          {' '}
+          ·{' '}
+        </Typographies.Body>
+        <Typographies.Body color={styles.views.color} verticalTrim>
+          {formatNumber(views)} {translate('home.views')} · {formatNumber(likes)}{' '}
+          {translate('home.likes')}
         </Typographies.Body>
       </View>
-    </TouchableScale>
+      <View style={{ flex: 1 }} />
+      <Typographies.Body color={styles.plateform.color} verticalTrim>
+        youtube.com
+      </Typographies.Body>
+    </View>
   );
 };
 
