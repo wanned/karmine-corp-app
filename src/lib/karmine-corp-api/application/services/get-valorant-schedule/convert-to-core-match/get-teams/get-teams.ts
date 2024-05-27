@@ -4,29 +4,37 @@ import { HTMLElement } from 'node-html-parser';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export function getTeams(matchElement: HTMLElement) {
-  return Effect.all([getTeam(matchElement, 0), getTeam(matchElement, 1)]) satisfies Effect.Effect<
-    CoreData.ValorantMatch['teams'],
-    any,
-    any
-  >;
+  return Effect.all([getTeam(matchElement, 0), getTeam(matchElement, 1)], {
+    concurrency: 1,
+  }) satisfies Effect.Effect<CoreData.ValorantMatch['teams'], any, any>;
 }
 
 function getTeam(matchElement: HTMLElement, teamIndex: 0 | 1) {
-  return Effect.all({
-    name: getTeamName(matchElement, teamIndex),
-    logoUrl: getTeamLogoUrl(matchElement, teamIndex),
-    score: Effect.catchTags(
-      Effect.all({
-        score: getTeamScore(matchElement, teamIndex),
-        scoreType: Effect.succeed('gameWins' as const),
-        isWinner: getTeamIsWinner(matchElement, teamIndex),
-      }),
-      {
-        NoSuchElementException: () => Effect.succeed(undefined),
-        NotAScoreError: () => Effect.succeed(undefined),
-      }
-    ),
-  }) satisfies Effect.Effect<CoreData.ValorantMatch['teams'][number], any, any>;
+  return Effect.all(
+    {
+      name: getTeamName(matchElement, teamIndex),
+      logoUrl: getTeamLogoUrl(matchElement, teamIndex),
+      score: Effect.catchTags(
+        Effect.all(
+          {
+            score: getTeamScore(matchElement, teamIndex),
+            scoreType: Effect.succeed('gameWins' as const),
+            isWinner: getTeamIsWinner(matchElement, teamIndex),
+          },
+          {
+            concurrency: 1,
+          }
+        ),
+        {
+          NoSuchElementException: () => Effect.succeed(undefined),
+          NotAScoreError: () => Effect.succeed(undefined),
+        }
+      ),
+    },
+    {
+      concurrency: 1,
+    }
+  ) satisfies Effect.Effect<CoreData.ValorantMatch['teams'][number], any, any>;
 }
 
 export function getTeamName(matchElement: HTMLElement, teamIndex: 0 | 1) {

@@ -1,5 +1,5 @@
 import { Effect, Option } from 'effect';
-import parseHtml, { HTMLElement } from 'node-html-parser';
+import { HTMLElement } from 'node-html-parser';
 
 import { getGameDetails } from './get-game-details';
 import { getTeamName } from '../get-teams/get-teams';
@@ -7,12 +7,20 @@ import { getTeamName } from '../get-teams/get-teams';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { VlrGgApiService } from '~/lib/karmine-corp-api/infrastructure/services/vlr-gg-api/vlr-gg-api-service';
 
-export function getMatchDetails(matchElement: HTMLElement) {
+export function getMatchDetails({
+  matchElement,
+  status,
+  teams,
+}: {
+  matchElement: HTMLElement;
+  status: CoreData.Match['status'];
+  teams: CoreData.ValorantMatch['teams'];
+}) {
   return Effect.all(
     {
       competitionName: getCompetitonName(matchElement),
       games: getGames(matchElement),
-      bo: getBo(matchElement),
+      bo: getBo({ matchElement, status, teams }),
       players: getPlayers(matchElement),
     },
     {
@@ -38,27 +46,45 @@ function getGames(matchElement: HTMLElement) {
   ) satisfies Effect.Effect<CoreData.ValorantGame[], any, any>;
 }
 
-function getBo(matchElement: HTMLElement) {
+function getBo({
+  matchElement,
+  status,
+  teams,
+}: {
+  matchElement: HTMLElement;
+  status: CoreData.Match['status'];
+  teams: CoreData.ValorantMatch['teams'];
+}) {
+  if (status === 'finished') {
+    const winningScore = teams.find((team) => team?.score?.isWinner)?.score?.score;
+    if (winningScore !== undefined) {
+      return Effect.succeed(winningScore + 1);
+    }
+  }
+
   return Effect.Do.pipe(
     Effect.flatMap(() => getMatchPage(matchElement)),
-    Effect.map((page) => page.querySelectorAll('.match-header-vs-score .match-header-vs-note')),
-    Effect.flatMap((matchNotes) =>
-      Option.firstSomeOf(
-        matchNotes.map((note) =>
-          Option.some(note.text.trim().toLowerCase()).pipe(
-            Option.filter((text) => text.startsWith('bo'))
-          )
-        )
-      )
-    ),
-    Effect.map((bo) => Number(bo.replace('bo', '')))
+    Effect.map((page) => (typeof page.data.content === 'string' && page.data.content) || undefined),
+    Effect.flatMap(Option.fromNullable),
+    Effect.map((content) => content.toLowerCase().match(/\nbo(\d+)/)),
+    Effect.flatMap(Option.fromNullable),
+    Effect.map(([, bo]) => Number(bo))
   );
 }
 
 function getPlayers(matchElement: HTMLElement) {
   return Effect.Do.pipe(
     Effect.flatMap(() => getMatchPage(matchElement)),
-    Effect.map((page) => page.querySelectorAll('.vm-stats-game:first-of-type .mod-player')),
+    Effect.map((page) => (Array.isArray(page.data.links) ? page.data.links : [])),
+    Effect.map((links) =>
+      links.reduce<Set<string>>((acc, link) => {
+        if (link.href && link.href.startsWith('/player/')) {
+          acc.add(link.href);
+        }
+        return acc;
+      }, new Set<string>())
+    ),
+    Effect.map((links) => [...links]),
     Effect.flatMap((players) =>
       Effect.all(
         {
@@ -73,25 +99,20 @@ function getPlayers(matchElement: HTMLElement) {
   );
 }
 
-function getPlayerDetails(playerElement: HTMLElement) {
-  return Effect.all(
-    {
-      name: Option.fromNullable(playerElement.querySelector('a div:first-of-type')?.text.trim()),
-      imageUrl: getPlayerImageUrl(playerElement),
-    },
-    {
-      concurrency: 1,
-    }
-  );
-}
-
-function getPlayerImageUrl(playerElement: HTMLElement) {
+function getPlayerDetails(playerUrl: string) {
   return Effect.Do.pipe(
-    Effect.flatMap(() => getPlayerPage(playerElement)),
-    Effect.map((page) => page.querySelector('.player-header img')),
-    Effect.flatMap((img) => Option.fromNullable(img?.getAttribute('src'))),
-    Effect.map((src) => src.replace(/^\/\//, 'https://')),
-    Effect.map((src) => src.replace(/^\//, 'https://www.vlr.gg/'))
+    Effect.map(() => playerUrl.match(/\/player\/(\d+)\/.+/)),
+    Effect.flatMap(Option.fromNullable),
+    Effect.map(([_, playerId]) => playerId),
+    Effect.flatMap((playerId) =>
+      Effect.serviceMembers(VlrGgApiService).functions.getPlayer({
+        playerId,
+      })
+    ),
+    Effect.map((player) => ({
+      name: player.data.info.user,
+      imageUrl: player.data.info.img,
+    }))
   );
 }
 
@@ -106,39 +127,6 @@ function getMatchPage(matchElement: HTMLElement) {
       Effect.serviceMembers(VlrGgApiService).functions.getMatch({
         gameId,
       })
-    ),
-    Effect.map((response) => parseHtml(response.html))
-  );
-}
-
-const playersPagesCache = new Map<string, HTMLElement>();
-function getPlayerPage(playerElement: HTMLElement) {
-  return Effect.Do.pipe(
-    Effect.flatMap(() =>
-      Option.fromNullable(playerElement.querySelector('a')?.getAttribute('href'))
-    ),
-    Effect.map((href) => href.replace(/^\/?player\/?/, '')),
-    Effect.flatMap((href) => Option.fromNullable(href.split('/')[0])),
-    Effect.flatMap((playerId) =>
-      Effect.Do.pipe(
-        Effect.flatMap(() =>
-          Option.Do.pipe(
-            Option.flatMap(() => Option.fromNullable(playersPagesCache.get(playerId))),
-            Option.map(Effect.succeed),
-            Option.getOrElse(() =>
-              Effect.Do.pipe(
-                Effect.flatMap(() =>
-                  Effect.serviceMembers(VlrGgApiService).functions.getPlayer({
-                    playerId,
-                  })
-                ),
-                Effect.map((response) => parseHtml(response.html))
-              )
-            )
-          )
-        ),
-        Effect.tap((page) => playersPagesCache.set(playerId, page))
-      )
     )
   );
 }
