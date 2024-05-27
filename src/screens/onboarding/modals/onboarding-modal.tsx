@@ -1,5 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
+
+import { Step1 } from '../children/step-1';
+import { Step2 } from '../children/step-2';
 
 import { Buttons } from '~/shared/components/buttons';
 import { Body } from '~/shared/components/typographies/body';
@@ -11,8 +14,6 @@ import { useTranslate } from '~/shared/hooks/use-translate';
 import { ModalLayout } from '~/shared/layouts/modal-layout';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { Translations } from '~/translations/Translations';
-import { Step1 } from '../children/step-1';
-import { Step2 } from '../children/step-2';
 
 export const OnboardingModal = React.memo(() => {
   const styles = useStyles(getStyles);
@@ -118,10 +119,11 @@ const getStyles = createStylesheet((theme) => ({
   card: {
     borderRadius: theme.roundness.large,
     backgroundColor: theme.colors.subtleBackground,
-    shadowColor: theme.colors.background,
+    shadowColor: theme.colors.shadowOnBackground,
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.1,
     shadowRadius: 4,
+    elevation: 4,
     marginTop: -40,
     padding: 40,
     justifyContent: 'space-between',
