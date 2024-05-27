@@ -81,6 +81,8 @@ const getRadioStyles = createStylesheet((theme) => ({
     borderRadius: 8,
   },
   radio: {
+    position: 'absolute',
+    right: 12,
     width: 16,
     height: 16,
     borderRadius: 8,
