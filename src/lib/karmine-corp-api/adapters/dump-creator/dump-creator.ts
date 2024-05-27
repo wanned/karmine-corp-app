@@ -10,6 +10,7 @@ import { createBetterSqlite3WithDrizzleImpl } from '../../infrastructure/service
 import { DatabaseService } from '../../infrastructure/services/database/database-service';
 import { createEnvServiceImpl } from '../../infrastructure/services/env/env-service-impl';
 import { FetchServiceImpl } from '../../infrastructure/services/fetch/fetch-service-impl';
+import { HtmlToJsonServiceImpl } from '../../infrastructure/services/html-to-json/html-to-json-service-impl';
 import { KarmineApiServiceImpl } from '../../infrastructure/services/karmine-api/karmine-api-service-impl';
 import { LeagueOfLegendsApiServiceImpl } from '../../infrastructure/services/league-of-legends-api/league-of-legends-api-service-impl';
 import { OctaneApiServiceImpl } from '../../infrastructure/services/octane-api/octane-api-service-impl';
@@ -79,6 +80,7 @@ const getMainLayer = () =>
     Layer.merge(StrafeApiServiceImpl),
     Layer.merge(VlrGgApiServiceImpl),
     Layer.merge(FetchServiceImpl),
+    Layer.merge(HtmlToJsonServiceImpl),
     Layer.merge(createBetterSqlite3WithDrizzleImpl(databaseDumpPath)),
     Layer.merge(createEnvServiceImpl({ firebaseEnvShouldBeDefined: false })),
     Layer.merge(
