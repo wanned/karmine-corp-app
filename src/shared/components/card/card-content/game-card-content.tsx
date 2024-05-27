@@ -84,26 +84,28 @@ const TeamScore = ({ logoUrl, name, score, position }: TeamScoreProps) => {
   return (
     <View
       style={StyleSheet.compose(
-        styles.teamContainer,
-        position === 'left' ? styles.teamContainerLeft : styles.teamContainerRight
+        styles.teamScoreContainer,
+        position === 'left' ? styles.teamScoreContainerLeft : styles.teamScoreContainerRight
       )}>
-      <View style={styles.teamNameContainer}>
+      <View style={styles.teamContainer}>
         <Image
           source={{ uri: logoUrl }}
           cachePolicy="memory-disk"
           style={{ width: 70, height: 70 }}
         />
-        <Typographies.Title3 color={styles.teamNameContainer.color}>{name}</Typographies.Title3>
+        <View style={styles.teamNameContainer}>
+          <Typographies.Title3 color={styles.teamContainer.color}>{name}</Typographies.Title3>
+        </View>
       </View>
 
       {score !== undefined &&
         (score.isWinner ?
-          <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
+          <Typographies.VeryBig color={styles.teamContainer.color} verticalTrim>
             {score.score.toString()}
           </Typographies.VeryBig>
         : checkSingleNumber(score.score) ?
           <OutlinedNumber size="small">{score.score}</OutlinedNumber>
-        : <Typographies.VeryBig color={styles.teamNameContainer.color} verticalTrim>
+        : <Typographies.VeryBig color={styles.teamContainer.color} verticalTrim>
             {score.score.toString()}
           </Typographies.VeryBig>)}
     </View>
@@ -111,21 +113,34 @@ const TeamScore = ({ logoUrl, name, score, position }: TeamScoreProps) => {
 };
 
 const getTeamsScoreStyles = createStylesheet((theme) => ({
-  teamNameContainer: {
+  teamContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
     color: theme.colors.foreground,
     paddingVertical: 2,
+    position: 'relative',
+    marginBottom: 20,
   },
-  teamContainer: {
+  teamNameContainer: {
+    position: 'absolute',
+    bottom: -20,
+    width: 10_000,
+    left: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: -5_000,
+  },
+  teamScoreContainer: {
+    flex: 1,
     alignItems: 'center',
     gap: 20,
+    justifyContent: 'flex-end',
   },
-  teamContainerLeft: {
+  teamScoreContainerLeft: {
     flexDirection: 'row',
   },
-  teamContainerRight: {
+  teamScoreContainerRight: {
     flexDirection: 'row-reverse',
   },
 }));
