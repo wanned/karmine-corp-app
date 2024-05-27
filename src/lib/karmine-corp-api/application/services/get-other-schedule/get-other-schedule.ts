@@ -6,8 +6,18 @@ import { GetScheduleParamsState } from '../../use-cases/get-schedule/get-schedul
 import { KarmineApi } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api';
 import { KarmineApiService } from '~/lib/karmine-corp-api/infrastructure/services/karmine-api/karmine-api-service';
 
-export const getOtherSchedule = () =>
-  Stream.filterEffect(Stream.concat(getUpcomingEvents(), getFinishedEvents()), applyFilters);
+//  getOtherSchedule is very short in terms of execution time, but it produces a big drop in performance
+// TODO: Investigate why getOtherSchedule is so slow and optimize it
+
+export const getOtherSchedule = ({
+  ignoreGames = [],
+}: {
+  ignoreGames?: CoreData.CompetitionName[];
+} = {}) =>
+  Stream.filterEffect(
+    Stream.concat(getUpcomingEvents({ ignoreGames }), getFinishedEvents({ ignoreGames })),
+    applyFilters
+  );
 
 const applyFilters = (match: CoreData.Match) =>
   Effect.Do.pipe(
@@ -38,36 +48,58 @@ const applyFilters = (match: CoreData.Match) =>
     })
   );
 
-const getUpcomingEvents = () =>
+const getUpcomingEvents = ({
+  ignoreGames = [],
+}: {
+  ignoreGames?: CoreData.CompetitionName[];
+} = {}) =>
   Stream.fromIterableEffect(
     Effect.serviceFunctionEffect(KarmineApiService, (_) => _.getEvents)()
-  ).pipe(Stream.flatMap((event) => Stream.fromEffect(karmineEventToCoreMatch(event, 'events'))));
+  ).pipe(
+    Stream.filter(
+      (event) => !ignoreGames.includes(event.competition_name as CoreData.CompetitionName)
+    ),
+    Stream.flatMap((event) => Stream.fromEffect(karmineEventToCoreMatch(event, 'events')))
+  );
 
-const getFinishedEvents = () =>
+const getFinishedEvents = ({
+  ignoreGames = [],
+}: {
+  ignoreGames?: CoreData.CompetitionName[];
+} = {}) =>
   Stream.fromIterableEffect(
     Effect.serviceFunctionEffect(KarmineApiService, (_) => _.getEventsResults)()
   ).pipe(
+    Stream.filter(
+      (event) => !ignoreGames.includes(event.competition_name as CoreData.CompetitionName)
+    ),
     Stream.flatMap((event) => Stream.fromEffect(karmineEventToCoreMatch(event, 'eventsResults')))
   );
 
 const karmineEventToCoreMatch = (
-  event: KarmineApi.GetEvents[number] | KarmineApi.GetEventsResults[number],
+  event: (KarmineApi.GetEvents[number] | KarmineApi.GetEventsResults[number]) & {
+    streamLink?: KarmineApi.GetEvents[number]['streamLink'];
+  },
   source: 'events' | 'eventsResults'
-): Effect.Effect<CoreData.Match, never, never> =>
-  Effect.Do.pipe(
-    Effect.bind('teams', () => getTeamsFromEvent(event)),
-    Effect.bind('id', () => calculateId(event)),
-    Effect.map(({ teams, id }) => ({
-      id: `all:${id}`,
-      date: event.start,
-      streamLink: 'streamLink' in event ? event.streamLink : null,
-      status: source === 'events' ? 'upcoming' : 'finished',
-      teams,
-      matchDetails: {
+) =>
+  Effect.all(
+    {
+      id: Effect.map(calculateId(event), (id) => `all:${id}`),
+      date: Effect.succeed(event.start),
+      streamLink: Effect.succeed(event.streamLink ?? null),
+      status: Effect.if(source === 'events', {
+        onTrue: () => Effect.succeed('upcoming' as const),
+        onFalse: () => Effect.succeed('finished' as const),
+      }),
+      teams: getTeamsFromEvent(event),
+      matchDetails: Effect.succeed({
         competitionName: event.competition_name as CoreData.CompetitionName,
-      },
-    }))
-  );
+      }),
+    },
+    {
+      concurrency: 1,
+    }
+  ) satisfies Effect.Effect<CoreData.Match, any, any>;
 
 type BaseKarmineEvent = (KarmineApi.GetEvents[number] | KarmineApi.GetEventsResults[number]) &
   Partial<
@@ -124,8 +156,9 @@ const getTeamNamesFromEvent = (event: BaseKarmineEvent): Effect.Effect<string[],
     let teamNames = [
       ...new Set(
         event.title
-          .replace(/\[.*\]/g, '')
-          .split(/(?: vs )|(?:;)/)
+          .split('] ')
+          .at(-1)
+          ?.split(/(?: vs )|(?:;)/)
           .map((teamName) => teamName.trim())
       ),
     ];

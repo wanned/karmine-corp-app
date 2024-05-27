@@ -17,11 +17,23 @@ export function getUnlistedMatches<E, R>(matchesStream: Stream.Stream<CoreData.M
     }),
     Effect.map(({ listedDates }) =>
       Stream.Do.pipe(
-        () => getOtherSchedule(),
-        Stream.filter(
-          (unlistedMatch) =>
-            unlistedMatch.matchDetails.competitionName === CoreData.CompetitionName.RocketLeague
-        ),
+        () =>
+          getOtherSchedule({
+            ignoreGames: Object.keys({
+              Fortnite: true,
+              LeagueOfLegendsLEC: true,
+              LeagueOfLegendsLFL: true,
+              SuperSmashBrosUltimate: true,
+              TeamfightTacticsGSC: true,
+              TFT: true,
+              TrackMania: true,
+              ValorantVCT: true,
+              ValorantVCT_GC: true,
+            } satisfies Record<
+              Exclude<CoreData.CompetitionName, CoreData.CompetitionName.RocketLeague>,
+              true
+            >) as Exclude<CoreData.CompetitionName, CoreData.CompetitionName.RocketLeague>[],
+          }),
         Stream.filter((unlistedMatch) => {
           const date = new Date(unlistedMatch.date);
           return !listedDates.has(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
