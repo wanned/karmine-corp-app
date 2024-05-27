@@ -10,7 +10,7 @@ export const frTranslations: Translations['fr'] = {
       },
       1: {
         title: 'Notifications',
-        description: 'Choisissez les matchs pour lesquels vous recevrez des notifications.',
+        description: 'Choisissez les jeux pour lesquels vous recevrez des notifications.',
       },
       2: {
         title: 'Spoiler',
@@ -56,7 +56,7 @@ export const frTranslations: Translations['fr'] = {
     notAffiliated: 'Non affilié à Karmine Corp',
     notifications: {
       title: 'Notifications',
-      description: 'Choisissez les matchs pour lesquels vous recevrez des notifications.',
+      description: 'Choisissez les jeux pour lesquels vous recevrez des notifications.',
     },
     spoiler: {
       title: 'Spoiler',
