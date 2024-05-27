@@ -76,10 +76,12 @@ function getTeamScore(matchElement: HTMLElement, teamIndex: 0 | 1) {
 function getTeamIsWinner(matchElement: HTMLElement, teamIndex: 0 | 1) {
   return Effect.Do.pipe(
     Effect.map(() => matchElement.querySelector('.m-item-result.mod-win')),
-    Option.fromNullable,
-    Option.match({
-      onSome: () => Effect.succeed(teamIndex === 0),
-      onNone: () => Effect.succeed(teamIndex === 1),
-    })
+    Effect.map(Option.fromNullable),
+    Effect.flatMap(
+      Option.match({
+        onSome: () => Effect.succeed(teamIndex === 0),
+        onNone: () => Effect.succeed(teamIndex === 1),
+      })
+    )
   );
 }
