@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { LogBox, View } from 'react-native';
 
 import { LolGames } from './components/lol-games';
@@ -38,8 +38,6 @@ export const GameDetailsModal = React.memo(
     const translate = useTranslate();
     const styles = useStyles(getStyles);
 
-    const [isNotified, setIsNotified] = useState(false);
-
     const gameDetails = GameDetails({ match });
     const gamePlayers = GameDetailsPlayers({ match });
 
@@ -57,7 +55,7 @@ export const GameDetailsModal = React.memo(
             status={match.status}
             bo={match.matchDetails.bo}
           />
-          <GameButtons match={match} isNotified={isNotified} setIsNotified={setIsNotified} />
+          <GameButtons match={match} />
         </View>
         <View style={styles.gameDetailsContainer}>
           {gameDetails === null && gamePlayers === null ?
@@ -138,27 +136,8 @@ function GameDetailsHeader({
   );
 }
 
-const GameButtons = ({
-  match,
-  isNotified,
-  setIsNotified,
-}: {
-  match: CoreData.Match;
-  isNotified: boolean;
-  setIsNotified: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+const GameButtons = ({ match }: { match: CoreData.Match }) => {
   const buttons: React.ReactElement[] = [];
-
-  if (match.status === 'upcoming') {
-    buttons.push(
-      <GameDetailsNotificationButton
-        key="notification"
-        match={match}
-        isNotified={isNotified}
-        setIsNotified={setIsNotified}
-      />
-    );
-  }
 
   if (match.status === 'live') {
     buttons.push(<GameDetailsStreamButton match={match} key="stream" />);
@@ -170,38 +149,6 @@ const GameButtons = ({
 
   return buttons;
 };
-
-function GameDetailsNotificationButton({
-  match,
-  isNotified,
-  setIsNotified,
-}: {
-  match: CoreData.Match;
-  isNotified: boolean;
-  setIsNotified: (isNotified: boolean) => void;
-}) {
-  const styles = useStyles(getStyles);
-  const translate = useTranslate();
-
-  if (match.status !== 'upcoming') {
-    return null;
-  }
-
-  return (
-    <View style={styles.buttonsContainer}>
-      {!isNotified ?
-        <Buttons.Primary
-          text={translate('gameDetails.beNotifiedButtonText')}
-          onPress={() => setIsNotified(true)}
-        />
-      : <Buttons.Secondary
-          text={translate('gameDetails.cancelNotificationButtonText')}
-          onPress={() => setIsNotified(false)}
-        />
-      }
-    </View>
-  );
-}
 
 function GameDetailsStreamButton({ match }: { match: CoreData.Match }) {
   const styles = useStyles(getStyles);
