@@ -9,7 +9,7 @@ import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 import { Settings } from '~/shared/types/Settings';
 
-const numberOfColumns = 3;
+const numberOfColumns = 4;
 const gridGap = 16;
 
 export function NotificationSettings({
@@ -47,7 +47,7 @@ export function NotificationSettings({
             }
           />
         )}
-        numColumns={3}
+        numColumns={numberOfColumns}
         keyExtractor={(key) => key}
       />
     </View>
