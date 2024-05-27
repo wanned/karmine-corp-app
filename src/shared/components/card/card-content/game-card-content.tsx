@@ -5,10 +5,8 @@ import { StyleSheet, View } from 'react-native';
 import { LivePill } from '../../live-pill/live-pill';
 import { MatchLabel } from '../../match-preview/components/match-label';
 import { Typographies } from '../../typographies';
-import { checkSingleNumber } from '../utils/check-single-number';
 
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
-import { OutlinedNumber } from '~/shared/components/card/card-content/outlined-numbers';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
 
@@ -94,16 +92,11 @@ const TeamScore = ({ logoUrl, name, score, position }: TeamScoreProps) => {
         </View>
       </View>
 
-      {score !== undefined &&
-        (score.isWinner ?
-          <Typographies.VeryBig color={styles.teamContainer.color} verticalTrim>
-            {score.score.toString()}
-          </Typographies.VeryBig>
-        : checkSingleNumber(score.score) ?
-          <OutlinedNumber size="small">{score.score}</OutlinedNumber>
-        : <Typographies.VeryBig color={styles.teamContainer.color} verticalTrim>
-            {score.score.toString()}
-          </Typographies.VeryBig>)}
+      {score !== undefined && (
+        <Typographies.VeryBig color={styles.teamContainer.color} verticalTrim>
+          {score.score.toString()}
+        </Typographies.VeryBig>
+      )}
     </View>
   );
 };
