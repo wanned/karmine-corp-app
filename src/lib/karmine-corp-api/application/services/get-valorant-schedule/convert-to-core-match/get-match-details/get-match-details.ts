@@ -58,7 +58,7 @@ function getBo({
   if (status === 'finished') {
     const winningScore = teams.find((team) => team?.score?.isWinner)?.score?.score;
     if (winningScore !== undefined) {
-      return Effect.succeed(winningScore + 1);
+      return Effect.succeed(winningScore * 2 - 1);
     }
   }
 

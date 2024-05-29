@@ -4,9 +4,35 @@ import { HTMLElement } from 'node-html-parser';
 import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
 export function getTeams(matchElement: HTMLElement) {
-  return Effect.all([getTeam(matchElement, 0), getTeam(matchElement, 1)], {
-    concurrency: 1,
-  }) satisfies Effect.Effect<CoreData.ValorantMatch['teams'], any, any>;
+  // Karmine Corp team will always be the first team in matchElement, but not on the match page.
+  // That's the match page that matters for us, so we have to parse the match page url to get the Karmine Corp index.
+
+  return Effect.Do.pipe(
+    Effect.flatMap(() =>
+      Effect.if(
+        matchElement
+          .querySelector('a')
+          ?.attributes['href'].replaceAll('-', ' ')
+          .split(' vs ')[0]
+          .includes('karmine') === true,
+        {
+          onTrue: () => Effect.succeed(0 as const),
+          onFalse: () => Effect.succeed(1 as const),
+        }
+      )
+    ),
+    Effect.flatMap((karmineCorpIndex) =>
+      Effect.all(
+        [
+          getTeam(matchElement, karmineCorpIndex === 0 ? 0 : 1),
+          getTeam(matchElement, karmineCorpIndex === 0 ? 1 : 0),
+        ],
+        {
+          concurrency: 1,
+        }
+      )
+    )
+  ) satisfies Effect.Effect<CoreData.ValorantMatch['teams'], any, any>;
 }
 
 function getTeam(matchElement: HTMLElement, teamIndex: 0 | 1) {
