@@ -19,6 +19,10 @@ import { VlrGgApiServiceImpl } from '../../infrastructure/services/vlr-gg-api/vl
 
 import { IsoDate } from '~/shared/types/IsoDate';
 
+const sentNotifications = {
+  matchStarting: new Set<string>(),
+};
+
 const notifier = () =>
   Effect.Do.pipe(
     Effect.flatMap(() =>
@@ -53,8 +57,10 @@ const notifier = () =>
           // We want to create a notification for matches that are upcoming in less than 15 minutes
           if (
             match.status === 'upcoming' &&
-            new Date(match.date).getTime() - new Date().getTime() < 15 * 60 * 1000
+            new Date(match.date).getTime() - new Date().getTime() <= 15 * 60 * 1000 &&
+            !sentNotifications.matchStarting.has(match.id)
           ) {
+            sentNotifications.matchStarting.add(match.id);
             return Option.some({
               type: 'matchStarting',
               match: getBaseMatch(match),
