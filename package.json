@@ -16,7 +16,8 @@
     "publish:ios": "npm run prepublish && eas build --platform ios --auto-submit",
     "link-assets": "react-native-asset",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "start:notifier": "npx tsx ./src/lib/karmine-corp-api/adapters/notifier/notifier.ts"
   },
   "dependencies": {
     "@badrap/valita": "^0.3.8",
