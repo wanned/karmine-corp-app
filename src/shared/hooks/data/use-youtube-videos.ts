@@ -11,5 +11,6 @@ export const useYoutubeVideos = () => {
     queryKey: ['youtube-videos'],
     queryFn: async () => await dataFetcher.getYoutubeVideos(),
     refetchInterval: durationUtils.toMs.fromMinutes(5),
+    staleTime: durationUtils.toMs.fromMinutes(5),
   });
 };
