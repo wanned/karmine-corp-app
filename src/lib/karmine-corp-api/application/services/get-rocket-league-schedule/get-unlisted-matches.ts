@@ -1,9 +1,11 @@
 import { Effect, Stream } from 'effect';
 
+import { paginateKarmineCorpMatches } from './paginate-karmine-corp-matches';
 import { CoreData } from '../../types/core-data';
+import { GetScheduleParamsState } from '../../use-cases/get-schedule/get-schedule-params-state';
 import { getOtherSchedule } from '../get-other-schedule/get-other-schedule';
 
-export function getUnlistedMatches<E, R>(matchesStream: Stream.Stream<CoreData.Match, E, R>) {
+export function getUnlistedMatches(matchesStream: ReturnType<typeof paginateKarmineCorpMatches>) {
   return Effect.Do.pipe(
     () => matchesStream,
     Stream.runCollect,
@@ -38,6 +40,30 @@ export function getUnlistedMatches<E, R>(matchesStream: Stream.Stream<CoreData.M
           const date = new Date(unlistedMatch.date);
           return !listedDates.has(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
         }),
+        Stream.filterEffect((match) =>
+          Effect.gen(function* (_) {
+            // Filter by date
+            const dateRange = yield* _(Effect.serviceConstants(GetScheduleParamsState).dateRange);
+            if (dateRange !== undefined) {
+              const date = new Date(match.date);
+              if (
+                (dateRange.start !== undefined && date < dateRange.start) ||
+                (dateRange.end !== undefined && date > dateRange.end)
+              ) {
+                return false;
+              }
+            }
+
+            // Filter by ignoreIds
+            const ignoreIds = yield* _(Effect.serviceConstants(GetScheduleParamsState).ignoreIds);
+            if (ignoreIds !== undefined) {
+              const matchId = `rl:${match.id}`;
+              return !ignoreIds.includes(matchId);
+            }
+
+            return true;
+          })
+        ),
         Stream.map((unlistedMatch) => ({
           ...unlistedMatch,
           id: `rl:${unlistedMatch.id}`,

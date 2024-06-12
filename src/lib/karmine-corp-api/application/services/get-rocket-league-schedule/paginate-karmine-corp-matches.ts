@@ -1,6 +1,5 @@
 import { Chunk, Effect, Stream, Option } from 'effect';
 
-import { getMatchId } from './convert-to-core-match/utils/get-match-id';
 import { PaginateChunkEffectPaginatorFormatter } from '../../types/effect-utils';
 import { GetScheduleParamsState } from '../../use-cases/get-schedule/get-schedule-params-state';
 
@@ -40,39 +39,8 @@ function getResultForPaginatorFormatter(): PaginateChunkEffectPaginatorFormatter
 > {
   return function formatResultForPaginator(schedule) {
     return Effect.gen(function* formatResultForPaginatorGenerator(_) {
-      let karmineMatchesChunk = Chunk.fromIterable(schedule.matches);
-      let shouldContinuePagination = true;
-
-      // Filter by date
-      const dateRange = yield* _(Effect.serviceConstants(GetScheduleParamsState).dateRange);
-      if (dateRange !== undefined) {
-        let enteredInDateRange = false;
-        karmineMatchesChunk = Chunk.filter(karmineMatchesChunk, (event) => {
-          if (
-            (dateRange.start === undefined || event.date >= dateRange.start) &&
-            (dateRange.end === undefined || event.date <= dateRange.end)
-          ) {
-            enteredInDateRange = true;
-            return true;
-          }
-          return false;
-        });
-
-        if (!enteredInDateRange) {
-          shouldContinuePagination = true;
-        }
-      }
-
-      // Filter by ignoreIds
-      const ignoreIds = yield* _(Effect.serviceConstants(GetScheduleParamsState).ignoreIds);
-      if (ignoreIds !== undefined) {
-        karmineMatchesChunk = Chunk.filter(
-          karmineMatchesChunk,
-          (match) => !ignoreIds.includes(Effect.runSync(getMatchId(match)))
-        );
-      }
-
-      shouldContinuePagination = shouldContinuePagination && schedule.pageSize < schedule.perPage;
+      const karmineMatchesChunk = Chunk.fromIterable(schedule.matches);
+      const shouldContinuePagination = schedule.pageSize < schedule.perPage;
 
       if (!shouldContinuePagination) {
         return [karmineMatchesChunk, Option.none()];
