@@ -86,7 +86,7 @@ const karmineEventToCoreMatch = (
     {
       id: Effect.map(calculateId(event), (id) => `all:${id}`),
       date: Effect.succeed(event.start),
-      streamLink: Effect.succeed(event.streamLink ?? null),
+      streamLink: Effect.succeed(`https://twitch.tv/${event.streamLink}` ?? null),
       status: Effect.if(Effect.succeed(source === 'events'), {
         onTrue: () => Effect.succeed('upcoming' as const),
         onFalse: () => Effect.succeed('finished' as const),

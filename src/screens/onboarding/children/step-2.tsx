@@ -1,10 +1,9 @@
 import { useContext, useMemo } from 'react';
 import { View } from 'react-native';
-import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 
+import { CoreData } from '~/lib/karmine-corp-api/application/types/core-data';
 import { SpoilerSettings } from '~/screens/settings/components/spoiler-settings';
 import { MatchPreview } from '~/shared/components/match-preview/match-preview';
-import { Title2 } from '~/shared/components/typographies/title2';
 import { SettingsContext } from '~/shared/contexts/settings-context';
 import { useStyles } from '~/shared/hooks/use-styles';
 import { createStylesheet } from '~/shared/styles/create-stylesheet';
@@ -20,7 +19,7 @@ export const Step2 = () => {
       id: '1',
       matchDetails: { competitionName: CoreData.CompetitionName.LeagueOfLegendsLEC },
       status: 'upcoming',
-      streamLink: 'kamet0',
+      streamLink: 'https://twitch.tv/kamet0',
       teams: [
         {
           logoUrl: 'https://medias.kametotv.fr/karmine/teams_logo/KC.png',

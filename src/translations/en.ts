@@ -230,4 +230,13 @@ export const enTranslations: Translations['en'] = {
       },
     ],
   },
+  shareMessages: {
+    watchStream: [
+      ({ game, karmineName, opponentName, link }) => {
+        return `Watch the stream of ${game} : ${karmineName}${
+          opponentName ? ` vs ${opponentName}` : ''
+        } at ${link}`;
+      },
+    ],
+  },
 };

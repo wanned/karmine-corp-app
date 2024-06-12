@@ -150,5 +150,15 @@ export type Translations = Record<
         },
       ];
     };
+    shareMessages: {
+      watchStream: [
+        (params: {
+          game: string;
+          karmineName: string;
+          opponentName: string | undefined;
+          link: string;
+        }) => string,
+      ];
+    };
   }
 >;

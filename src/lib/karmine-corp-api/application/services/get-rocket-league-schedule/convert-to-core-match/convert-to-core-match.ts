@@ -27,7 +27,7 @@ export function convertToCoreMatch(match: RocketLeagueMatch) {
     }),
     status: getStatus(match),
     teams: Effect.all([getTeam(match, 'blue'), getTeam(match, 'orange')]),
-    streamLink: Effect.succeed('kamet0'), // TODO
+    streamLink: Effect.succeed('https://twitch.tv/kamet0'), // TODO
   }) satisfies Effect.Effect<CoreData.RocketLeagueMatch, any, any>;
 }
 
