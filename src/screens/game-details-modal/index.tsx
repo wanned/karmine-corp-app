@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useMemo } from 'react';
-import { LogBox, View } from 'react-native';
+import { Linking, LogBox, View, Share } from 'react-native';
 
 import { LolGames } from './components/lol-games';
 import { Player } from './components/player';
@@ -154,14 +154,31 @@ function GameDetailsStreamButton({ match }: { match: CoreData.Match }) {
   const styles = useStyles(getStyles);
   const translate = useTranslate();
 
-  if (!match.streamLink) {
+  const streamLink = match.streamLink;
+
+  if (!streamLink) {
     return null;
   }
 
   return (
     <View style={styles.buttonsContainer}>
-      <Buttons.Primary text={translate('gameDetails.watchStreamButtonText')} onPress={() => {}} />
-      <Buttons.Secondary text={translate('gameDetails.shareStreamButtonText')} onPress={() => {}} />
+      <Buttons.Primary
+        text={translate('gameDetails.watchStreamButtonText')}
+        onPress={() => Linking.openURL(streamLink)}
+      />
+      <Buttons.Secondary
+        text={translate('gameDetails.shareStreamButtonText')}
+        onPress={() =>
+          Share.share({
+            message: translate('shareMessages.watchStream')[0]({
+              game: translate(`games.${match.matchDetails.competitionName}`),
+              karmineName: match.teams[0].name,
+              link: streamLink,
+              opponentName: match.teams[1]?.name,
+            }),
+          })
+        }
+      />
     </View>
   );
 }

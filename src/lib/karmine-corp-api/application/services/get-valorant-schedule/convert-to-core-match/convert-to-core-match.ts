@@ -14,7 +14,7 @@ export function convertToCoreMatch(matchContainerElement: HTMLElement) {
         id: getMatchId(matchContainerElement),
         teams: getTeams(matchContainerElement),
         date: getMatchDate(matchContainerElement),
-        streamLink: Effect.succeed('kamet0'), // TODO
+        streamLink: Effect.succeed('https://twitch.tv/kamet0'), // TODO
         status: getMatchStatus(matchContainerElement),
       })
     ),

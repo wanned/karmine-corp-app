@@ -16,7 +16,7 @@ export function convertToCoreMatch(match: LeagueOfLegendsMatch) {
     date: Effect.succeed(match.startTime),
     matchDetails: getMatchDetails(match),
     status: convertToCoreStatus(match.state),
-    streamLink: Effect.succeed('kamet0'),
+    streamLink: Effect.succeed('https://twitch.tv/kamet0'),
     teams: getTeams(match),
   }) satisfies Effect.Effect<CoreData.Match, any, any>;
 }
