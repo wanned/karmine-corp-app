@@ -31,9 +31,9 @@ export const MatchesList = React.memo(({ matches }: MatchesListProps) => {
 
   return (
     <View style={{ width: screenWidth, paddingHorizontal: 16 }}>
-      {matches.map(
-        (match) => match && <MatchPreview key={match.id} match={match} variant="compact" />
-      )}
+      {matches
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        .map((match) => match && <MatchPreview key={match.id} match={match} variant="compact" />)}
     </View>
   );
 });
