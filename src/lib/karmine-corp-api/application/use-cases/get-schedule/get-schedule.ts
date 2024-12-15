@@ -1,4 +1,4 @@
-import { Chunk, Sink, Stream } from 'effect';
+import { Chunk, Schedule, Sink, Stream } from 'effect';
 
 import { getLeagueOfLegendsSchedule } from '../../services/get-league-of-legends-schedule/get-league-of-legends-schedule';
 import { getOtherSchedule } from '../../services/get-other-schedule/get-other-schedule';
@@ -75,6 +75,7 @@ export const getSchedule = ({ onlyFromDatabase }: { onlyFromDatabase?: boolean }
       )
     ),
     Stream.filter((match): match is Exclude<typeof match, void> => match !== undefined),
-    Stream.map(fixKarmineLogo)
+    Stream.map(fixKarmineLogo),
+    Stream.retry(Schedule.intersect(Schedule.fibonacci('1 second'), Schedule.recurs(10)))
   );
 };
